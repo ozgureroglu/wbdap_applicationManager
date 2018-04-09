@@ -1,0 +1,54 @@
+.idea
+.error_line
+error.log
+staticCollect
+settings.py.*
+**.pyc
+AppArchive/
+AppArchive/*
+wbdap/settings.py.*
+wbdap/urls.py.*
+staticServePath/*
+twistd.pid
+.venv
+/.vagrant/
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Django stuff:
+*.log
+*.pot
+
+
+# Sphinx documentation
+docs/_build/
+
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+=======
+
+# No databases
+*.sqlite3
+
+static_root/
+staticroot/
