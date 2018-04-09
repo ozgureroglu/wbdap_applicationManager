@@ -1,0 +1,111 @@
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+
+        <div class="pull-left">
+            Fields of model: <u>{{ model.name }}</u> in app {{ model.app|upper }}
+        </div>
+
+
+        <button type="button"
+                class="btn btn-primary pull-right btn-sm"
+                data-toggle="modal"
+                data-target="#add_field_modal"
+                data-field_add_form_url="{% url 'applicationManager:field-create' model.app.id model.id %}"
+                id="add_new_field">
+
+                <span class="glyphicon glyphicon-plus"
+                      aria-hidden="true"></span> Add Field
+        </button>
+
+
+    </div>
+    <div class="panel-body">
+
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th colspan="3">Operations</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for field in object_list %}
+                <tr>
+                    <td>{{ field.name }}</td>
+                    <td>{{ field.type }}</td>
+                    <td><a href="#"
+                           class="ops_button"
+                           data-ops-type="details"
+                           data-ops-type-url="{% url 'applicationManager:field-details' model.app.id model.id field.id %}">Details</a>
+                    </td>
+
+                    <td><a href="#"
+                           class="ops_button"
+                           data-ops-type="update"
+                           data-ops-type-url="{% url 'applicationManager:field-update' model.app.id model.id field.id %}">Update</a>
+                    </td>
+
+                    <td><a href="#"
+                           class="ops_button"
+                           data-ops-type="delete"
+                           data-ops-type-url="{% url 'applicationManager:field-delete' model.app.id model.id field.id %}">Delete</a>
+                    </td>
+
+
+                </tr>
+            {% empty %}
+                <td>No models yet.</td>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        //Add field to modal
+        $('body').on('click', '#add_new_field', function () {
+            var get_address = this.getAttribute('data-field_add_form_url');
+            var csrftoken = $("[name*='csrfmiddlewaretoken']").val();
+
+            $.get(get_address, function (data) {
+                $(".add_field_modal_content").html(data);
+            });
+        });
+
+
+        //Add field to modal
+        $('body').on('click', '.ops_button', function () {
+
+            var get_address = this.getAttribute('data-ops-type-url');
+            var csrftoken = $("[name*='csrfmiddlewaretoken']").val();
+
+            $.get(get_address, function (data) {
+                $(".generic_modal_content").html(data);
+                $("#generic_modal").modal("show");
+            });
+        });
+
+
+
+        //Get field list
+        $(".field_delete_button").on("click", function () {
+
+            var field_delete_url = this.getAttribute('data-field-delete-url');
+            var csrftoken = $("[name*='csrfmiddlewaretoken']").val();
+
+            $.get(field_delete_url, function (data) {
+                $(".add_field_modal_content").html(data);
+                $("#add_field_modal").modal("show");
+                // alert("Load was performed.");
+            })
+        });
+
+
+    });
+</script>

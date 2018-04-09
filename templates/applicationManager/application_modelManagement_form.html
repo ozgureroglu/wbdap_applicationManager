@@ -1,0 +1,62 @@
+<!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Add Model</button>
+
+
+<!-- Modal -->
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Model</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Model details.</p>
+
+                        <table id="modelAdditionForm" class="table table-hover" borde="1">
+                            <tr class="form-group">
+                                <td><label>Model Name :</label></td>
+                                <td>
+                                    <input type="text" class="form-control">
+                                </td>
+                                <td></td>
+
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-success"
+                                            {#                                        data-toggle="modal"#}
+                                            data-target="#addIdentityObjectModal"
+                                            id="addFieldToForm">
+
+                                        <i class="fa fa-plus" aria-hidden="true"
+                                           data-toggle="tooltip"
+                                           data-placement="left" title="Edit"></i> Add model field
+                                    </button>
+                                </td>
+                                <td></td>
+                            </tr>
+
+
+
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">
+                            Add
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<hr>

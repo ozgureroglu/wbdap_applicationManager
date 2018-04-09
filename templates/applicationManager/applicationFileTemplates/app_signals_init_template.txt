@@ -1,0 +1,6 @@
+__author__ = 'ozgur'
+
+
+import django.dispatch
+#Just import and send the following signal from somewhere in your business logic code.
+{{applicationName}}_sample_signal = django.dispatch.Signal(providing_args=["test_message","application"])

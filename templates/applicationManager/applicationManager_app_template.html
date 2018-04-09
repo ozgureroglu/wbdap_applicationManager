@@ -1,0 +1,18 @@
+{% extends "projectCore/template_level_3_common_content.html" %}
+{#{% extends "projectCore/applicationTemplates/template_level_2_default_project_page_layout.html" %}#}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ file }}{% endblock %}
+
+{% block application_head_stylesheet %}
+    {{ block.super }}
+    <link href="{% static "applicationManager/css/applicationManager.css" %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block left_sidebar_content %}
+    {% if request.path != '/'|add:current_app_name|add:'/' %}
+        {% include 'applicationManager/left_sidebar.html' %}
+    {% endif %}
+{% endblock %}

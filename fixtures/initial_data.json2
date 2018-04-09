@@ -1,0 +1,298 @@
+[
+{
+  "model": "applicationManager.application",
+  "pk": 614,
+  "fields": {
+    "app_name": "mentor",
+    "verbose_name": "mentor",
+    "url": "mentor",
+    "namedUrl": "mentor",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 615,
+  "fields": {
+    "app_name": "brainStormer",
+    "verbose_name": "brainStormer",
+    "url": "brainStormer",
+    "namedUrl": "brainStormer",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 616,
+  "fields": {
+    "app_name": "examApp",
+    "verbose_name": "examApp",
+    "url": "examApp",
+    "namedUrl": "examApp",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 617,
+  "fields": {
+    "app_name": "projectCore",
+    "verbose_name": "projectCore",
+    "url": "projectCore",
+    "namedUrl": "projectCore",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 618,
+  "fields": {
+    "app_name": "blog",
+    "verbose_name": "blog",
+    "url": "blog",
+    "namedUrl": "blog",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 620,
+  "fields": {
+    "app_name": "realEstateRecommender",
+    "verbose_name": "realEstateRecommender",
+    "url": "realEstateRecommender",
+    "namedUrl": "realEstateRecommender",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 621,
+  "fields": {
+    "app_name": "dataExtractor",
+    "verbose_name": "Data Extractor",
+    "url": "dataExtractor",
+    "namedUrl": "dataExtractor",
+    "active": true,
+    "readmeContent": "Generic data scraper with storage capability.",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 622,
+  "fields": {
+    "app_name": "applicationManager",
+    "verbose_name": "applicationManager",
+    "url": "applicationManager",
+    "namedUrl": "applicationManager",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 624,
+  "fields": {
+    "app_name": "authenticationApp",
+    "verbose_name": "authenticationApp",
+    "url": "authenticationApp",
+    "namedUrl": "authenticationApp",
+    "active": false,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 625,
+  "fields": {
+    "app_name": "businessDB",
+    "verbose_name": "businessdb",
+    "url": "businessdb",
+    "namedUrl": "businessdb",
+    "active": true,
+    "readmeContent": "A database of businesses which can be investigated and used for starting an startup.",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 626,
+  "fields": {
+    "app_name": "identityManager",
+    "verbose_name": "identityManager",
+    "url": "identityManager",
+    "namedUrl": "identityManager",
+    "active": true,
+    "readmeContent": "Readme file",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 627,
+  "fields": {
+    "app_name": "sciDB",
+    "verbose_name": "sciDB",
+    "url": "sciDB",
+    "namedUrl": "sciDB",
+    "active": true,
+    "readmeContent": "sciDB",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 727,
+  "fields": {
+    "app_name": "projectManager",
+    "verbose_name": "projectManager",
+    "url": "projectManager",
+    "namedUrl": "projectManager",
+    "active": true,
+    "readmeContent": "projectManager",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 748,
+  "fields": {
+    "app_name": "webcoding",
+    "verbose_name": "webcoding",
+    "url": "webcoding",
+    "namedUrl": "webcoding",
+    "active": false,
+    "readmeContent": "webcoding",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 749,
+  "fields": {
+    "app_name": "filemanager",
+    "verbose_name": "filemanager",
+    "url": "filemanager",
+    "namedUrl": "filemanager",
+    "active": false,
+    "readmeContent": "filemanager",
+    "owner": 1,
+    "native": true
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 750,
+  "fields": {
+    "app_name": "docker_manager",
+    "verbose_name": "docker_manager",
+    "url": "docker_manager",
+    "namedUrl": "docker_manager",
+    "active": false,
+    "readmeContent": "docker_manager",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 752,
+  "fields": {
+    "app_name": "jamesAdministrator",
+    "verbose_name": "jamesAdministrator",
+    "url": "jamesAdministrator",
+    "namedUrl": "jamesAdministrator",
+    "active": false,
+    "readmeContent": "jamesAdministrator",
+    "owner": 1,
+    "native": false
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 1,
+  "fields": {
+    "name": "model1",
+    "app": 614
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 2,
+  "fields": {
+    "name": "gggg",
+    "app": 748
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 3,
+  "fields": {
+    "name": "ddd",
+    "app": 748
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 4,
+  "fields": {
+    "name": "ccc",
+    "app": 748
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 6,
+  "fields": {
+    "name": "uuu",
+    "app": 748
+  }
+},
+{
+  "model": "applicationManager.model",
+  "pk": 7,
+  "fields": {
+    "name": "qqq",
+    "app": 748
+  }
+},
+{
+  "model": "applicationManager.field",
+  "pk": 1,
+  "fields": {
+    "name": "f1",
+    "type": "CharField",
+    "type_parameter": "",
+    "model": 1
+  }
+}
+]

@@ -1,0 +1,24 @@
+__author__ = 'ozgur'
+
+import logging
+from {{applicationName}}.models import Example_{{applicationName}}_Model
+from {{applicationName}}.signals import {{applicationName}}_sample_signal
+
+from django.shortcuts import render
+
+logger = logging.getLogger('django.request')
+
+
+def landing_page(request):
+    return render(request,'{{applicationName}}/landing.html')
+
+def index_page(request):
+    return render(request,'{{applicationName}}/landing.html')
+
+def dashboard(request):
+    return render(request,'{{applicationName}}/dashboard.html')
+
+
+def signal_test(request):
+    {{applicationName}}_sample_signal.send(sender=Example_{{applicationName}}_Model.__class__, test_message="testString",model=Example_{{applicationName}}_Model.objects.get(name='name'))
+    return render(request,'{{applicationName}}/dashboard.html')

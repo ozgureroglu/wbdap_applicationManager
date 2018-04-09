@@ -1,0 +1,117 @@
+{% extends "applicationManager/template.html" %}
+{% load staticfiles %}
+
+
+{% block adminContent %}
+
+    <div id="page-wrapper">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Re-Index Application</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Re-index panel
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <form role="form" action="" method="post">
+                                    {% csrf_token %}
+
+                                    {% for field in form %}
+                                        <div class="form-group">
+
+                                            {{ field.label_tag }} {{ field }}
+                                            <p>{{ field.errors }}</p>
+                                            {#                                                <p class="help-block">Example block-level help text here.</p>#}
+                                        </div>
+
+                                    {% endfor %}
+                                    <button type="submit" class="btn btn-default">Re-Index</button>
+
+                                </form>
+                            </div>
+
+                            <!-- /.col-lg-6 (nested) -->
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+
+
+            {#                ----------------------------------------#}
+
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-folder-open "></i> Application List
+                    </div>
+                    <!-- /.panel-heading -->
+
+
+                    <div class="panel-body">
+                        <div class="list-group">
+
+
+                            {% for app in appList %}
+
+                                <a href="{% url app.namedUrl|add:":index" %}" class="list-group-item">
+                                {{ app.namedUrl }}
+                                    <i class="fa fa-laptop "></i> {{ app.name }}
+                                    <span class="pull-right text-muted small"><em>{{ app.creationDate }} minutes ago</em>
+                                    </span>
+                                </a>
+
+                            {% endfor %}
+
+
+                        </div>
+                        <!-- /.list-group -->
+{#                        <a href="#" class="btn btn-default btn-block">View All Alerts</a>#}
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+
+                <!-- /.panel -->
+            </div>
+            <!-- /.panel -->
+        </div>
+
+
+    </div>
+
+
+    <!-- /.row -->
+    </div>
+
+{% endblock %}
+
+
+{% block admin_body_javascript %}
+    {{ block.super }}
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static "projectCore/jscript/notify.js" %}"></script>
+
+
+    {% if messageType == "Exception" %}
+        <script>
+            $(document).ready(function () {
+                $.notify("{{ message }}", "error");
+            });
+
+        </script>
+    {% endif %}
+{% endblock %}

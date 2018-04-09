@@ -1,0 +1,13 @@
+__author__ = 'ozgur'
+
+from django import forms
+from django.forms import ModelForm
+from {{applicationName}}.models import *
+
+
+class ExampleForm(ModelForm):
+    name = forms.CharField(label="Model Name",widget=forms.TextInput(attrs={'class':'form-control','id':'modelName'}))
+
+    class Meta:
+        exclude = []
+        model = Example_{{applicationName}}_Model

@@ -1,0 +1,13 @@
+__author__ = 'ozgur'
+
+import logging
+from django.dispatch import receiver
+from {{applicationName}}.signals import *
+
+logger= logging.getLogger("wbdap.debug")
+
+
+# Called when he application is created
+@receiver({{applicationName}}_sample_signal)
+def my_callback(sender, **kwargs):
+    logger.info("Sample signal receieved")

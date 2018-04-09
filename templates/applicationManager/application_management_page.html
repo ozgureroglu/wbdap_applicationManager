@@ -1,0 +1,678 @@
+{% extends "applicationManager/applicationManager_app_template.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block page_content %}
+
+    {#    <!-- FIELD OPERATIONS TO MODEL Modal -->#}
+
+    <div class="modal fade bs-model-add-modal-sm" id="add_model_modal" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {#                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
+                    {#                                            aria-hidden="true">&times;</span></button>#}
+                    <h4 class="modal-title" id="myModalLabel">Add Model</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="add_model_modal_content">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ADD FIELD TO MODEL Modal -->
+    <div class="modal fade" id="add_field_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         style="z-index: 2001">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Modal Field</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="add_field_modal_content">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- FIELD OPERATIONS TO MODEL Modal -->
+    <div class="modal fade" id="model_field_ops" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         style="z-index: 2000">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal Field Operations</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="model_field_ops_content">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- FIELD OPERATIONS TO MODEL Modal -->
+    <div class="modal fade" id="generic_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         style="z-index: 2000">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal Field Operations</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="generic_modal_content">
+
+                    </div>
+                </div>
+                {#                <div class="modal-footer">#}
+                {#                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>#}
+                {#                </div>#}
+            </div>
+        </div>
+    </div>
+
+
+
+
+    {% include "applicationManager/waitingPage.html" %}
+
+    <div id="page-wrapper">
+
+
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-server fa-2x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="page-header">Details of {{ app.app_name | upper }}</h4>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Long Name : <a href="#">{{ app.verbose_name }}</a></div>
+                                <div>URL : <a href="#">{{ app.url }}</a></div>
+                                <div>NamedURL : <a href="#">{{ app.namedUrl }}</a></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>Is Active : <a href="#">{{ app.active }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                            </div>
+                        </div>
+
+
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Models
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    Actions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#" type="button"
+                                           id="add_model_menu_item"
+                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"
+                                            {#                                           data-toggle="modal"#}
+                                            {#                                           data-target=".bs-model-add-modal-sm"#}
+                                    >Add Model</a>
+                                    </li>
+                                    <li><a href="#">Another action</a>
+                                    </li>
+                                    <li><a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            {% csrf_token %}
+
+                            <table class="table table-hover table-striped" id="app_models">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Model Name</th>
+                                    <th>Definition</th>
+                                    <th>Ops</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+
+            </div>
+            <!-- /.col-lg-8 -->
+
+
+            <div class="col-lg-6">
+                <div class="panel panel-default fields-panel">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Fields
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    Actions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#" type="button"
+                                           id="add_model_menu_item"
+                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"
+                                    >Add Model</a>
+                                    </li>
+                                    <li><a href="#">Another action</a>
+                                    </li>
+                                    <li><a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            {% csrf_token %}
+
+                            <table class="table table-hover table-striped" id="model_fields">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Field Name</th>
+                                    <th>Definition</th>
+                                    <th>Type</th>
+                                    <th>Parameters</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+
+    </div>
+    <!-- /.row -->
+    </div>
+
+{% endblock %}
+
+
+{% block body_jscript %}
+    {{ block.super }}
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static "projectCore/jscript/notify.js" %}"></script>
+    <script src="{% static "applicationManager/jscript/submitApplication.js" %}"></script>
+    <script src="{% static "applicationManager/jscript/addApplicationModel.js" %}"></script>
+    <script src="{% static "applicationManager/jscript/field_operations.js" %}"></script>
+    <script src="{% static "applicationManager/jscript/model_operations.js" %}"></script>
+
+
+    {% if messageType == "Exception" %}
+        <script>
+            $(document).ready(function () {
+                $.notify("{{ message }}", "error");
+            });
+        </script>
+    {% endif %}
+
+
+    <script>
+        $(document).ready(function () {
+
+            var editor = new $.fn.dataTable.Editor({
+                ajax: {
+                    create: {
+                        type: 'POST',
+                        url: "/applicationManager/api/appmodels/?format=json",
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }, contentType: 'application/json',
+                        data: function (d) {
+
+                            d.data[0]['owner_app'] ={{ app.id }};
+                            var keys = Object.keys(d.data);
+                            ndata = JSON.stringify(d.data[keys[0]]);
+                            return ndata;
+                        },
+                    },
+                    edit: {
+                        type: 'PUT',
+                        url: "/applicationManager/api/appmodels/_id_/",
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }, contentType: 'application/json',
+                        data: function (d) {
+
+                            var row_id = Object.keys(d.data)
+                            var jdata = d.data[row_id]
+
+                            var jdata_keys = Object.keys(jdata);
+                            $.each(jdata_keys, function (k, v) {
+                                if (v.startsWith('is_')) {
+                                    if (jdata[v] === "") {
+                                        // alert(v+" is empty valued")
+                                        delete jdata[v];
+                                        jdata[v] = 'false';
+                                    }
+                                }
+                            })
+
+                            jdata['owner_app'] = {{ app.id }}
+                                console.log(jdata);
+                            ndata = JSON.stringify(jdata);
+                            return ndata;
+                        },
+                    },
+                    remove: {
+                        type: 'DELETE',
+                        url: "/applicationManager/api/appmodels/_id_/",
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }, contentType: 'application/json',
+                        data: function (d) {
+                            var keys = Object.keys(d.data);
+                            ndata = JSON.stringify(d.data[keys[0]]);
+                            return ndata;
+                        },
+                    },
+                },
+                table: $('#app_models'),
+                idSrc: 'id',
+                fields: [
+                    {
+                        label: "Name:",
+                        name: "name"
+                    }, {
+                        label: "Definition:",
+                        name: "definition"
+                    }
+                ],
+            });
+
+            var table = $('#app_models').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "dom": 'Bfrtip',
+                "paging": true,
+                "select": true,
+                "info": false,
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    url: "/applicationManager/api/appmodels/?format=json&owner_app={{ app.id }}",
+                    dataSrc: 'results',
+                    data: function (d) {
+                        var keys = Object.keys(d);
+
+                        var offset = d["start"];
+                        var limit = d["length"];
+                        var search = d["search"];
+                        var ordering = d["order"][0]["column"];
+                        var order_val = d.columns[ordering]['data'];
+
+                        d["offset"] = offset;
+                        d["limit"] = limit;
+                        d["order"][0]["column"] = order_val;
+                        delete d["start"];
+                        delete d["length"];
+                    },
+                    dataFilter: function (d) {
+                        var json = jQuery.parseJSON(d);
+                        json.recordsTotal = json.count;
+                        json.recordsFiltered = json.count;
+                        json.data = json.results;
+
+                        return JSON.stringify(json); // return JSON string
+                    }
+
+                }, buttons: [
+                    {extend: "create", editor: editor},
+                    {extend: "edit", editor: editor},
+                    {extend: "remove", editor: editor}
+                ],
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                "columns": [
+                    {
+                        data: null,
+                        defaultContent: '',
+                        className: 'select-checkbox not_editable',
+                        orderable: false
+                    },
+                    {"data": "name"},
+                    {"data": "definition"},
+                    //{
+                    //    "data": "fields[,].name",
+                    //  className: 'not_editable',
+                    //},
+                    {
+                        data: null,
+                        className: "center not_editable",
+                        defaultContent: '<a href="" class="editor_edit" data-toggle="modal" data-target="#add_field_modal">Fields</a>',
+                        render: function (data, type, row, meta) {
+                            if (type === 'display') {
+                                data = '<a href="#" class="show_fields"  data-model_id=' + data.id + '>Fields</a>'
+                                {#data = '<a href="#" class="show_fields" data-toggle="modal" data-target="#add_field_modal" data-model_id=' + data.id + '>Fields</a>'#}
+
+                                ;
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                rowCallback: function (row, data) {
+
+                    var chk_fields = $("input[class^='datatable-is_']", row);
+
+                    $.each(chk_fields, function (k, v) {
+                        var elem = v;
+                        var cls = elem.getAttribute("class");
+
+                        $(chk_fields[k]).prop('checked', data[cls.split("-")[1]] == true);
+                    });
+                }
+            });
+
+            $('#app_models').on('click', "input:checkbox", function () {
+                // console.log( $( this ).attr('class') );
+
+                var type = $(this).attr('class').split("-")[1];
+                editor
+                // asagidaki ilk satirdaki false, edit modali gosterme demektir.
+                // .edit(table.rows({ selected: true}), false)
+                    .edit($(this).closest('tr'), false)
+                    .set(type, $(this).prop('checked') ? true : false)
+                    .submit();
+            });
+
+            $('#app_models').on('click', 'tbody td:not(:has(input)):not(.not_editable)', function (e) {
+
+                // alert($(this).html());
+                editor.inline(this, {
+                    submit: 'allIfChanged'
+                });
+            });
+
+
+            {#--------------------------------------------------------------#}
+
+            {#Birinci tablodaki filters linkine tiklandiginda ikinci tabloda icerik yeniden #}
+            {#olusturulmakta.#}
+
+
+            $("#app_models").on('click', '.show_fields', function () {
+                var model_id = $(this).attr('data-model_id');
+
+                var init_datatable = function (tname, mid) {
+
+                    $(tname).DataTable({
+                        "scrollY": "500px",
+                        "scrollCollapse": true,
+                        "dom": 'Bfrtip',
+                        "paging": true,
+                        "select": true,
+                        "info": false,
+                        "ordering": true,
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax": {
+                            url: "/applicationManager/api/fields/?format=json&owner_model=" + mid,
+                            data: function (d) {
+                                var keys = Object.keys(d);
+
+                                var offset = d["start"];
+                                var limit = d["length"];
+                                var search = d["search"];
+                                var ordering = d["order"][0]["column"];
+                                var order_val = d.columns[ordering]['data'];
+
+                                d["offset"] = offset;
+                                d["limit"] = limit;
+                                d["order"][0]["column"] = order_val;
+                                delete d["start"];
+                                delete d["length"];
+                            },
+                            "dataSrc": function (json) {
+                                console.log(json);
+                                console.log(json.options);
+                                console.log(json.options['field_types']);
+                                //make another ajax call to get the data for select or extract from the joined data here
+                                fields_editor.field('field_type').update(json.options['field_types']);
+                                return json.data;
+                            },
+                            dataFilter: function (d) {
+                                var json = jQuery.parseJSON(d);
+                                json.recordsTotal = json.count;
+                                json.recordsFiltered = json.count;
+                                json.data = json.results;
+
+                                return JSON.stringify(json); // return JSON string
+                            }
+
+                        }, buttons: [
+                            {extend: "create", editor: fields_editor},
+                            {extend: "edit", editor: fields_editor},
+                            {extend: "remove", editor: fields_editor}
+                        ],
+                        select: {
+                            style: 'os',
+                            selector: 'td:first-child'
+                        },
+                        "columns": [
+                            {
+                                data: null,
+                                defaultContent: '',
+                                className: 'select-checkbox not_editable',
+                                orderable: false
+                            },
+                            {"data": "name"},
+                            {"data": "definition"},
+                            {"data": "field_type"},
+                            {"data": "type_parameter"},
+                        ],
+                        rowCallback: function (row, data) {
+
+                            var chk_fields = $("input[class^='datatable-is_']", row);
+
+                            $.each(chk_fields, function (k, v) {
+                                var elem = v;
+                                var cls = elem.getAttribute("class");
+
+                                $(chk_fields[k]).prop('checked', data[cls.split("-")[1]] == true);
+                            });
+                        }
+                    });
+
+                }
+
+                var fields_editor = new $.fn.dataTable.Editor({
+                    ajax: {
+                        create: {
+                            type: 'POST',
+                            url: "/applicationManager/api/fields/?format=json",
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }, contentType: 'application/json',
+                            data: function (d) {
+
+                                d.data[0]['owner_model'] = model_id;
+                                var keys = Object.keys(d.data);
+                                ndata = JSON.stringify(d.data[keys[0]]);
+                                return ndata;
+                            },
+                        },
+                        edit: {
+                            type: 'PUT',
+                            url: "/applicationManager/api/fields/_id_/",
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }, contentType: 'application/json',
+                            data: function (d) {
+
+                                var row_id = Object.keys(d.data)
+                                var jdata = d.data[row_id]
+
+                                var jdata_keys = Object.keys(jdata);
+                                $.each(jdata_keys, function (k, v) {
+                                    if (v.startsWith('is_')) {
+                                        if (jdata[v] === "") {
+                                            // alert(v+" is empty valued")
+                                            delete jdata[v];
+                                            jdata[v] = 'false';
+                                        }
+                                    }
+                                })
+
+                                jdata['owner_model'] = model_id;
+                                ndata = JSON.stringify(jdata);
+                                return ndata;
+                            },
+                        },
+                        remove: {
+                            type: 'DELETE',
+                            url: "/applicationManager/api/fields/_id_/",
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }, contentType: 'application/json',
+                            data: function (d) {
+                                var keys = Object.keys(d.data);
+                                ndata = JSON.stringify(d.data[keys[0]]);
+                                return ndata;
+                            },
+                        },
+                    },
+                    table: $('#model_fields'),
+                    idSrc: 'id',
+                    fields: [
+                        {
+                            label: "Name:",
+                            name: "name"
+                        }, {
+                            label: "Definition:",
+                            name: "definition"
+                        }, {
+                            label: "Type:",
+                            name: "field_type",
+                            type: "select",
+                            placeholder: "Select field type",
+                        }, {
+                            label: "Parameters:",
+                            name: "type_parameter   "
+                        }
+                    ],
+                });
+
+                if ($.fn.dataTable.isDataTable('#model_fields')) {
+                    $('#model_fields').DataTable().destroy();
+                    init_datatable('#model_fields', model_id);
+                }
+                else {
+                    init_datatable('#model_fields', model_id);
+                }
+
+                {#runEffect();#}
+            })
+            ;
+
+
+        })
+        ;
+    </script>
+
+    <script>
+        $(function () {
+            $("#accordion").accordion({
+                collapsible: true
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,54 @@
+from django.urls import include, path
+import applicationManager.views
+import identityManager.views
+import projectCore
+
+
+
+urlpatterns = [
+    ##--------- Template ------------------------------------------
+    # Examples:
+    # path('$', 'WBDAP.views.home', name='home'),
+    # path('WBDAP/', include('WBDAP.foo.urls')),
+    # Asagidaki belirtilen uygulama icindeki bir URL e shortcut olarak kullanilabilir. Asagidaki
+    # shortcuts alani bu tur baglantilar icin kullanilacaktir. Orijinali burada olacaktir.
+    #path('profile/', examApp.views.user_dashboard_page),
+
+
+    # Uncomment the admin/doc line below to enable admin documentation:
+    # path('admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    # path('admin/', include(admin.site.urls)),
+
+
+    # Asagidaki include ifadeleri icinde namespace kisimlari ekleniyor.
+    # Bu sayede uygulamalari tamamen bolunebilir hale getiriyorum.
+
+    #-----------------------------------------------------------------------------------
+    # Bu alana eklnemis olan URL'ler otomatik olarak uretilmistir. Manuel olarak silmeyin.
+    # Asagidaki uygulamalarin listesi WBDAP icindeki context processor tarafindan saglanmaktadir.
+
+    {% for app in applist %}
+    path('{{app.url}}/', include('{{app.app_name}}.urls',namespace="{{app.namedUrl}}"),name='{{app.namedUrl}}'),
+    {% endfor %}
+    #-----------------------------------------------------------------------------------
+
+    # ---------------- DEFAULT URLS -------------------------------------
+    #Any pattern except the above will end here, this is the default application settings aka base/core application
+    #path('',include('projectCore.urls')),
+
+    # REST API login pages
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # social-django
+    path('', include('social_django.urls', namespace='social')),
+
+    #----------------- SHORTCUTS ---------------------------------------
+    path('dashboard',identityManager.views.user_dashboard ),
+    path('login', projectCore.views.login),
+    path('logout', projectCore.views.logout),
+    path('reindexApps',applicationManager.views.reindexApps ),
+
+
+]

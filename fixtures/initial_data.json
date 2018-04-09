@@ -1,0 +1,338 @@
+[
+{
+  "model": "applicationManager.application",
+  "pk": 616,
+  "fields": {
+    "app_name": "examApp",
+    "verbose_name": "examApp",
+    "url": "examApp",
+    "namedUrl": "examApp",
+    "active": false,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "2b7d63cb-5575-4351-9fbb-e0114e689a52"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 617,
+  "fields": {
+    "app_name": "projectCore",
+    "verbose_name": "projectCore",
+    "url": "projectCore",
+    "namedUrl": "projectCore",
+    "active": true,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": true,
+    "uuid": "abe0a943-9f06-407f-98ff-83b5c889f205"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 618,
+  "fields": {
+    "app_name": "blog",
+    "verbose_name": "blog",
+    "url": "blog",
+    "namedUrl": "blog",
+    "active": true,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "46aa8dec-4074-4650-bf4a-ba2e479a5f84"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 620,
+  "fields": {
+    "app_name": "realEstateRecommender",
+    "verbose_name": "realEstateRecommender",
+    "url": "realEstateRecommender",
+    "namedUrl": "realEstateRecommender",
+    "active": false,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "e4d01c3a-37f1-4e54-936e-8342dd6ba8d1"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 621,
+  "fields": {
+    "app_name": "dataExtractor",
+    "verbose_name": "Data Extractor",
+    "url": "dataExtractor",
+    "namedUrl": "dataExtractor",
+    "active": false,
+    "description": "Generic data scraper with storage capability.",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "18e1fa62-d9e8-49e1-ada7-e473f2eef860"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 622,
+  "fields": {
+    "app_name": "applicationManager",
+    "verbose_name": "applicationManager",
+    "url": "applicationManager",
+    "namedUrl": "applicationManager",
+    "active": true,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": true,
+    "uuid": "c6b4af68-da35-4a73-8231-d41ed16fc5ae"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 624,
+  "fields": {
+    "app_name": "authenticationApp",
+    "verbose_name": "authenticationApp",
+    "url": "authenticationApp",
+    "namedUrl": "authenticationApp",
+    "active": false,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": true,
+    "uuid": "ad9be11a-631f-4492-a98f-a506cd32db45"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 625,
+  "fields": {
+    "app_name": "businessDB",
+    "verbose_name": "businessdb",
+    "url": "businessdb",
+    "namedUrl": "businessdb",
+    "active": false,
+    "description": "A database of businesses which can be investigated and used for starting an startup.",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "1935b6ae-ea2d-409d-a7cf-38d80fc19ffa"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 626,
+  "fields": {
+    "app_name": "identityManager",
+    "verbose_name": "identityManager",
+    "url": "identityManager",
+    "namedUrl": "identityManager",
+    "active": true,
+    "description": "Readme file",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": true,
+    "uuid": "a39546fe-c528-40a6-88e9-d4fa220e85ce"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 627,
+  "fields": {
+    "app_name": "sciDB",
+    "verbose_name": "sciDB",
+    "url": "sciDB",
+    "namedUrl": "sciDB",
+    "active": true,
+    "description": "sciDB",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "92b2d551-9c33-4612-a627-ffffa351e3dd"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 727,
+  "fields": {
+    "app_name": "projectManager",
+    "verbose_name": "projectManager",
+    "url": "projectManager",
+    "namedUrl": "projectManager",
+    "active": true,
+    "description": "projectManager",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "de1167cc-360e-4799-b729-b2af23f0ef63"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 748,
+  "fields": {
+    "app_name": "webcoding",
+    "verbose_name": "webcoding",
+    "url": "webcoding",
+    "namedUrl": "webcoding",
+    "active": false,
+    "description": "webcoding",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "3c94f17c-9a82-4c8a-be85-2796701c5ab8"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 749,
+  "fields": {
+    "app_name": "filemanager",
+    "verbose_name": "filemanager",
+    "url": "filemanager",
+    "namedUrl": "filemanager",
+    "active": false,
+    "description": "filemanager",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": true,
+    "uuid": "e50e1e91-b1c0-4b57-a9b8-502266e97ed8"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 750,
+  "fields": {
+    "app_name": "docker_manager",
+    "verbose_name": "docker_manager",
+    "url": "docker_manager",
+    "namedUrl": "docker_manager",
+    "active": false,
+    "description": "docker_manager",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "2c40e692-310c-4c15-be22-912efa453d7a"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 752,
+  "fields": {
+    "app_name": "jamesAdministrator",
+    "verbose_name": "jamesAdministrator",
+    "url": "jamesAdministrator",
+    "namedUrl": "jamesAdministrator",
+    "active": false,
+    "description": "jamesAdministrator",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "7086b833-f98b-4f29-8fc0-ec65a02cc8ac"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 753,
+  "fields": {
+    "app_name": "mentor",
+    "verbose_name": "mentor",
+    "url": "mentor",
+    "namedUrl": "mentor",
+    "active": false,
+    "description": "mentor",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "5995c608-a5fd-4ad7-a066-c6aaccf12cb5"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 771,
+  "fields": {
+    "app_name": "mailapp",
+    "verbose_name": "mailapp",
+    "url": "mailapp",
+    "namedUrl": "mailapp",
+    "active": true,
+    "description": "mailapp",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "80799d1b-f588-4edc-a895-8f6a167141d6"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 772,
+  "fields": {
+    "app_name": "rulemall",
+    "verbose_name": "rulemall",
+    "url": "rulemall",
+    "namedUrl": "rulemall",
+    "active": false,
+    "description": "rulemall",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "80799d1b-f578-4edc-a895-8f6a167141d6"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 773,
+  "fields": {
+    "app_name": "gametest",
+    "verbose_name": "gametest",
+    "url": "gametest",
+    "namedUrl": "gametest",
+    "active": false,
+    "description": "gametest",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "80799d1b-f578-4edc-a895-3f6a167141d6"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 774,
+  "fields": {
+    "app_name": "scraper",
+    "verbose_name": "scraper",
+    "url": "scraper",
+    "namedUrl": "scraper",
+    "active": false,
+    "description": "scraper",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b6913c2"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 775,
+  "fields": {
+    "app_name": "testapp",
+    "verbose_name": "testapp",
+    "url": "testapp",
+    "namedUrl": "testapp",
+    "active": false,
+    "description": "testapp",
+    "coming_soon_page": true,
+    "owner": 1,
+    "core_app": false,
+    "uuid": "236ba6ab-271c-4da6-8d4c-2f05fa87c7ff"
+  }
+}
+]

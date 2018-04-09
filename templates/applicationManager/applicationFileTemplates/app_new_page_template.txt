@@ -1,0 +1,23 @@
+{%  extends "${applicationName}/${applicationName}_app_template.html"  %}
+{% load i18n %}
+
+{% block title %}${applicationName}{% endblock %}
+
+{% block head_stylesheet %}
+    {{ block.super }}
+
+{% endblock %}
+
+
+{% block navbar_extension %}
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row" style="border:1px solid orange">
+            <div class="col-md-8">.col-md-8</div>
+            <div class="col-md-4">.col-md-4</div>
+        </div>
+    </div>
+{% endblock %}

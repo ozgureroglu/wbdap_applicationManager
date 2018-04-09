@@ -1,0 +1,49 @@
+{% extends "projectCore/external_application_base_template.html" %}
+{% load i18n %}
+
+{% block title %}{{ file }}{% endblock %}
+
+{% block head_stylesheet %}
+    {{ block.super }}
+    {% if not request.path == '/${applicationName}/' %}
+        <link href="{{ STATIC_URL }}${applicationName}/css/${applicationName}.css" rel="stylesheet">
+    {% endif %}
+{% endblock %}
+
+{% block application_navbar %}
+    {#    First get the content of the super block#}
+    {{ block.super }}
+
+    {% block navbar_extension %}
+        {#        Add any other extensions to here#}
+    {% endblock %}
+
+    {% if request.path == '/${applicationName}/' %}
+            {{ block.super }}
+            {% include "${applicationName}/${applicationName}_landing_page_navbar.html" %}
+    {% else %}
+            {{ block.super }}
+            {% include "${applicationName}/${applicationName}_landing_page_navbar.html" %}
+            {% include "${applicationName}/${applicationName}_navbar.html" %}
+            {% include '${applicationName}/${applicationName}_navbar2.html' %}
+            {% include '${applicationName}/${applicationName}_left_sidebar.html' %}
+    {% endif %}
+
+{% endblock %}
+
+
+
+{% block external_application_left_side %}
+    {{ block.super }}
+{% endblock %}
+
+{% block body_jscript %}
+    {{ block.super }}
+    <!-- Project XXX app template
+    ================================================== -->
+
+
+    <!-- ================================================== -->
+
+{% endblock %}
+

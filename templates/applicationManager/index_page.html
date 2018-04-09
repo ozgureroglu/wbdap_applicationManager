@@ -1,0 +1,361 @@
+{% extends "applicationManager/applicationManager_app_template.html" %}
+{% load staticfiles %}
+
+
+{% block page_content %}
+    {{ block.super }}
+    {% include "applicationManager/waitingPage.html" %}
+
+    <div id="wrapper">
+
+        <div id="page-wrapper">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Django Applications In The Portfolio</h2>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading clearfix">
+                            <h4>
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                                data-toggle="dropdown">
+                                            Actions
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="#" id="list_selected">List Selected</a>
+                                            </li>
+                                            <li><a href="{% url 'applicationManager:dump-all-data' %}" id="dump_data">Dump
+                                                All</a>
+                                            </li>
+                                            <li><a href="#" id="dump_data">Dump Selected</a>
+                                            </li>
+                                            <li><a href="{% url 'applicationManager:genuuid-all' %}" id="dump_data">Generate
+                                                UUID for all</a>
+                                            </li>
+                                            <li><a href="#">Load Data</a>
+                                            </li>
+                                            <li><a href="#">Export As Standalone Project</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <i class="fa fa-folder-open fa-fw"></i> Applications
+                            </h4>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div>
+                                <table id="application_list_table" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Application Name</th>
+                                        <th>Verbose Name</th>
+                                        <th>Core App</th>
+                                        <th>Owner</th>
+                                        <th>Active</th>
+                                        <th style="text-align:left">Operations</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    {% for app in all_apps %}
+                                        <tr>
+                                            <form action="" method="POST" id="appForm_{{ app.id }}">
+                                                {% csrf_token %}
+                                                <td>
+                                                    {% if app.core_app == False %}
+                                                        <a href="{% url app.namedUrl|add:":index" %}"
+                                                           target="_blank"></a>
+                                                        <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                           target="_blank">
+                                                            <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
+                                                        </a>
+
+                                                    {% else %}
+                                                        <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                           target="_blank"><i
+                                                                class="fa fa-asterisk fa-fw"></i> {{ app.app_name |capfirst }}
+                                                        </a>
+                                                    {% endif %}
+
+                                                </td>
+                                                <td>{{ app.verbose_name }}</td>
+                                                <td>
+                                                    {% if app.core_app == False %}
+                                                        External
+                                                    {% else %}
+                                                        Core
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ app.owner | capfirst }}</td>
+                                                <td><span class="text-muted small">
+
+                                                {% if app.core_app == False %}
+                                                    {% if  app.active %}
+                                                        <a class="btn btn-success btn-xs"
+                                                           href="{% url 'applicationManager:application-activate' app.id %}"
+                                                           role="button">Active</a>
+                                                    {% else %}
+                                                        <a class="btn btn-danger btn-xs"
+                                                           href="{% url 'applicationManager:application-activate' app.id %}"
+                                                           role="button">Passive</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if  app.active %}
+                                                        <a class="btn btn-success btn-xs"
+                                                           href="{% url 'applicationManager:application-activate' app.id %}"
+                                                           role="button">Active</a>
+                                                    {% else %}
+                                                        <a class="btn btn-danger btn-xs"
+                                                           href="{% url 'applicationManager:application-activate' app.id %}"
+                                                           role="button">Passive</a>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                            </span></td>
+                                                <td style="text-align: left">
+
+                                                    <!-- Single button -->
+                                                    <div class="btn-group" >
+                                                        <button type="button"
+                                                                class="btn btn-xs btn-primary dropdown-toggle"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            Actions <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" style="overflow-x: visible;overflow-y: visible">
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:load-data' app.id %}"> <span
+                                                                        class="glyphicon glyphicon-floppy-open"
+                                                                        icon-id="{{ app.id }}"></span> Load Data</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:dump-data' app.id %}"> <span
+                                                                        class="glyphicon glyphicon-floppy-save"
+                                                                        icon-id="{{ app.id }}"></span> Dump Application
+                                                                    Data</a></li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:download-app' app.id %}"><span
+                                                                        class="glyphicon glyphicon-download"
+                                                                        icon-id="{{ app.id }}"></span> Download as
+                                                                    tar.gz</a></li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:download-app' app.id %}"><span
+                                                                        class="glyphicon glyphicon-packtar"
+                                                                        icon-id="{{ app.id }}"></span> Download as
+                                                                    tar.gz</a></li>
+
+                                                            <li role="separator" class="divider"></li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:application-info' app.id %}"> <span
+                                                                        class="glyphicon glyphicon-pencil"
+                                                                        icon-id="{{ app.id }}"></span> Edit Models</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:create-file' app.id %}"> <span
+                                                                        class="glyphicon glyphicon-file"
+                                                                        icon-id="{{ app.id }}"></span> Add Code
+                                                                    Files</a></li>
+                                                            <li role="separator" class="divider">
+
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:create-file' app.id %}"><span
+                                                                        class="glyphicon glyphicon-cloud-upload"
+                                                                        icon-id="{{ app.id }}"></span> Upload to
+                                                                    cloud</a>
+                                                            </li>
+
+
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:genuuid-app' app.id %}"><span
+                                                                        class="glyphicon glyphicon-key"
+                                                                        icon-id="{{ app.id }}"></span> Generate UUID</a>
+                                                            </li>
+                                                            <li class="divider"></li>
+
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:application-info' app.id %}">Application
+                                                                    Info</a>
+                                                            </li>
+                                                            <li role="separator" class="divider"></li>
+                                                            <li>
+                                                                <a href="{% url 'applicationManager:delete-application' app.id %}"
+                                                                   id="delete_selected"
+                                                                   onmouseover="this.style.background='red';this.style.color='white'"
+                                                                   onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+
+
+                                                </td>
+                                            </form>
+                                        </tr>
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <!-- /.panel -->
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{#User native application  body jscript in view if it is related to requested page otherwise in #}
+{#use it in templates#}
+{% block application_body_jscript %}
+    {{ block.super }}
+
+    <script>
+        $(document).ready(function () {
+            $('#application_list_table').DataTable({
+                {#"scrollY": "300px",#}
+                {#"scrollCollapse": true,#}
+                "paging": true,
+                "select": true,
+            });
+
+            {% if messageType == "Exception" %}
+                $.notify("{{ message }}", "error");
+            {% endif %}
+        });
+    </script>
+
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static "projectCore/jscript/notify.js" %}"></script>
+    <script src="{% static "applicationManager/jscript/deleteApplication.js" %}"></script>
+
+
+
+
+    <script>
+
+
+        var $table = $('#table');
+        var $button = $('#button');
+        var csrftoken = getCookie('csrftoken');
+
+
+        $(function () {
+
+            $('#list_selected').click(function () {
+                alert('getSelections: ' + JSON.stringify($table.bootstrapTable('getAllSelections')));
+            });
+
+            {#             $('#delete_selected').click(function () {#}
+            {#                alert('getSelections: ' + JSON.stringify($table.bootstrapTable('getAllSelections')));#}
+            {#            });#}
+
+
+
+
+            {#            -------------------#}
+            $('#dump_data').click(function () {
+
+                var apps2dump = {};
+                var res = $table.bootstrapTable('getAllSelections');
+
+                for (i = 0; i < res.length; i++) {
+                    var jsobj = JSON.stringify(res[i]);
+                    apps2dump[i] = res[i]['4'];
+                }
+                data = apps2dump;
+
+                {# POST Data to service#}
+                // Lets first setup the ajax request
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                            // Send the token to same-origin, relative URLs only.
+                            // Send the token only if the method warrants CSRF protection
+                            // Using the CSRFToken value acquired earlier
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            //alert("beforeSend");
+                        }
+                    }
+                });
+
+                var postURL = "/applicationManager/dumpApplicationData/";
+                //alert(postURL);
+                $.ajax({
+                    //beforeSend: function (xhr, opts) {
+                    //    $("#dialog-confirm").dialog({
+                    //        resizable: false,
+                    //        height: 140,
+                    //        modal: true,
+                    //        buttons: {
+                    //            "Delete all items": function () {
+                    //                $(this).dialog("close");
+                    //            },
+                    //            Cancel: function () {
+                    //                $(this).dialog("close");
+                    //                xhr.abort();
+                    //            }
+                    //        }
+                    //    });
+                    //},
+
+                    //beforeSend:function(){
+                    //
+                    //},
+
+                    type: "POST",
+//            type: $("form[data-formId=" + formId + "]").attr('method'),
+                    url: postURL,
+//          data:{ worker:user, task:bid, workStartTime:start, workStopTime:end }
+                    data: data,
+//            data:{}
+
+                    error: function () {
+                        //ShowStatus("AJAX - error()");
+
+                        // Load the content in to the page.
+                        //jContent.html("<p>Page Not Found!!</p>");
+                    },
+
+
+                    complete: function () {
+                        //ShowStatus("AJAX - complete()");
+                        //alert('complete')
+                    },
+
+                    success: function () {
+                        //alert('sucess')
+                    }
+                }).done(function (msg) {
+                    //location.reload(true)
+                    {#                        $("#id_table_row_" + buttonId).remove();#}
+                    alert(" Your data has been dumped. ");
+                });
+
+
+            });
+
+            {#            --------------------#}
+        });
+    </script>
+
+{% endblock %}

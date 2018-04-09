@@ -1,0 +1,180 @@
+
+<div>
+    <h2>Existing Models</h2>
+    <p>The .table-hover class enables a hover state on table rows:</p>
+
+
+
+            <ul>
+                {% for model in object_list %}
+                    <li>{{ model.modelName }} </li>
+                {% empty %}
+                    <li>No models yet.</li>
+                {% endfor %}
+            </ul>
+
+
+
+
+{#    <table class="table table-hover">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>Model Name</th>#}
+{#            <th>Description</th>#}
+{#            <th>Email</th>#}
+{#            <th>Actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>John</td>#}
+{#            <td>Doe</td>#}
+{#            <td>john@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <th>Model Name</th>#}
+{#            <th>Description</th>#}
+{#            <th>Email</th>#}
+{#            <th>Actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>John</td>#}
+{#            <td>Doe</td>#}
+{#            <td>john@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <th>Model Name</th>#}
+{#            <th>Description</th>#}
+{#            <th>Email</th>#}
+{#            <th>Actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>John</td>#}
+{#            <td>Doe</td>#}
+{#            <td>john@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#      <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <th>Model Name</th>#}
+{#            <th>Description</th>#}
+{#            <th>Email</th>#}
+{#            <th>Actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>John</td>#}
+{#            <td>Doe</td>#}
+{#            <td>john@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#      <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <th>Model Name</th>#}
+{#            <th>Description</th>#}
+{#            <th>Email</th>#}
+{#            <th>Actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        <tr>#}
+{#            <td>John</td>#}
+{#            <td>Doe</td>#}
+{#            <td>john@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>Mary</td>#}
+{#            <td>Moe</td>#}
+{#            <td>mary@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>July</td>#}
+{#            <td>Dooley</td>#}
+{#            <td>july@example.com</td>#}
+{#            <td>john@example.com</td>#}
+{#        </tr>#}
+{##}
+{##}
+{##}
+{#        </tbody>#}
+{#    </table>#}
+</div>

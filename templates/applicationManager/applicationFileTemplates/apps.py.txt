@@ -1,0 +1,40 @@
+__author__ = 'ozgur'
+
+import logging
+from django.apps import AppConfig
+from django.core.management import call_command
+from django.db import connection
+
+logger = logging.getLogger("wbdap.debug")
+
+class {{app_name|capfirst}}AppConfig(AppConfig):
+    name = '{{app_name}}'
+    verbose_name = "{{app_name}} App"
+
+    appName = '{{app_name}}'
+    verbose_name ='{{verbose_name}}'
+    url = '{{url}}'
+    namedUrl = '{{namedUrl}}'
+    readmeContent = '{{readmeContent}}'
+    active = {{active}}
+
+
+    yvar = "yvar"
+
+    def db_table_exists(self, prefix):
+        for table_name in connection.introspection.table_names():
+            if prefix in table_name:
+                return True
+        return False
+
+    # Sadece bir kere uygulama baslatildiginda calistirilmakta
+    def ready(self):
+
+        import {{app_name}}.signals.handler
+
+        if not self.db_table_exists('{{app_name}}_'):
+            try:
+                call_command('migrate', '{{app_name}}')
+                call_command('loaddata', '{{app_name}}/fixtures/initial_data.json')
+            except:
+                logger.fatal('unable to migrate {{app_name}} app ')

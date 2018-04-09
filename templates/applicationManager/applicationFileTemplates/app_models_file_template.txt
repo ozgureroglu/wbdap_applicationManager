@@ -1,0 +1,21 @@
+__author__ = 'ozgur'
+
+from django.db import models
+from mongoengine import *
+
+
+# Django Model Example
+class Example_{{applicationName}}_Model(models.Model):
+    name = models.CharField(max_length=20)
+    active = models.BooleanField(default=True,blank=True)
+    readmeContent = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
+
+
+#MongoDB Model Example
+class Example_{{applicationName}}_Model2(Document):
+    meta = {'collection': 'exactDBName'}
+    name = StringField(max_length=255)
+    description = StringField(max_length=255)
