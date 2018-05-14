@@ -44,6 +44,11 @@ class Application(models.Model):
     def __str__(self):
         return self.app_name
 
+    class Meta:
+        permissions = (
+            ("has_access", "Has access to application pages"),
+        )
+
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     pass

@@ -8,7 +8,7 @@ from importlib import reload, import_module
 
 from django.apps import apps
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.core import serializers, management
 from django.urls import reverse_lazy, reverse, URLResolver
@@ -46,7 +46,10 @@ logger = logging.getLogger("wbdap.debug")
 
 
 @login_required
+# @permission_required('applicationManager.has_access')
 def index_page(request):
+    if (request.user.has_perm('applicationManager.has_access')):
+        print('has access')
     return render(request,
                   'applicationManager/landing.html'
                   )
