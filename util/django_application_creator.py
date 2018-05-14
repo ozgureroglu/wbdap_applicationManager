@@ -155,8 +155,8 @@ class DjangoApplicationCreator:
 
                 logger.info(
                     "================================= STAGE 2 ==================================\n\t\t")
-                self.updateProjectUrlsPy()
-                self.updateProjectSettingsPy()
+                # self.updateProjectUrlsPy()
+                # self.updateProjectSettingsPy()
                 logger.info(
                     "Stage-2 DONE.")
 

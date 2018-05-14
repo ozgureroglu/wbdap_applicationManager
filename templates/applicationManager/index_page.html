@@ -73,8 +73,8 @@
                                                 {% csrf_token %}
                                                 <td>
                                                     {% if app.core_app == False %}
-                                                        <a href="{% url app.namedUrl|add:":index" %}"
-                                                           target="_blank"></a>
+{#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
+{#                                                           target="_blank"></a>#}
                                                         <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
                                                            target="_blank">
                                                             <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}

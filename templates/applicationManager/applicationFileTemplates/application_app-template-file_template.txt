@@ -1,4 +1,4 @@
-{% extends "projectCore/external_application_base_template.html" %}
+{% extends "projectCore/template_level_3_common_content.html" %}
 {% load i18n %}
 
 {% block title %}{{ file }}{% endblock %}

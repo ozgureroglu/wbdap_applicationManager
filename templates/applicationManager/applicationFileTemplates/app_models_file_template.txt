@@ -13,6 +13,9 @@ class Example_{{applicationName}}_Model(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        app_label = "{{applicationName}}"
+
 
 #MongoDB Model Example
 class Example_{{applicationName}}_Model2(Document):

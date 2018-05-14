@@ -33,10 +33,10 @@ class DjangoApplicationRemover:
         self.remove_from_db(app_name)
 
         #UpdateSettings File
-        self.updateSettingsFile(app_name)
+        # self.updateSettingsFile(app_name)
 
         #Update Urls.py file
-        self.update_urls_file(app_name)
+        # self.update_urls_file(app_name)
 
         # self.targzApplicationFolder(app_name)
 

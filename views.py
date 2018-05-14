@@ -92,6 +92,65 @@ def countdown_test_page(request):
                   )
 
 
+
+@login_required
+# Creates an application
+def createApplication(request):
+    if request.method == "POST":
+
+        # We are creating the bound form
+        form = CreateApplicationForm(request.POST)
+
+        if form.is_valid():
+            logger.info("Form is valid")
+            application = form.save(commit=False)
+            application.active = False
+            application.owner = request.user
+            application.uuid = uuid.uuid4()
+            application.save()
+
+            #
+            # if res:
+            #     messages.add_message(request, messages.INFO, 'Created Application ' + application.app_name)
+            # else:
+            #     messages.add_message(request, messages.ERROR, 'Application creation failed')
+
+            # Send the application created signal; first parameter is the sender, second one is a parameter.
+            resps = application_created.send(sender=Application.__class__, test="testString", application=Application.objects.get(app_name='asd'))
+
+            return redirect('applicationManager:dashboard')
+            # return HttpResponse(status=200)
+        else:
+            logger.warning('Form is not valid')
+            return HttpResponse(status=400)
+    else:
+
+        form = CreateApplicationForm()
+        variables = {'form': form}
+        return render(
+            request,
+            'applicationManager/createApplication.html',
+            variables
+        )
+
+
+
+@login_required
+def delete_application(request, id):
+    app = Application.objects.get(id=id)
+    logger.info('Deleting application %s', app.app_name)
+
+    try:
+        application_removed.send(sender=Application.__class__, test="testString",
+                                 application=Application.objects.get(app_name=app.app_name))
+    except Exception as e:
+        logger.fatal('An exception occured while deleting application : %s', e)
+        return False
+        # app = Application.objects.get(appName = request.POST[key])
+        # app.delete()
+    return redirect('applicationManager:dashboard')
+
+
 @login_required
 def application_details(request, appid):
     app = Application.objects.get(id=appid)
@@ -407,48 +466,6 @@ def reload_urlconf(urlconf=None):
     return redirect('applicationManager:index')
 
 
-@login_required
-# Creates an application
-def createApplication(request):
-    if request.method == "POST":
-
-        # We are creating the bound form
-        form = CreateApplicationForm(request.POST)
-
-        if form.is_valid():
-            logger.info("Form is valid")
-            application = form.save(commit=False)
-            application.active = False
-            application.owner = request.user
-            application.uuid = uuid.uuid4()
-            application.save()
-
-            dj_app_creator = DjangoApplicationCreator(application)
-            res = dj_app_creator.create()
-            if res:
-                messages.add_message(request, messages.INFO, 'Created Application ' + application.app_name)
-            else:
-                messages.add_message(request, messages.ERROR, 'Application creation failed')
-
-            # Send the application created signal; first parameter is the sender, second one is a parameter.
-            # resps = application_created.send(sender=Application.__class__, test="testString",application=Application.objects.get(app_name='asd'))
-
-            return redirect('applicationManager:index')
-            # return HttpResponse(status=200)
-        else:
-            logger.warning('Form is not valid')
-            return HttpResponse(status=400)
-    else:
-
-        form = CreateApplicationForm()
-        variables = {'form': form}
-        return render(
-            request,
-            'applicationManager/createApplication.html',
-            variables
-        )
-
-
 def getAppNameListByAppsPy():
     # def test(request):
     appNameList = []
@@ -551,32 +568,6 @@ def updateAppsDB(request):
         app.save()
 
 
-def createApplication2(request):
-    updateAppsDBWoAppConfig()
-
-
-#
-# class ApplicationDelete(DeleteView):
-#     model = Application
-#     success_url = reverse_lazy('applicationManager:index')
-#
-#     def get_object(self):
-#         # application_removed.send(sender=Application.__class__,test="testString",application=Application.objects.get(pk=self.request.GET.get('pk')))
-#         pass
-
-def delete_application(request, id):
-    app = Application.objects.get(id=id)
-    logger.info('Deleting application %s', app.app_name)
-
-    try:
-        application_removed.send(sender=Application.__class__, test="testString",
-                                 application=Application.objects.get(app_name=app.app_name))
-    except Exception as e:
-        logger.fatal('An exception occured while deleting application : %s', e)
-        return False
-        # app = Application.objects.get(appName = request.POST[key])
-        # app.delete()
-    return redirect('applicationManager:index')
 
 
 @login_required

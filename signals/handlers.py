@@ -15,11 +15,11 @@ logger= logging.getLogger("wbdap.debug")
 
 # Called when he application is created
 @receiver(application_created)
-def my_callback(sender, **kwargs):
+def application_created(sender, **kwargs):
     logger.info("application_created signal receieved")
-    djAppC = DjangoApplicationCreator(kwargs['application'])
 
-    djAppC.create_application()
+    dj_app_creator = DjangoApplicationCreator(kwargs['application'])
+    dj_app_creator.create()
 
 
 @receiver(application_creation_failed)
