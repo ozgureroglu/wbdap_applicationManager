@@ -1,4 +1,8 @@
-def create_model(self,app,model):
+import os
+import shutil
+
+
+def create_model(self, app, model):
     self._info("   Model   ")
     self._info("===========")
 
@@ -30,3 +34,15 @@ def create_model(self,app,model):
     with open('{0}{1}/models.py'.format(self.SCAFFOLD_APPS_DIR, self.app), 'a') as fp:
         fp.write(''.join([import_line for import_line in self.imports]))
         fp.write(MODEL_TEMPLATE % (self.model, ''.join(field for field in fields)))
+
+
+def clean_folder(app):
+    for root, dirs, files in os.walk(app):
+
+        for file in files:
+            if file.endswith(".pyc"):
+                os.remove(os.path.join(root, file))
+
+        for dir in dirs:
+            if dir == '__pycache__':
+                shutil.rmtree(os.path.join(root, dir))

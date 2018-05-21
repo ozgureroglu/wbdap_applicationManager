@@ -1,9 +1,9 @@
 import logging
-import os
+
 import tarfile
-import json
+from .util.util_functions import *
 import uuid
-from collections import OrderedDict
+
 from importlib import reload, import_module
 
 from django.apps import apps
@@ -38,12 +38,7 @@ from rest_framework import filters
 
 import sys
 
-# from django.urls.resolvers import
-# from django.urls import RegexURLPattern, RegexURLResolver
-# from django.urls.resolvers import urlresolvers
-
 logger = logging.getLogger("wbdap.debug")
-
 
 @login_required
 # @permission_required('applicationManager.has_access')
@@ -168,19 +163,16 @@ def dump_all_data(request):
     return redirect('applicationManager:index')
 
 
-@login_required
-def dump_all_data(request):
-    apps = Application.objects.all()
-    res = dump_selected_application_data(apps)
-    if not res:
-        for mess in res:
-            messages.add_message(request, messages.WARNING, mess)
-
-    return redirect('applicationManager:index')
 
 
 @login_required
 def load_data(request, id):
+    """
+    Loads the fixtures of the application given by the id
+    :param request:
+    :param id: id of the application
+    :return:
+    """
     app = Application.objects.get(id=id)
     if load_application_data(app.app_name):
         messages.add_message(request, messages.INFO,
@@ -192,7 +184,13 @@ def load_data(request, id):
 
 
 @login_required
-def dump_data(request, id):
+def dump_app_data(request, id):
+    """
+    dumps only the data of the selected application
+    :param request:
+    :param id: id of the application
+    :return:
+    """
     app = Application.objects.get(id=id)
     if dump_application_data(app.app_name):
         messages.add_message(request, messages.INFO,
@@ -200,7 +198,7 @@ def dump_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Dumping of application data(" + app.app_name + ") has been failed")
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 #
@@ -255,7 +253,7 @@ def application_activate(request, id):
         # # print(get_app_template_dirs('templates'))
 
     app.save()
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 def get_installed_apps_names():
@@ -856,13 +854,16 @@ def add_application_model(request, pk):
 def download_app(request, id):
     app = Application.objects.get(id=id)
 
+    clean_folder(os.path.join(settings.SITE_ROOT, app.app_name))
+
+
     response = HttpResponse(content_type='application/x-gzip')  # mimetype is replaced by content_type for django 1.7
     response['Content-Disposition'] = 'attachment; filename=%s' % app.app_name + ".tar.gz"
 
-    tar = tarfile.open(mode="w:gz", fileobj=response)
+    tar = tarfile.open(fileobj=response, mode="w:gz")
     tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
             arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
-
+    tar.close()
     return response
 
 
