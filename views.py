@@ -42,7 +42,7 @@ logger = logging.getLogger("wbdap.debug")
 
 @login_required
 # @permission_required('applicationManager.has_access')
-def index_page(request):
+def landing_page(request):
     if (request.user.has_perm('applicationManager.has_access')):
         print('has access')
     return render(request,
@@ -61,7 +61,7 @@ def dashboard(request):
             applications = None
 
     return render(request,
-                  'applicationManager/index_page.html', {'user': request.user, 'all_apps': applications}
+                  'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
 
@@ -894,75 +894,13 @@ def model_list_from_app_config(request, id):
     app = apps.get_app_config(app.appName)
 
 
-class ApplicationViewSet(ModifiedViewSet):
-    """
-    API endpoint that allows users to view existing exams
-    """
-    queryset = Application.objects.all()
-    serializer_class = ApplicationSerializer
+# class ApplicationViewSet(ModifiedViewSet):
+#     """
+#     API endpoint that allows users to view existing exams
+#     """
+#     queryset = Application.objects.all()
+#     serializer_class = ApplicationSerializer
 
-
-class AppModelViewSet(ModifiedViewSet):
-    """
-    API endpoint that allows users to view existing exams
-    """
-    queryset = AppModel.objects.all()
-    serializer_class = AppModelSerializer
-
-    def get_queryset(self):
-        """
-               Optionally restricts the returned purchases to a given user,
-               by filtering against a `username` query parameter in the URL.
-               """
-        app_id = self.request.query_params.get('owner_app_id', None)
-        if app_id is not None:
-            self.queryset = self.queryset.filter(app_id=app_id)
-        return self.queryset
-
-
-class FieldViewSet(ModifiedViewSet):
-    """
-    API endpoint that allows users to view existing exams
-    """
-    queryset = Field.objects.all()
-    serializer_class = FieldSerializer
-    ser = FieldSerializer()
-
-
-    filter_backends = (DjangoFilterBackend,filters.SearchFilter,)
-    filter_fields = ('owner_model',)
-    search_fields = ('name',)
-
-    def get_fields_paramters(self):
-        from inspect import Parameter, signature
-        from django.db import models
-
-        # sig = signature(models.fields_all)
-
-        field_types = []
-        i=0
-        for param in models.fields_all:
-            kv = {}
-            kv['label'] = param
-            kv['value'] = param
-            print(kv)
-            field_types.append(kv)
-            i=i+1
-        resp={}
-        resp['field_types']= field_types
-
-        return resp
-
-
-    def list(self, request, *args, **kwargs):
-        response = super(FieldViewSet, self).list(request, args, kwargs)
-        # Add data to response.data Example for your object:
-
-        options = self.get_fields_paramters()
-        print(options.__class__)
-        response.data['options'] = options
-
-        return response
 
 
 def editors(request):

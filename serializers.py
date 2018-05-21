@@ -29,7 +29,7 @@ class AppModelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        print(validated_data)
+        # print(validated_data)
         appmodel = AppModel.objects.create(**validated_data)
         # owner_app_id = self.request.data.get("owner_app_id")
         return appmodel
@@ -44,8 +44,9 @@ class AppModelSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     # answer = serializers.StringRelatedField(many=True)
     models = AppModelSerializer(many=True, read_only=True)
+    owner = serializers.SlugRelatedField(many=False, read_only=True, slug_field='username')
     class Meta:
         model=Application
-        fields = ('app_name','verbose_name','url','namedUrl','active','models')
+        fields = ('id','app_name', 'verbose_name', 'url', 'namedUrl', 'active', 'owner', 'models', 'core_app', 'description')
 
 

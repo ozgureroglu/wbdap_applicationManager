@@ -1,7 +1,6 @@
 __author__ = 'ozgur'
 
 from django.urls import path, include
-from applicationManager.views import *
 
 # Uncomment the next two lines to enable the admin:
 from applicationManager import views
@@ -11,24 +10,22 @@ from applicationManager.views import *
 
 #Admin 4
 admin.autodiscover()
-
-# Serve the exams rest api
-router = routers.DefaultRouter()
-router.register(r'applications', views.ApplicationViewSet)
-router.register(r'appmodels', views.AppModelViewSet, base_name='appmodel')
-router.register(r'fields', views.FieldViewSet)
+#
+# # Serve the exams rest api
+# router = routers.DefaultRouter()
+# router.register(r'applications', views.ApplicationViewSet)
+# router.register(r'appmodels', views.AppModelViewSet, base_name='appmodel')
+# router.register(r'fields', views.FieldViewSet)
 
 
 app_name = 'applicationManager'
 urlpatterns = [
 
-    path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('apps/<uuid:uuid>/', redirect_to_app, name="redirect-to-app"),
 
 
-    path('', index_page, name='index'),
+    path('', landing_page, name='landing'),
     path('cdt/', countdown_test_page, name='cdt'),
     path('dashboard/', dashboard, name='dashboard'),
     # ---------------------------------------------------
@@ -48,15 +45,15 @@ urlpatterns = [
     path('application/<int:id>/newfile/', create_file, name='create-file'),
     # path('application/<pk>/', ApplicationUpdate.as_view(), name='application-details'),
     # path('application/<pk>/', ApplicationUpdate.as_view(), name='editApplication'),
-    path('addApplicationModel/<pk>/', add_application_model, name='addApplicationModel'),
+    path('addApplicationModel/<int:pk>/', add_application_model, name='addApplicationModel'),
 
     path('application/<int:id>/activate/', application_activate, name='application-activate'),
     path('application/<int:id>/model/', AppModelListView.as_view(), name='model-list'),
     path('application/<int:id>/model/add/', ModelCreateView.as_view(), name='model-create'),
-    path('application/<int:id>/model/<pk>/', AppModelDetailView.as_view(), name='model-details'),
+    path('application/<int:id>/model/<int:pk>/', AppModelDetailView.as_view(), name='model-details'),
     path('application/<int:app_id>/model/<int:model_id>/scaffold/', scaffold, name='model-scaffold'),
-    path('application/<int:id>/model/<pk>/update/', ModelUpdate.as_view(), name='model-update'),
-    path('application/<int:id>/model/<pk>/delete/', ModelDelete.as_view(), name='model-delete'),
+    path('application/<int:id>/model/<int:pk>/update/', ModelUpdate.as_view(), name='model-update'),
+    path('application/<int:id>/model/<int:pk>/delete/', ModelDelete.as_view(), name='model-delete'),
 
     path('application/<int:app_id>/model/<int:model_id>/field/', FieldListView.as_view(), name='field-list'),
     path('application/<int:app_id>/model/<int:model_id>/field/add/', FieldCreateView.as_view(),

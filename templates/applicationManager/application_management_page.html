@@ -5,101 +5,6 @@
 
 {% block page_content %}
 
-    {#    <!-- FIELD OPERATIONS TO MODEL Modal -->#}
-
-    <div class="modal fade bs-model-add-modal-sm" id="add_model_modal" tabindex="-1" role="dialog"
-         aria-labelledby="myLargeModalLabel">
-        <div class="modal-dialog modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    {#                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
-                    {#                                            aria-hidden="true">&times;</span></button>#}
-                    <h4 class="modal-title" id="myModalLabel">Add Model</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="add_model_modal_content">
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- ADD FIELD TO MODEL Modal -->
-    <div class="modal fade" id="add_field_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         style="z-index: 2001">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Add Modal Field</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="add_field_modal_content">
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- FIELD OPERATIONS TO MODEL Modal -->
-    <div class="modal fade" id="model_field_ops" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         style="z-index: 2000">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Modal Field Operations</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="model_field_ops_content">
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <!-- FIELD OPERATIONS TO MODEL Modal -->
-    <div class="modal fade" id="generic_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         style="z-index: 2000">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Modal Field Operations</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="generic_modal_content">
-
-                    </div>
-                </div>
-                {#                <div class="modal-footer">#}
-                {#                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>#}
-                {#                </div>#}
-            </div>
-        </div>
-    </div>
-
-
-
 
     {% include "applicationManager/waitingPage.html" %}
 
@@ -107,21 +12,14 @@
 
 
         <div class="row">
-            <div class="col-lg-8 col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-server fa-2x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
 
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <h4 class="page-header">Details of {{ app.app_name | upper }}</h4>
-                                    </div>
-                                </div>
-
+                            <div class="col-lg-12">
+                                <h4 class="page-header"><i class="fa fa-server fa-1x"></i> Details
+                                    of {{ app.app_name | upper }} application</h4>
                             </div>
                         </div>
                     </div>
@@ -129,7 +27,6 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-6">
-
                                 <div>Owner : <a href="#">{{ app.owner }}</a></div>
                                 <div>Long Name : <a href="#">{{ app.verbose_name }}</a></div>
                                 <div>URL : <a href="#">{{ app.url }}</a></div>
@@ -143,8 +40,6 @@
                             </div>
                         </div>
 
-
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
 
@@ -158,31 +53,31 @@
             <div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="fa fa-bar-chart-o fa-fw"></i> Models
+                        <i class="fas fa-plug"></i> Models
                         <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                        data-toggle="dropdown">
-                                    Actions
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#" type="button"
-                                           id="add_model_menu_item"
-                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"
+{#                            <div class="btn-group">#}
+{#                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"#}
+{#                                        data-toggle="dropdown">#}
+{#                                    Actions#}
+{#                                    <span class="caret"></span>#}
+{#                                </button>#}
+{#                                <ul class="dropdown-menu pull-right" role="menu">#}
+{#                                    <li><a href="#" type="button"#}
+{#                                           id="add_model_menu_item"#}
+{#                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"#}
                                             {#                                           data-toggle="modal"#}
                                             {#                                           data-target=".bs-model-add-modal-sm"#}
-                                    >Add Model</a>
-                                    </li>
-                                    <li><a href="#">Another action</a>
-                                    </li>
-                                    <li><a href="#">Something else here</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a>
-                                    </li>
-                                </ul>
-                            </div>
+{#                                    >Add Model</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Another action</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Something else here</a>#}
+{#                                    </li>#}
+{#                                    <li class="divider"></li>#}
+{#                                    <li><a href="#">Separated link</a>#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </div>#}
                         </div>
                     </div>
                     <!-- /.panel-heading -->
@@ -218,29 +113,29 @@
             <div class="col-lg-6">
                 <div class="panel panel-default fields-panel">
                     <div class="panel-heading">
-                        <i class="fa fa-bar-chart-o fa-fw"></i> Fields
+                        <i class="fas fa-plug"></i> Fields
                         <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                        data-toggle="dropdown">
-                                    Actions
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#" type="button"
-                                           id="add_model_menu_item"
-                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"
-                                    >Add Model</a>
-                                    </li>
-                                    <li><a href="#">Another action</a>
-                                    </li>
-                                    <li><a href="#">Something else here</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a>
-                                    </li>
-                                </ul>
-                            </div>
+{#                            <div class="btn-group">#}
+{#                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"#}
+{#                                        data-toggle="dropdown">#}
+{#                                    Actions#}
+{#                                    <span class="caret"></span>#}
+{#                                </button>#}
+{#                                <ul class="dropdown-menu pull-right" role="menu">#}
+{#                                    <li><a href="#" type="button"#}
+{#                                           id="add_model_menu_item"#}
+{#                                           data-model-add-url="{% url 'applicationManager:model-create' app.id %}"#}
+{#                                    >Add Model</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Another action</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Something else here</a>#}
+{#                                    </li>#}
+{#                                    <li class="divider"></li>#}
+{#                                    <li><a href="#">Separated link</a>#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </div>#}
                         </div>
                     </div>
                     <!-- /.panel-heading -->
@@ -302,11 +197,11 @@
     <script>
         $(document).ready(function () {
 
-            var editor = new $.fn.dataTable.Editor({
+            var model_editor = new $.fn.dataTable.Editor({
                 ajax: {
                     create: {
                         type: 'POST',
-                        url: "/applicationManager/api/appmodels/?format=json",
+                        url: "/api/v1/applicationManager/appmodels/?format=json",
                         headers: {
                             'X-CSRFToken': csrftoken
                         }, contentType: 'application/json',
@@ -320,7 +215,7 @@
                     },
                     edit: {
                         type: 'PUT',
-                        url: "/applicationManager/api/appmodels/_id_/",
+                        url: "/api/v1/applicationManager/appmodels/_id_/",
                         headers: {
                             'X-CSRFToken': csrftoken
                         }, contentType: 'application/json',
@@ -348,7 +243,7 @@
                     },
                     remove: {
                         type: 'DELETE',
-                        url: "/applicationManager/api/appmodels/_id_/",
+                        url: "/api/v1/applicationManager/appmodels/_id_/",
                         headers: {
                             'X-CSRFToken': csrftoken
                         }, contentType: 'application/json',
@@ -363,7 +258,7 @@
                 idSrc: 'id',
                 fields: [
                     {
-                        label: "Name:",
+                        label: "Model Name:",
                         name: "name"
                     }, {
                         label: "Definition:",
@@ -383,7 +278,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    url: "/applicationManager/api/appmodels/?format=json&owner_app={{ app.id }}",
+                    url: "/api/v1/applicationManager/appmodels/?format=json&owner_app={{ app.id }}",
                     dataSrc: 'results',
                     data: function (d) {
                         var keys = Object.keys(d);
@@ -410,9 +305,9 @@
                     }
 
                 }, buttons: [
-                    {extend: "create", editor: editor},
-                    {extend: "edit", editor: editor},
-                    {extend: "remove", editor: editor}
+                    {extend: "create", editor: model_editor},
+                    {extend: "edit", editor: model_editor},
+                    {extend: "remove", editor: model_editor}
                 ],
                 select: {
                     style: 'os',
@@ -502,7 +397,7 @@
                         "processing": true,
                         "serverSide": true,
                         "ajax": {
-                            url: "/applicationManager/api/fields/?format=json&owner_model=" + mid,
+                            url: "/api/v1/applicationManager/fields/?format=json&owner_model=" + mid,
                             data: function (d) {
                                 var keys = Object.keys(d);
 
@@ -575,7 +470,7 @@
                     ajax: {
                         create: {
                             type: 'POST',
-                            url: "/applicationManager/api/fields/?format=json",
+                            url: "/api/v1/applicationManager/fields/?format=json",
                             headers: {
                                 'X-CSRFToken': csrftoken
                             }, contentType: 'application/json',
@@ -589,7 +484,7 @@
                         },
                         edit: {
                             type: 'PUT',
-                            url: "/applicationManager/api/fields/_id_/",
+                            url: "/api/v1/applicationManager/fields/_id_/",
                             headers: {
                                 'X-CSRFToken': csrftoken
                             }, contentType: 'application/json',
@@ -616,7 +511,7 @@
                         },
                         remove: {
                             type: 'DELETE',
-                            url: "/applicationManager/api/fields/_id_/",
+                            url: "/api/v1/applicationManager/fields/_id_/",
                             headers: {
                                 'X-CSRFToken': csrftoken
                             }, contentType: 'application/json',
@@ -664,15 +559,6 @@
         })
         ;
     </script>
-
-    <script>
-        $(function () {
-            $("#accordion").accordion({
-                collapsible: true
-            });
-        });
-    </script>
-
 
 
 {% endblock %}
