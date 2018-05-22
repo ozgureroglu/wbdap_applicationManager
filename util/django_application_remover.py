@@ -1,7 +1,7 @@
 import sys
 
 from applicationManager.models import Application
-from applicationManager.signals import application_creation_failed
+from applicationManager.signals.signals import application_creation_failed_signal
 
 __author__ = 'ozgur'
 
@@ -91,7 +91,7 @@ class DjangoApplicationRemover:
             open(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/settings.py", "w+").write(rendered)
         except  Exception as e:
             logger.fatal("Exception occurred while updating project settings file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString", application=Application.objects.get(app_name=self.application.app_name))
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString", application=Application.objects.get(app_name=self.application.app_name))
             print(sys.exc_info()[0])
             return False
         return True

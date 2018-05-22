@@ -1,44 +1,35 @@
+import sys
 import logging
-
+import uuid
 import tarfile
 from .util.util_functions import *
-import uuid
-
 from importlib import reload, import_module
-
 from django.apps import apps
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core import serializers, management
+from django.core import serializers
 from django.urls import reverse_lazy, reverse, URLResolver
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.template.loaders.app_directories import Loader
 from django.urls.resolvers import RegexPattern, get_resolver
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
 from django.views.generic.edit import DeleteView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
 from django.conf.urls import include, url
-from applicationManager.forms import CreateAppForm_OLD, AddApplicationModelForm, CreateApplicationForm, CreateModelForm, \
-    CreateFieldForm, UpdateFieldForm
+from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
+    UpdateFieldForm
 from applicationManager.models import Application, AppModel, Field
-from applicationManager.serializers import ApplicationSerializer, AppModelSerializer, FieldSerializer
 from applicationManager.signals import *
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
-from projectCore.datatable_viewset import ModifiedViewSet
 from wbdap import settings
-
 from django.conf import settings
-from rest_framework import filters
+from applicationManager.signals.signals import application_created_signal, application_removed_signal
 
-
-import sys
 
 logger = logging.getLogger("wbdap.debug")
+
 
 @login_required
 # @permission_required('applicationManager.has_access')
@@ -87,7 +78,6 @@ def countdown_test_page(request):
                   )
 
 
-
 @login_required
 # Creates an application
 def createApplication(request):
@@ -109,9 +99,13 @@ def createApplication(request):
             #     messages.add_message(request, messages.INFO, 'Created Application ' + application.app_name)
             # else:
             #     messages.add_message(request, messages.ERROR, 'Application creation failed')
-
-            # Send the application created signal; first parameter is the sender, second one is a parameter.
-            resps = application_created.send(sender=Application.__class__, test="testString", application=Application.objects.get(app_name='asd'))
+            try:
+                # Send the application created signal; first parameter is the sender,
+                # second one is a generic parameter, third one is the applications itself.
+                application_created_signal.send(sender=Application.__class__, test="testString",
+                                         application=Application.objects.get(app_name=application.app_name))
+            except Exception as e:
+                print(e)
 
             return redirect('applicationManager:dashboard')
             # return HttpResponse(status=200)
@@ -129,14 +123,13 @@ def createApplication(request):
         )
 
 
-
 @login_required
 def delete_application(request, id):
     app = Application.objects.get(id=id)
     logger.info('Deleting application %s', app.app_name)
 
     try:
-        application_removed.send(sender=Application.__class__, test="testString",
+        application_removed_signal.send(sender=Application.__class__, test="testString",
                                  application=Application.objects.get(app_name=app.app_name))
     except Exception as e:
         logger.fatal('An exception occured while deleting application : %s', e)
@@ -161,8 +154,6 @@ def dump_all_data(request):
             messages.add_message(request, messages.WARNING, mess)
 
     return redirect('applicationManager:index')
-
-
 
 
 @login_required
@@ -566,8 +557,6 @@ def updateAppsDB(request):
         app.save()
 
 
-
-
 @login_required
 def get_application_models(request, id):
     app = Application.objects.get(id=id)
@@ -856,7 +845,6 @@ def download_app(request, id):
 
     clean_folder(os.path.join(settings.SITE_ROOT, app.app_name))
 
-
     response = HttpResponse(content_type='application/x-gzip')  # mimetype is replaced by content_type for django 1.7
     response['Content-Disposition'] = 'attachment; filename=%s' % app.app_name + ".tar.gz"
 
@@ -900,7 +888,6 @@ def model_list_from_app_config(request, id):
 #     """
 #     queryset = Application.objects.all()
 #     serializer_class = ApplicationSerializer
-
 
 
 def editors(request):

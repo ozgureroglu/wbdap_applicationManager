@@ -3,7 +3,7 @@ from shutil import copyfile
 from django.core.management import call_command
 
 from applicationManager.models import Application, AppModel
-from applicationManager.signals import application_creation_failed
+from applicationManager.signals.signals import application_creation_failed_signal
 
 __author__ = 'ozgur'
 
@@ -138,6 +138,7 @@ class DjangoApplicationCreator:
                 self.create_apps_file()
                 self.create_models_file()
                 self.create_template_files()
+                self.send_create_signal()
 
                 # self.updateAppsDBWoAppConfig()
 
@@ -187,7 +188,7 @@ class DjangoApplicationCreator:
             except Exception as e:
                 logger.fatal('Exception occured while creating Urls.py : %s', e)
                 # Send the necessary signals to rollback
-                application_creation_failed.send(sender=Application.__class__, test="testString",
+                application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                  application=Application.objects.get(app_name=app_name))
                 raise Exception('create_urls_file failed')
 
@@ -245,7 +246,7 @@ class DjangoApplicationCreator:
                 logger.info('OK. Created necessary folders...')
             except Exception as e:
                 logger.fatal("Exception occurred while creating Folders : %s", e)
-                application_creation_failed.send(sender=Application.__class__, test="testString",
+                application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                  application=Application.objects.get(app_name=app_name))
 
                 raise Exception('unable to create folders: '+str(e))
@@ -266,7 +267,7 @@ class DjangoApplicationCreator:
 
         except Exception as e:
             logger.fatal("Exception occurred while creating view file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create views file failed: '+str(e))
 
@@ -285,7 +286,7 @@ class DjangoApplicationCreator:
 
         except Exception as e:
             logger.fatal("Exception occurred while creating signals init file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create signals init file failed: ' + str(e))
 
@@ -299,7 +300,7 @@ class DjangoApplicationCreator:
 
         except Exception as e:
             logger.fatal("Exception occurred while creating signals handler file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create signals handle file failed: ' + str(e))
 
@@ -318,7 +319,7 @@ class DjangoApplicationCreator:
 
         except Exception as e:
             logger.fatal("Exception occurred while creating view file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create forms file failed: ' + str(e))
 
@@ -359,7 +360,7 @@ class DjangoApplicationCreator:
             open(self.site_root + "/" + app_name + "/__init__.py", "w+").write(renderedInit)
         except Exception as e:
             logger.error("Exception occurred while creating apps.py file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create apps.py file failed: ' + str(e))
 
@@ -381,7 +382,7 @@ class DjangoApplicationCreator:
             open(self.site_root + "/" + app_name + "/models.py", "w+").write(rendered)
         except Exception as e:
             logger.fatal("Exception occurred while creating models.py file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('create sample models failed: ' + str(e))
 
@@ -575,7 +576,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating index2.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of index2.html failed: ' + str(e))
 
@@ -591,7 +592,7 @@ class DjangoApplicationCreator:
                  "w+").write(buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating app_template.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of app template file failed: ' + str(e))
         try:
@@ -606,7 +607,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating navbar.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of navbar.html failed: ' + str(e))
         try:
@@ -621,7 +622,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating navbar.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of navbar2.html failed: ' + str(e))
 
@@ -637,7 +638,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating navbar.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of left_sidebar.html failed: ' + str(e))
 
@@ -654,7 +655,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating landing page navbar.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of landing_page_navbar failed: ' + str(e))
 
@@ -670,7 +671,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating navbar.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of new_page_template.html failed: ' + str(e))
 
@@ -686,7 +687,7 @@ class DjangoApplicationCreator:
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating dashboard.html file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=app_name))
             raise Exception('creation of dashboard.html failed: ' + str(e))
         return True
@@ -769,7 +770,7 @@ class DjangoApplicationCreator:
         except  Exception as e:
 
             logger.fatal("Exception occurred while updating project settings file : %s", e)
-            application_creation_failed.send(sender=Application.__class__, test="testString",
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=self.application.app_name))
             raise Exception('creation of project settings.py failed: ' + str(e))
 

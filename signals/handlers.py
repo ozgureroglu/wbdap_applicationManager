@@ -1,20 +1,20 @@
-from applicationManager.signals import application_created, application_creation_failed, application_removed, \
-    model_changed
-
 __author__ = 'ozgur'
 
 import logging
+
+from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
+    application_removed_signal, model_changed_signal
 
 from django.dispatch import receiver
 
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 from applicationManager.util.django_application_remover import DjangoApplicationRemover
 
-logger= logging.getLogger("wbdap.debug")
+logger = logging.getLogger(name="wbdap.debug")
 
 
 # Called when he application is created
-@receiver(application_created)
+@receiver(application_created_signal)
 def application_created(sender, **kwargs):
     logger.info("application_created signal receieved")
 
@@ -22,7 +22,7 @@ def application_created(sender, **kwargs):
     dj_app_creator.create()
 
 
-@receiver(application_creation_failed)
+@receiver(application_creation_failed_signal)
 def rollback_setup(sender, **kwargs):
     logger.warning("Application creating steps will be roll-backed")
 
@@ -30,7 +30,7 @@ def rollback_setup(sender, **kwargs):
     djAppC.rollback()
 
 
-@receiver(application_removed)
+@receiver(application_removed_signal)
 def removeApplication(sender, **kwargs):
     logger.warning("Application removing process started")
 
@@ -38,8 +38,6 @@ def removeApplication(sender, **kwargs):
     djAppC.removeApp()
 
 
-@receiver(model_changed)
-def dump_all_app_data(sender,**kwargs):
+@receiver(model_changed_signal)
+def dump_all_app_data(sender, **kwargs):
     logger.info("Dumping all application data")
-
-

@@ -5,6 +5,7 @@ __author__ = 'ozgur'
 from django.core.management import call_command
 from django.apps import AppConfig
 import logging
+
 logger = logging.getLogger("wbdap.debug")
 
 class ApplicationManagerAppConfig(AppConfig):
@@ -31,6 +32,7 @@ class ApplicationManagerAppConfig(AppConfig):
 
     # Sadece bir kere uygulama baslatildiginda calistirilmakta
     def ready(self):
+        import applicationManager.signals.signals
         import applicationManager.signals.handlers
 
         if not self.db_table_exists('applicationManager_'):
