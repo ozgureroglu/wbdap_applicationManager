@@ -36,6 +36,8 @@ def create_model(self, app, model):
         fp.write(MODEL_TEMPLATE % (self.model, ''.join(field for field in fields)))
 
 
+
+
 def clean_folder(app):
     for root, dirs, files in os.walk(app):
 

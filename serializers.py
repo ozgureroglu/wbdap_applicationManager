@@ -41,12 +41,59 @@ class AppModelSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+
+# Read the important diff :
+#https://stackoverflow.com/questions/42615984/whats-the-difference-between-a-viewsets-create-and-update-and-a-seriali
+class DjangoAppsSerializer(serializers.Serializer):
+
+    name = serializers.CharField(max_length=100)
+    label = serializers.CharField(max_length=100)
+    models = serializers.ListField()
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
+
+
+# Read the important diff :
+#https://stackoverflow.com/questions/42615984/whats-the-difference-between-a-viewsets-create-and-update-and-a-seriali
+class DjangoAppModelsSerializer(serializers.Serializer):
+
+    name = serializers.CharField(max_length=100)
+    application = serializers.CharField(max_length=100)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
+
+
+
+
 class ApplicationSerializer(serializers.ModelSerializer):
     # answer = serializers.StringRelatedField(many=True)
     models = AppModelSerializer(many=True, read_only=True)
     owner = serializers.SlugRelatedField(many=False, read_only=True, slug_field='username')
+
     class Meta:
-        model=Application
+        model = Application
         fields = ('id','app_name', 'verbose_name', 'url', 'namedUrl', 'active', 'owner', 'models', 'core_app', 'description')
 
-
+# class ApplicationSerializer(serializers.ModelSerializer):
+#     # answer = serializers.StringRelatedField(many=True)
+#     models = AppModelSerializer(many=True, read_only=True)
+#     owner = serializers.SlugRelatedField(many=False, read_only=True, slug_field='username')
+#     class Meta:
+#         model=Application
+#         fields = ('id','app_name', 'verbose_name', 'url', 'namedUrl', 'active', 'owner', 'models', 'core_app', 'description')
+#

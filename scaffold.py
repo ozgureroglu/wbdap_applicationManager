@@ -3,7 +3,7 @@ import logging
 from os import path, system, listdir, sys, mkdir
 
 # VIEW CONSTS
-from wbdap import settings
+from wbdap.settings import development as settings
 
 
 logger = logging.getLogger('Scaffolding')
@@ -241,7 +241,7 @@ URL_EXISTS_CONTENT = """
 """
 
 APP_TEMPLATE_CONTENT ="""
-    {%% extends "projectCore/template_level_3_common_content.html" %%}
+    {%% extends "projectCore/template_level_300_default_content.html" %%}
     {%% load i18n %%}
     
     {%% block title %%}{{ file }}{%% endblock %%}

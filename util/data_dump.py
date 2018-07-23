@@ -18,7 +18,7 @@ def load_application_data(appname):
     try:
         call_command('loaddata', appname + "/fixtures/initial_data.json")
     except Exception as e:
-        logger(e)
+        logger.error(e)
         return False
     return True
 

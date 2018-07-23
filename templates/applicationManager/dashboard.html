@@ -6,222 +6,241 @@
     {{ block.super }}
     {% include "applicationManager/waitingPage.html" %}
 
-    <div id="wrapper">
 
-        <div id="page-wrapper">
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2 class="page-header">Django Applications In The Portfolio</h2>
-                </div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading clearfix">
-                            <h4>
-                                <div class="pull-right">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            Actions
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#" id="list_selected">List Selected</a>
-                                            </li>
-                                            <li><a href="{% url 'applicationManager:dump-all-data' %}" id="dump_data">Dump
-                                                All</a>
-                                            </li>
-                                            <li><a href="#" id="dump_data">Dump Selected</a>
-                                            </li>
-                                            <li><a href="{% url 'applicationManager:genuuid-all' %}" id="dump_data">Generate
-                                                UUID for all</a>
-                                            </li>
-                                            <li><a href="#">Load Data</a>
-                                            </li>
-                                            <li><a href="#">Export As Standalone Project</a>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <i class="fa fa-folder-open fa-fw"></i> Applications
-                            </h4>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div>
-
-
-                                <table id="application_list_table" class="display" cellspacing="0" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Application Name</th>
-                                        {#                                        <th>Verbose Name</th>#}
-                                        <th>Core App</th>
-                                        <th>Owner</th>
-                                        <th>Active</th>
-                                        <th style="text-align:left">Operations</th>
-                                    </tr>
-                                    </thead>
-
-
-                                    {% for app in all_apps %}
-                                        <tr>
-                                            <form action="" method="POST" id="appForm_{{ app.id }}">
-                                                {% csrf_token %}
-                                                <td>
-                                                    {% if app.core_app == False %}
-{#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
-{#                                                           target="_blank"></a>#}
-                                                        <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
-                                                           target="_blank">
-                                                            <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
-                                                        </a>
-
-                                                    {% else %}
-                                                        <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
-                                                           target="_blank"><i
-                                                                class="fa fa-asterisk fa-fw"></i> {{ app.app_name |capfirst }}
-                                                        </a>
-                                                    {% endif %}
-
-                                                </td>
-                                                <td>{{ app.verbose_name }}</td>
-                                                <td>
-                                                    {% if app.core_app == False %}
-                                                        External
-                                                    {% else %}
-                                                        Core
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ app.owner | capfirst }}</td>
-                                                <td><span class="text-muted small">
-
-                                                {% if app.core_app == False %}
-                                                    {% if  app.active %}
-                                                        <a class="btn btn-success btn-xs"
-                                                           href="{% url 'applicationManager:application-activate' app.id %}"
-                                                           role="button">Active</a>
-                                                    {% else %}
-                                                        <a class="btn btn-danger btn-xs"
-                                                           href="{% url 'applicationManager:application-activate' app.id %}"
-                                                           role="button">Passive</a>
-                                                    {% endif %}
-                                                {% else %}
-                                                    {% if  app.active %}
-                                                        <a class="btn btn-success btn-xs"
-                                                           href="{% url 'applicationManager:application-activate' app.id %}"
-                                                           role="button">Active</a>
-                                                    {% else %}
-                                                        <a class="btn btn-danger btn-xs"
-                                                           href="{% url 'applicationManager:application-activate' app.id %}"
-                                                           role="button">Passive</a>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                            </span></td>
-                                                <td style="text-align: left">
-
-                                                    <!-- Single button -->
-                                                    <div class="btn-group" >
-                                                        <button type="button"
-                                                                class="btn btn-xs btn-primary dropdown-toggle"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                            Actions <span class="caret"></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu" style="overflow-x: visible;overflow-y: visible">
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:load-data' app.id %}"> <span
-                                                                        class="glyphicon glyphicon-floppy-open"
-                                                                        icon-id="{{ app.id }}"></span> Load Data</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:dump-app-data' app.id %}"> <span
-                                                                        class="glyphicon glyphicon-floppy-save"
-                                                                        icon-id="{{ app.id }}"></span> Dump Application
-                                                                    Data</a></li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:download-app' app.id %}"><span
-                                                                        class="glyphicon glyphicon-download"
-                                                                        icon-id="{{ app.id }}"></span> Download as
-                                                                    tar.gz</a></li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:download-app' app.id %}"><span
-                                                                        class="glyphicon glyphicon-packtar"
-                                                                        icon-id="{{ app.id }}"></span> Download as
-                                                                    tar.gz</a></li>
-
-                                                            <li role="separator" class="divider"></li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:application-info' app.id %}"> <span
-                                                                        class="glyphicon glyphicon-pencil"
-                                                                        icon-id="{{ app.id }}"></span> Edit Models</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:create-file' app.id %}"> <span
-                                                                        class="glyphicon glyphicon-file"
-                                                                        icon-id="{{ app.id }}"></span> Add Code
-                                                                    Files</a></li>
-                                                            <li role="separator" class="divider">
-
-                                                            </li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:create-file' app.id %}"><span
-                                                                        class="glyphicon glyphicon-cloud-upload"
-                                                                        icon-id="{{ app.id }}"></span> Upload to
-                                                                    cloud</a>
-                                                            </li>
-
-
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:genuuid-app' app.id %}"><span
-                                                                        class="glyphicon glyphicon-key"
-                                                                        icon-id="{{ app.id }}"></span> Generate UUID</a>
-                                                            </li>
-                                                            <li class="divider"></li>
-
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:application-info' app.id %}">Application
-                                                                    Info</a>
-                                                            </li>
-                                                            <li role="separator" class="divider"></li>
-                                                            <li>
-                                                                <a href="{% url 'applicationManager:delete-application' app.id %}"
-                                                                   id="delete_selected"
-                                                                   onmouseover="this.style.background='red';this.style.color='white'"
-                                                                   onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>
-                                                            </li>
-
-                                                        </ul>
-                                                    </div>
-
-
-                                                </td>
-                                            </form>
-                                        </tr>
-
-                                    {% endfor %}
-
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <!-- /.panel -->
-                        </div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-
-            </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Django Applications In The Portfolio</h1>
         </div>
     </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header  bg-light mb-3">
+                    <ul class="nav nav-pills card-header-pills">
+                        <span class="navbar-brand mb-0 h1"><i class="fa fa-folder-open fa-fw"></i> Applications</span>
+
+                        <li class="nav-item dropdown ml-auto">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                Actions
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'projectCore:settings' %}"><i
+                                        class="fa fa-cogs"></i>
+                                    Settings</a>
+                                <a class="dropdown-item" href={% url 'filemanager:view-editor' %}><i
+                                        class="fa fa-edit"></i>
+                                    Editor</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="card-body">
+                    <div>
+                        <table id="application_list_table" class="display table table-striped" cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Application Name</th>
+                                {#                                        <th>Verbose Name</th>#}
+                                <th>Core App</th>
+                                <th>Owner</th>
+
+                                <th style="text-align:left">Operations</th>
+                            </tr>
+                            </thead>
+
+
+                            {% for app in all_apps %}
+                                <tr>
+                                    <form action="" method="POST" id="appForm_{{ app.id }}">
+                                        {% csrf_token %}
+                                        <td>
+                                            {% if app.core_app == False %}
+                                                {#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
+                                                {#                                                           target="_blank"></a>#}
+                                                <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                   target="_blank">
+                                                    <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
+                                                </a>
+
+                                            {% else %}
+                                                <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                   target="_blank"><i
+                                                        class="fa fa-asterisk fa-fw"></i> {{ app.app_name |capfirst }}
+                                                </a>
+                                            {% endif %}
+
+                                        </td>
+                                        <td>{{ app.verbose_name }}</td>
+                                        <td>
+                                            {% if app.core_app == False %}
+                                                External
+                                            {% else %}
+                                                Core
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ app.owner | capfirst }}</td>
+                                        {#                                        <td><span class="text-muted small">#}
+                                        {##}
+                                        {#                                                {% if app.core_app == False %}#}
+                                        {#                                                    {% if  app.active %}#}
+                                        {#                                                        <a class="btn btn-success btn-sm"#}
+                                        {#                                                           href="{% url 'applicationManager:application-activate' app.id %}"#}
+                                        {#                                                           role="button">Active</a>#}
+                                        {#                                                    {% else %}#}
+                                        {#                                                        <a class="btn btn-danger btn-sm"#}
+                                        {#                                                           href="{% url 'applicationManager:application-activate' app.id %}"#}
+                                        {#                                                           role="button">Passive</a>#}
+                                        {#                                                    {% endif %}#}
+                                        {#                                                {% else %}#}
+                                        {#                                                    {% if  app.active %}#}
+                                        {#                                                        <a class="btn btn-success btn-sm"#}
+                                        {#                                                           href="{% url 'applicationManager:application-activate' app.id %}"#}
+                                        {#                                                           role="button">Active</a>#}
+                                        {#                                                    {% else %}#}
+                                        {#                                                        <a class="btn btn-danger btn-sm"#}
+                                        {#                                                           href="{% url 'applicationManager:application-activate' app.id %}"#}
+                                        {#                                                           role="button">Passive</a>#}
+                                        {#                                                    {% endif %}#}
+                                        {#                                                {% endif %}#}
+                                        {##}
+                                        {#                                            </span></td>#}
+                                        <td style="text-align: left">
+
+                                            <!-- Single button -->
+                                            <div class="btn-group">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                    Actions <span class="caret"></span>
+                                                </button>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+
+                                                    {% if app.core_app == False %}
+                                                        {% if  app.active %}
+                                                            <a class="dropdown-item" style="background-color: green"
+                                                               href="{% url 'applicationManager:application-activate' app.id %}"
+                                                            >Active</a>
+                                                        {% else %}
+                                                            <a class="dropdown-item" style="background-color: orangered"
+                                                               href="{% url 'applicationManager:application-activate' app.id %}"
+                                                            >Disabled</a>
+                                                        {% endif %}
+                                                    {% endif %}
+
+
+
+                                                    <div class="dropdown-divider"></div>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:generate-data' app.id %}"> <span
+                                                            class="glyphicon glyphicon-floppy-open"
+                                                            icon-id="{{ app.id }}"></span> Generate Dummy
+                                                        Data</a>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:load-data' app.id %}"> <span
+                                                            class="glyphicon glyphicon-floppy-open"
+                                                            icon-id="{{ app.id }}"></span> Load Fixture Data</a>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:dump-app-data' app.id %}"> <span
+                                                            class="glyphicon glyphicon-floppy-save"
+                                                            icon-id="{{ app.id }}"></span> Dump Application
+                                                        Data</a>
+
+                                                    <div class="dropdown-divider"></div>
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:download-app' app.id %}"><span
+                                                            class="glyphicon glyphicon-download"
+                                                            icon-id="{{ app.id }}"></span> Download as
+                                                        tar.gz</a>
+
+
+                                                    <div class="dropdown-divider"></div>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:application-info' app.id %}"> <span
+                                                            class="glyphicon glyphicon-pencil"
+                                                            icon-id="{{ app.id }}"></span> Edit Models</a>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:create-file' app.id %}"> <span
+                                                            class="glyphicon glyphicon-file"
+                                                            icon-id="{{ app.id }}"></span> Add Code
+                                                        Files</a>
+                                                    <div class="dropdown-divider"></div>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:create-file' app.id %}"><span
+                                                            class="glyphicon glyphicon-cloud-upload"
+                                                            icon-id="{{ app.id }}"></span> Upload to
+                                                        cloud</a>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:genuuid-app' app.id %}"><span
+                                                            class="glyphicon glyphicon-key"
+                                                            icon-id="{{ app.id }}"></span> Generate UUID</a>
+
+                                                    <div class="dropdown-divider"></div>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:application-info' app.id %}">Application
+                                                        Info</a>
+
+                                                    <div class="dropdown-divider"></div>
+
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:delete-application' app.id %}"
+                                                       id="delete_selected"
+                                                       onmouseover="this.style.background='red';this.style.color='white'"
+                                                       onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>
+
+
+                                                </div>
+
+
+                                        </td>
+                                    </form>
+                                </tr>
+
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+
+    </div>
+
 
 {% endblock %}
 
@@ -232,6 +251,7 @@
     {{ block.super }}
 
     <script>
+        {#This datatable shows the data which comes in the context; not retrieved from ajax call#}
         $(document).ready(function () {
             $('#application_list_table').DataTable({
                 {#"scrollY": "300px",#}
@@ -245,186 +265,6 @@
             {% endif %}
         });
     </script>
-
-
-
-
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            applications_editor = new $.fn.dataTable.Editor({#}
-{#                ajax: {#}
-{#                    create: {#}
-{#                        type: 'POST',#}
-{#                        url: '/api/v1/applicationManager/applications/',#}
-{#                        headers: {#}
-{#                            'X-CSRFToken': csrftoken#}
-{#                        },#}
-{#                        contentType: 'application/json',#}
-{#                        data: function (d) {#}
-{#                            var keys = Object.keys(d.data);#}
-{#                            ndata = JSON.stringify(d.data[keys[0]]);#}
-{#                            return ndata;#}
-{#                        },#}
-{#                    },#}
-{#                    edit: {#}
-{#                        type: 'PUT',#}
-{#                        url: '/api/v1/applicationManager/applications/_id_/',#}
-{#                        headers: {#}
-{#                            'X-CSRFToken': csrftoken#}
-{#                        },#}
-{#                        contentType: 'application/json',#}
-{#                        data: function (d) {#}
-{#                            console.log(d)#}
-{#                            var row_id = Object.keys(d.data)#}
-{#                            var jdata = d.data[row_id]#}
-{##}
-{#                            var jdata_keys = Object.keys(jdata);#}
-{#                            $.each(jdata_keys, function (k, v) {#}
-{#                                if (v.startsWith('is_')) {#}
-{#                                    if (jdata[v] === "") {#}
-{#                                        // alert(v+" is empty valued")#}
-{#                                        delete jdata[v];#}
-{#                                        jdata[v] = 'false';#}
-{#                                    }#}
-{#                                }#}
-{#                            })#}
-{##}
-{#                            ndata = JSON.stringify(jdata);#}
-{#                            return ndata;#}
-{#                        },#}
-{##}
-{#                    },#}
-{#                    remove: {#}
-{#                        type: 'DELETE',#}
-{#                        url: '/api/v1/applicationManager/applications/_id_/',#}
-{#                        headers: {#}
-{#                            'X-CSRFToken': csrftoken#}
-{#                        }, contentType: 'application/json',#}
-{#                        data: function (d) {#}
-{#                            var keys = Object.keys(d.data);#}
-{#                            ndata = JSON.stringify(d.data[keys[0]]);#}
-{#                            return ndata;#}
-{#                        },#}
-{#                    }#}
-{#                },#}
-{#                table: "#application_list_table",#}
-{#                idSrc: 'id',#}
-{#                fields: [{#}
-{#                    label: "Group Name:",#}
-{#                    name: "name"#}
-{#                }, {#}
-{#                    label: "Description:",#}
-{#                    name: "description"#}
-{#                }, {#}
-{#                    label: "Staus:",#}
-{#                    type: "checkbox",#}
-{#                    name: "active",#}
-{#                    unselectedValue: "false",#}
-{#                    separator: '',#}
-{#                    options: [#}
-{#                        {label: "Active", value: true}#}
-{#                    ],#}
-{#                }#}
-{##}
-{#                ]#}
-{#            });#}
-{##}
-{#            $('#application_list_table').DataTable({#}
-{#                "scrollY": "500px",#}
-{#                "scrollCollapse": true,#}
-{#                "dom": 'Bfrtip',#}
-{#                "paging": true,#}
-{#                "select": true,#}
-{#                "info": false,#}
-{#                "ordering": true,#}
-{#                "processing": true,#}
-{#                "serverSide": true,#}
-                {#"order": [[ 1, 'asc' ], [ 2, 'asc' ]],#}
-{#                "ajax": {#}
-{#                    url: "/api/v1/applicationManager/applications/?format=json",#}
-{#                    dataSrc: 'results',#}
-{#                    data: function (d) {#}
-{#                        var keys = Object.keys(d);#}
-{##}
-{#                        var offset = d["start"];#}
-{#                        var limit = d["length"];#}
-{#                        var search = d["search"];#}
-{#                        var ordering = d["order"][0]["column"];#}
-{#                        var order_val = d.columns[ordering]['data'];#}
-{##}
-{#                        d["offset"] = offset;#}
-{#                        d["limit"] = limit;#}
-{#                        d["order"][0]["column"] = order_val;#}
-{#                        delete d["start"];#}
-{#                        delete d["length"];#}
-{#                    },#}
-{#                    dataFilter: function (d) {#}
-{#                        var json = jQuery.parseJSON(d);#}
-{#                        json.recordsTotal = json.count;#}
-{#                        json.recordsFiltered = json.count;#}
-{#                        json.data = json.results;#}
-{##}
-{#                        return JSON.stringify(json); // return JSON string#}
-{#                    }#}
-{#                },#}
-{#                "columns": [#}
-{#                    {#}
-{#                        data: null,#}
-{#                        defaultContent: '',#}
-{#                        className: 'select-checkbox not_editable',#}
-{#                        orderable: false#}
-{#                    },#}
-{#                    {#}
-{#                        "data": "app_name",#}
-{#                        orderData: 1,#}
-{#                        targets: 1,#}
-{##}
-{#                        "render": function (data, type, row, meta) {#}
-{#                            return '<a href="/' + row.app_name + '/">' + row.app_name + '</a>';#}
-{#                        },#}
-{##}
-{#                    },#}
-                    {#{"data": "verbose_name"},#}
-{#                    {#}
-{#                        "data": function (row, type, val, meta) {#}
-{#                            if (row.core_app) {#}
-{#                                return "Core"#}
-{#                            } else {#}
-{#                                return "External"#}
-{#                            }#}
-{#                        }#}
-{#                    },#}
-{#                    {"data": "owner"},#}
-                    {#{"data": "description", orderData: 2, targets: 2}, #}
-{#                    {#}
-{#                        "data": function (row, type, val, meta) {#}
-{#                            if (row.active) {#}
-{#                                return '<a class="btn btn-success btn-xs" href="/applicationManager/application/' + row.id + '/activate/" role="button">Active</a>';#}
-{#                            } else {#}
-{#                                return '<a class="btn btn-danger btn-xs" href="/applicationManager/application/' + row.id + '/activate/" role="button">Passive</a>';#}
-{#                            }#}
-{#                        }#}
-{#                    },#}
-{#                    {#}
-{#                        "data": null,#}
-{#                        defaultContent: ''#}
-{#                    }#}
-{##}
-{#                ],#}
-{#                select: true,#}
-{#                buttons: [#}
-                    {#{extend: "create", editor: applications_editor},#}
-{#                    {extend: "edit", editor: applications_editor},#}
-{#                    {extend: "remove", editor: applications_editor}#}
-{#                ]#}
-{#            });#}
-{##}
-{#            {% if messageType == "Exception" %}#}
-{#                $.notify("{{ message }}", "error");#}
-{#            {% endif %}#}
-{#        });#}
-{#    </script>#}
-
 
 
 

@@ -1,0 +1,81 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 22/06/2016 15:06
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
+}
+
+.flaticon-bricks-layout:before { content: "\f100"; }
+.flaticon-center-content-layout:before { content: "\f101"; }
+.flaticon-center-content-layout-interface-symbol:before { content: "\f102"; }
+.flaticon-column-layout-with-right-sidebars:before { content: "\f103"; }
+.flaticon-column-with-rows-content-layout:before { content: "\f104"; }
+.flaticon-double-footer-layout-design-interface-symbol:before { content: "\f105"; }
+.flaticon-four-columns-layout-interface-symbol:before { content: "\f106"; }
+.flaticon-four-grid-layout-design-interface-symbol:before { content: "\f107"; }
+.flaticon-four-rows-content-layout-design:before { content: "\f108"; }
+.flaticon-full-display-layout-interface-square-symbol:before { content: "\f109"; }
+.flaticon-gallery-layout:before { content: "\f10a"; }
+.flaticon-gallery-layout-with-left-sidebar-interface-symbol:before { content: "\f10b"; }
+.flaticon-gallery-layout-with-right-sidebar-interface-square-symbol:before { content: "\f10c"; }
+.flaticon-header-and-content-body-areas-layout:before { content: "\f10d"; }
+.flaticon-horizontal-grid-layout-interface-symbol:before { content: "\f10e"; }
+.flaticon-layout-design-interface-symbol-with-right-sidebar:before { content: "\f10f"; }
+.flaticon-layout-design-with-bottom-panel:before { content: "\f110"; }
+.flaticon-layout-design-with-footer:before { content: "\f111"; }
+.flaticon-layout-design-with-header-and-four-rows:before { content: "\f112"; }
+.flaticon-layout-design-with-three-footer-parts:before { content: "\f113"; }
+.flaticon-layout-design-with-top-panel-of-three-areas-and-the-body:before { content: "\f114"; }
+.flaticon-layout-gallery-display-option:before { content: "\f115"; }
+.flaticon-layout-interface-symbol-of-header-with-two-columns:before { content: "\f116"; }
+.flaticon-layout-interface-symbol-with-left-sidebars:before { content: "\f117"; }
+.flaticon-layout-of-a-column-with-rows:before { content: "\f118"; }
+.flaticon-layout-of-gallery-with-header:before { content: "\f119"; }
+.flaticon-layout-square-symbol:before { content: "\f11a"; }
+.flaticon-layout-with-header-and-footer-areas:before { content: "\f11b"; }
+.flaticon-layout-with-header-and-three-columns:before { content: "\f11c"; }
+.flaticon-layout-with-one-column-and-two-rows:before { content: "\f11d"; }
+.flaticon-left-panel-layout-symbol:before { content: "\f11e"; }
+.flaticon-left-sidebar-layout-design-interface-symbol:before { content: "\f11f"; }
+.flaticon-list-rows-in-a-square:before { content: "\f120"; }
+.flaticon-right-and-left-sidebars-layout-design:before { content: "\f121"; }
+.flaticon-right-panel-layout-interface-symbol:before { content: "\f122"; }
+.flaticon-right-sidebar-layout-interface-symbol:before { content: "\f123"; }
+.flaticon-six-rows-layout-interface-symbol:before { content: "\f124"; }
+.flaticon-square-content-layout-interface-symbol:before { content: "\f125"; }
+.flaticon-square-layout-interface-symbol-outline:before { content: "\f126"; }
+.flaticon-squares-gallery-grid-layout-interface-symbol:before { content: "\f127"; }
+.flaticon-squares-layout-interface-symbol:before { content: "\f128"; }
+.flaticon-three-columns-layout:before { content: "\f129"; }
+.flaticon-three-columns-layout-1:before { content: "\f12a"; }
+.flaticon-three-rows-layout-content-structure-design:before { content: "\f12b"; }
+.flaticon-two-columns-layout:before { content: "\f12c"; }
+.flaticon-two-columns-layout-design-interface-symbol:before { content: "\f12d"; }
+.flaticon-two-rows-layout:before { content: "\f12e"; }
+.flaticon-two-rows-layout-1:before { content: "\f12f"; }
+.flaticon-vertical-grid-layout:before { content: "\f130"; }
+.flaticon-whiteboard-with-header-and-two-footers:before { content: "\f131"; }

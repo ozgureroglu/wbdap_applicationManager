@@ -1,17 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
+import logging
 
-class AppSetting(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    defaultSettings = models.BooleanField(default=True)
+logger = logging.getLogger('applicationManager_models')
 
-    def __unicode__(self):
-        return self.title
 
-@admin.register(AppSetting)
-class AppSettingsAdmin(admin.ModelAdmin):
-        pass
+
 
 # Sifreler ile ilgili ayarlarin yapilmasi icin kullanilacak olan model.
 class PasswordSetting(models.Model):
@@ -25,12 +20,12 @@ class PasswordSettingsAdmin(admin.ModelAdmin):
 
 # model for applications that have been created by this applicationManager.
 class Application(models.Model):
-    app_name =  models.CharField(max_length=25) # app_name parameter for urls.py
+    app_name = models.CharField(max_length=25) # app_name parameter for urls.py
     verbose_name = models.CharField(max_length=50) #Human readable form of the name
     url = models.CharField(max_length=30) #relative path to this application
     namedUrl = models.CharField(max_length=30) # name field of the urlconfig entry for reverse resolutions
 
-    active = models.BooleanField(default=True,blank=True)
+    active = models.BooleanField(default=True, blank=True)
     description = models.CharField(max_length=500) # Description of the application
     coming_soon_page = models.BooleanField(default=True,blank=False) # want to include a coming_soon page
 
@@ -39,7 +34,9 @@ class Application(models.Model):
     # uuid = models.UUIDField(primary_key=False, editable=True, blank=True,null=True)
     uuid = models.UUIDField(primary_key=False, blank=True,null=True)
 
+
     # model = models.ForeignKey(AppModel, null=True,blank=True)
+
 
     def __str__(self):
         return self.app_name
@@ -52,6 +49,44 @@ class Application(models.Model):
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     pass
+
+
+
+class ApplicationSettings(models.Model):
+    app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE)
+    api_enabled = models.BooleanField(default=False, blank=False)
+    display_wbdap_admin_menu = models.BooleanField(default=False, blank=False)
+    display_app_admin_menu = models.BooleanField(default=False, blank=False)
+
+
+    def toogle_setting(self, ttype):
+        print(ttype)
+        print(getattr(self, ttype))
+        try:
+            val = getattr(self, ttype)
+
+
+            setattr(self, ttype, not val)
+            self.save()
+
+        except AttributeError as e:
+            logger.fatal(e)
+
+
+
+
+    def __unicode__(self):
+        return self.app.app_name+"_settings"
+
+    def __str__(self):
+        return self.app.app_name+"_settings"
+
+
+
+@admin.register(ApplicationSettings)
+class AppSettingsAdmin(admin.ModelAdmin):
+        pass
+
 
 
 class DataDump(models.Model):
@@ -95,3 +130,17 @@ class Field(models.Model):
 @admin.register(Field)
 class ModelFieldAdmin(admin.ModelAdmin):
     pass
+
+
+class ApplicationLayout(models.Model):
+    name = models.CharField(max_length=50)
+    # image_url = models.URLField()
+    # live_url = models.URLField()
+
+    def __unicode__(self):
+        return self.name
+
+
+
+
+

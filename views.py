@@ -2,6 +2,15 @@ import sys
 import logging
 import uuid
 import tarfile
+import json
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods, require_POST
+from formtools.wizard.views import SessionWizardView
+
+from applicationManager.util.api_utils import create_api
+from wbdap import settings
+from django.conf import settings
 from .util.util_functions import *
 from importlib import reload, import_module
 from django.apps import apps
@@ -17,16 +26,14 @@ from django.views.generic import UpdateView, ListView, DetailView, CreateView
 from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
-    UpdateFieldForm
-from applicationManager.models import Application, AppModel, Field
-from applicationManager.signals import *
+    UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
+from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings
+
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
-from wbdap import settings
-from django.conf import settings
-from applicationManager.signals.signals import application_created_signal, application_removed_signal
 
+from applicationManager.signals.signals import application_created_signal, application_removed_signal
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -36,8 +43,10 @@ logger = logging.getLogger("wbdap.debug")
 def landing_page(request):
     if (request.user.has_perm('applicationManager.has_access')):
         print('has access')
+
     return render(request,
-                  'applicationManager/landing.html'
+                  'applicationManager/landing.html',
+                  {'hide_sidebar_toggle_button': True}
                   )
 
 
@@ -61,14 +70,14 @@ def genuuid_all(request):
         app.uuid = uuid.uuid4()
         app.save()
         pass
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 def genuuid_app(request, id):
     app = Application.objects.get(id=id)
     app.uuid = uuid.uuid4()
     app.save()
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 def countdown_test_page(request):
@@ -103,7 +112,52 @@ def createApplication(request):
                 # Send the application created signal; first parameter is the sender,
                 # second one is a generic parameter, third one is the applications itself.
                 application_created_signal.send(sender=Application.__class__, test="testString",
-                                         application=Application.objects.get(app_name=application.app_name))
+                                                application=Application.objects.get(app_name=application.app_name))
+            except Exception as e:
+                print(e)
+
+            return redirect('applicationManager:dashboard')
+            # return HttpResponse(status=200)
+        else:
+            logger.warning('Form is not valid')
+            return HttpResponse(status=400)
+    else:
+
+        form = CreateApplicationForm()
+        variables = {'form': form}
+        return render(
+            request,
+            'applicationManager/createApplication.html',
+            variables
+        )
+
+
+@login_required
+# Creates an application
+def createApplication2(request):
+    if request.method == "POST":
+
+        # We are creating the bound form
+        form = CreateApplicationForm(request.POST)
+
+        if form.is_valid():
+            logger.info("Form is valid")
+            application = form.save(commit=False)
+            application.active = False
+            application.owner = request.user
+            application.uuid = uuid.uuid4()
+            application.save()
+
+            #
+            # if res:
+            #     messages.add_message(request, messages.INFO, 'Created Application ' + application.app_name)
+            # else:
+            #     messages.add_message(request, messages.ERROR, 'Application creation failed')
+            try:
+                # Send the application created signal; first parameter is the sender,
+                # second one is a generic parameter, third one is the applications itself.
+                application_created_signal.send(sender=Application.__class__, test="testString",
+                                                application=Application.objects.get(app_name=application.app_name))
             except Exception as e:
                 print(e)
 
@@ -130,7 +184,7 @@ def delete_application(request, id):
 
     try:
         application_removed_signal.send(sender=Application.__class__, test="testString",
-                                 application=Application.objects.get(app_name=app.app_name))
+                                        application=Application.objects.get(app_name=app.app_name))
     except Exception as e:
         logger.fatal('An exception occured while deleting application : %s', e)
         return False
@@ -146,6 +200,12 @@ def application_details(request, appid):
 
 
 @login_required
+def generate_data(request, appid):
+    pass
+    return redirect('applicationManager:dashboard')
+
+
+@login_required
 def dump_all_data(request):
     apps = Application.objects.all()
     res = dump_selected_application_data(apps)
@@ -153,7 +213,7 @@ def dump_all_data(request):
         for mess in res:
             messages.add_message(request, messages.WARNING, mess)
 
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 @login_required
@@ -171,7 +231,7 @@ def load_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Load of application data (" + app.app_name + ") has failed.")
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 @login_required
@@ -442,7 +502,7 @@ def redirect_to_app(request, uuid):
     app = Application.objects.get(uuid=uuid)
     app_name = app.app_name
     reload(sys.modules[settings.ROOT_URLCONF])
-    # return redirect('applicationManager:index')
+    # return redirect('applicationManager:dashboard')
     return redirect("/" + app_name + '/')
 
 
@@ -452,7 +512,7 @@ def reload_urlconf(urlconf=None):
     if urlconf in sys.modules:
         reload(sys.modules[urlconf])
 
-    return redirect('applicationManager:index')
+    return redirect('applicationManager:dashboard')
 
 
 def getAppNameListByAppsPy():
@@ -556,6 +616,23 @@ def updateAppsDB(request):
         app.core_app = 1
         app.save()
 
+@require_POST
+def trigger(request, id):
+
+    print('triggered')
+    ttype = request.POST['type']
+
+    obj, created = ApplicationSettings.objects.get_or_create(app_id=id,defaults={},)
+
+    obj.toogle_setting(ttype)
+
+
+    # Application.objects.get(id = id).applicationsettings.toogle_setting(request.POST['type'])
+
+
+    # create_api('testapp')
+    return JsonResponse({}, safe=False)
+
 
 @login_required
 def get_application_models(request, id):
@@ -569,10 +646,110 @@ def application_info(request, id):
     if request.POST:
         logger.info('receved post')
 
+    app = Application.objects.get(id = id)
+    app_config = apps.get_app_config(app.app_name)
+    models = app_config.get_models()
+
+    # Here the term model denotes the native models of django not the AppModel of applicationManager application
+    # for m in models:
+    #     print(m.__name__)
+    #
+
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
-                   'app': Application.objects.get(id=id)})
+                   'app': Application.objects.get(id=id),
+                  'models': models}
+                  )
+
+
+class AppModelListView(ListView):
+    model = AppModel
+    http_method_names = ['get']
+
+    #TODO: This is not a suitable way of returning json for listview: because it is redefining the response of view,
+    # instead it should modify the exsiting response
+    # Listview tarafindan json response donmesi icin assagidaki method override ediliyor.
+    def render_to_response(self, context, **response_kwargs):
+        print(self.kwargs)
+        app_conf = apps.get_app_config(Application.objects.get(id= self.kwargs['id']).app_name)
+        models = app_conf.get_models()
+        data = {}
+        model_list=[]
+        for model in models:
+
+            print(model.__name__)
+            model_list.append(model.__name__)
+
+            # fields = model._meta.get_fields()
+            # for f in fields:
+            #     print(f.name)
+            #     print(f.get_internal_type())
+        data['models'] = model_list
+
+        # queryset = self.model.objects.all()
+        # data = list(models)
+        # print(data)
+        # data = serializers.serialize('json', model_list )
+        # data = json.dumps(list(models))
+
+        # returning httpresponse instead of jsonresponse to avoid double encoding
+        # return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data, safe=False)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AppModelListView, self).get_context_data(**kwargs)
+        # If extra contex parameters are required
+        # context['now'] = timezone.now()
+        return context
+
+
+
+class JSONResponseMixin:
+    """
+    A mixin that can be used to render a JSON response.
+    https://docs.djangoproject.com/en/2.0/topics/class-based-views/mixins/#jsonresponsemixin-example
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        Of course if context is
+        """
+        return HttpResponse(self.get_data(context), **response_kwargs)
+
+    def get_data(self, context):
+        """
+        Returns an object that will be serialized as JSON by json.dumps().
+        """
+
+        # Just serializing single object to json
+        context = serializers.serialize('json', [context['object']], ensure_ascii = False)
+        # Note: This is *EXTREMELY* naive; in reality, you'll need
+        # to do much more complex handling to ensure that arbitrary
+        # objects -- such as Django model instances or querysets
+        # -- can be serialized as JSON.
+        return context
+
+
+
+class AppModelDetailView(JSONResponseMixin, DetailView):
+    model = AppModel
+    http_method_names = ['get']
+
+
+    # Override render_to_response with the JSONResponseMixin's render_to_json_response using the same method signature
+
+    def render_to_response(self, context, **response_kwargs):
+        return self.render_to_json_response(context, **response_kwargs)
+
+
+    # If you want to change the context
+    def get_context_data(self, **kwargs):
+        context = super(AppModelDetailView, self).get_context_data(**kwargs)
+        # If extra contex parameters are required
+        # context['now'] = timezone.now()
+        return context
 
 
 @login_required
@@ -580,7 +757,7 @@ class ApplicationUpdate(UpdateView):
     model = Application
     form_class = CreateApplicationForm
 
-    success_url = reverse_lazy('applicationManager:index')
+    success_url = reverse_lazy('applicationManager:dashboard')
     template_name_suffix = '_update_form'
 
     #
@@ -637,25 +814,23 @@ class ApplicationUpdate(UpdateView):
 #     pass
 
 
-class AppModelListView(ListView):
-    model = AppModel
 
-    def get_context_data(self, **kwargs):
-        context = super(AppModelListView, self).get_context_data(**kwargs)
-        # If extra contex parameters are required
-        # context['now'] = timezone.now()
-        return context
-
-
-class FieldListView(ListView):
+class FieldListView(JSONResponseMixin,ListView):
     model = Field
+    http_method_names = ['get']
+
+    def render_to_response(self, context, **response_kwargs):
+        queryset = self.model.objects.all()
+        data = serializers.serialize('json',queryset)
+        return HttpResponse(data, content_type='application/json')
+
 
     # Bu metodu override etme sebebi donecek olan object listesini degistirmek ve
     # sadece modele ait olanlari donmek
     def get_queryset(self):
         queryset = super(FieldListView, self).get_queryset()
         # batchelors degrees only
-        queryset = queryset.filter(model_id=self.kwargs['model_id'])
+        queryset = queryset.filter(owner_model_id=self.kwargs['model_id'])
         # filter by state
         # queryset = queryset.filter(school__city__state__slug=self.kwargs['state_slug'])
         return queryset
@@ -741,18 +916,15 @@ class FieldCreateView(CreateView):
         return context
 
 
-class AppModelDetailView(DetailView):
-    model = AppModel
-
-    def get_context_data(self, **kwargs):
-        context = super(AppModelDetailView, self).get_context_data(**kwargs)
-        # If extra contex parameters are required
-        # context['now'] = timezone.now()
-        return context
 
 
-class FieldDetailView(DetailView):
+
+class FieldDetailView(JSONResponseMixin, DetailView):
     model = Field
+    http_method_names = ['get']
+
+    def render_to_response(self, context, **response_kwargs):
+        return self.render_to_json_response(context, **response_kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(FieldDetailView, self).get_context_data(**kwargs)
@@ -892,3 +1064,40 @@ def model_list_from_app_config(request, id):
 
 def editors(request):
     return render(request, 'applicationManager/draganddropedit.html')
+
+
+FORMS = [("Basic Info", ApplicationCreateForm1),
+         ("Description", ApplicationCreateForm4),
+
+         ("libs", ApplicationCreateForm2),
+         ("Page Layout", ApplicationCreateForm3),
+         ]
+
+TEMPLATES = {"Basic Info": "applicationManager/forms/wf.html",
+             "libs": "applicationManager/forms/wf.html",
+             "Page Layout": "applicationManager/forms/page_layout_form.html",
+             "Description": "applicationManager/forms/wf.html",
+             }
+
+
+class ApplicationCreateWizard(SessionWizardView):
+
+    def get_template_names(self):
+        logger.info(self.steps.current)
+        return [TEMPLATES[self.steps.current]]
+
+    def get_context_data(self, form, **kwargs):
+        context = super(ApplicationCreateWizard, self).get_context_data(form=form, **kwargs)
+        if self.steps.current == 'layout':
+            context.update({'layouts': ApplicationLayout.objects.all()})
+        return context
+
+    def done(self, form_list, form_dict, **kwargs):
+        print('done')
+        print(form_dict)
+        print(form_list)
+
+        # create_container(form_dict)
+
+        # Following redirection done only after the last commit
+        return HttpResponseRedirect(reverse('applicationManager:dashboard'))

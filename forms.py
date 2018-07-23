@@ -2,7 +2,7 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Reset, Button, HTML
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, RadioSelect
 from django.urls import reverse
 from openpyxl.chart import label
 
@@ -138,4 +138,67 @@ class UpdateFieldForm(ModelForm):
         fields = ['name', "field_type", 'type_parameter', 'owner_model']
 
 
+class ApplicationCreateForm1(ModelForm):
+    class Meta:
+        exclude = ['description']
+        model = Application
 
+
+
+class ApplicationCreateForm4(ModelForm):
+    class Meta:
+        fields = ['description']
+        model = Application
+
+
+
+class ApplicationCreateForm2(forms.Form):
+    BS_VERS=(
+        ('4.1','Bootstrap v4.1'),
+        ('4.0', 'Bootstrap v4.0.0'),
+        ('3.7.1', 'Bootstrap v3.3.7'),
+    )
+
+    JQUERY_VERS=(
+        ('3.3.1','jQuery Core 3.3.1'),
+        ('3.3.0', 'jQuery Core 3.3.0'),
+        ('3.2.1', 'jQuery Core 3.2.1'),
+        ('3.2.0', 'jQuery Core 3.2.0'),
+        ('3.1.1', 'jQuery Core 3.1.1'),
+        ('3.1.0', 'jQuery Core 3.1.0'),
+        ('3.0.0', 'jQuery Core 3.0.0'),
+        ('2.2.4', 'jQuery Core 2.2.4'),
+        ('2.2.3', 'jQuery Core 2.2.3'),
+        ('2.2.2', 'jQuery Core 2.2.2'),
+        ('2.2.1', 'jQuery Core 2.2.1'),
+        ('2.2.0', 'jQuery Core 2.2.0'),
+    )
+
+    bootsrap_version = forms.CharField(label='Bootstrap version', widget=forms.Select(choices=BS_VERS))
+    jquery_version = forms.CharField(label='JQuery version', widget=forms.Select(choices=JQUERY_VERS))
+
+
+
+class CustomRadioSelect(RadioSelect):
+    template_name = 'applicationManager/forms/template.html'
+    option_template_name = 'applicationManager/forms/radio_option_custom.html'
+
+
+class ApplicationCreateForm3(forms.Form):
+    # LAYOUT_OPTS = (
+    #     ('3-column', '3-column'),
+    #     ('3-column-header', '3-column-header'),
+    #     ('3-column-header-footer', '3-column-header-footer'),
+    #     ('3.2.0', 'jQuery Core 3.2.0'),
+    #     ('3.1.1', 'jQuery Core 3.1.1'),
+    #     ('3.1.0', 'jQuery Core 3.1.0'),
+    #     ('3.0.0', 'jQuery Core 3.0.0'),
+    #     ('2.2.4', 'jQuery Core 2.2.4'),
+    #     ('2.2.3', 'jQuery Core 2.2.3'),
+    #     ('2.2.2', 'jQuery Core 2.2.2'),
+    #     ('2.2.1', 'jQuery Core 2.2.1'),
+    #     ('2.2.0', 'jQuery Core 2.2.0'),
+    # )
+    #
+    # layout_opts = forms.ChoiceField(choices=LAYOUT_OPTS, widget=CustomRadioSelect())
+    pass
