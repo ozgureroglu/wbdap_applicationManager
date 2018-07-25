@@ -6,167 +6,293 @@
 {% block page_content %}
 
 
-    {% include "applicationManager/waitingPage.html" %}
 
     <div id="page-wrapper">
 
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                   aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false">Models</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab"
+                   aria-controls="messages" aria-selected="false">Pages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                   aria-controls="settings" aria-selected="false">Settings</a>
+            </li>
+        </ul>
 
-        <div class="card mb-2">
-            <div class="card-header">
-                <div class="row">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <div class="row">
 
-                    <div class="col-lg-12">
-                        <h5 class="page-header"><i class="fa fa-server fa-1x"></i> {{ app.app_name | upper }}
-                            application</h5>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div>Owner : <a href="#">{{ app.owner }}</a></div>
-                        <div>Long Name : <a href="#">{{ app.verbose_name }}</a></div>
-                        <div>URL : <a href="#">{{ app.url }}</a></div>
-                        <div>NamedURL : <a href="#">{{ app.namedUrl }}</a></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div>Is Active : <a href="#">{{ app.active }}</a></div>
-                        <div>Owner : <a href="#">{{ app.owner }}</a></div>
-                        <div>Owner : <a href="#">{{ app.owner }}</a></div>
-                        <div>Owner : <a href="#">{{ app.owner }}</a></div>
-                    </div>
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-
-        </div>
-
-
-        <div class="card-deck mb-2">
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-plug"></i> Models
-                    <div class="pull-right">
-
-                    </div>
-                </div>
-                <!-- /.card-header -->
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        {% csrf_token %}
-
-                        <table class="table table-hover table-striped" id="app_models">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Model Name</th>
-                                <th>Definition</th>
-                                <th>Ops</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.table-responsive -->
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.panel -->
-
-
-            <div class="card fields-panel">
-                <div class="card-header">
-                    <i class="fas fa-plug"></i> Fields
-
-                </div>
-                <!-- /.card-header -->
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        {% csrf_token %}
-
-                        <table class="table table-hover table-striped" id="model_fields">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Field Name</th>
-                                <th>Definition</th>
-                                <th>Type</th>
-                                <th>Parameters</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.table-responsive -->
-                </div>
-                <!-- /.card-body -->
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="card-header">
-                <i class="fas fa-plug"></i> SETTINGS
-            </div>
-            <div class="card-body">
-                <div class="row text-right">
-                    <div class="col-lg-4 border-right">
-                        Application API:
-                        <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler" data-on="Enabled"
-                                    {% if app.applicationsettings.api_enabled == True %}
-                                   checked
-                                    {% endif %}
-                               data-off="Disabled" data-onstyle="success"
-                               data-offstyle="danger">
-                    </div>
-                    <div class="col-lg-4 border-right">
-                        <div class="mb-1">
-                            WBDAP Admin Menu:
-
-                            <input type="checkbox" data-size="small"
-                                    {% if app.applicationsettings.display_wbdap_admin_menu == True %}
-                                   checked
-                                    {% endif %}
-                                   data-toggle="toggle"
-                                   data-on="Enabled" data-off="Disabled" data-onstyle="success"
-                                   data-offstyle="danger" id="wbdap_admin_menu_toggler"><br>
+                            <div class="col-lg-12">
+                                <h5 class="page-header"><i class="fa fa-server fa-1x"></i> {{ app.app_name | upper }}
+                                    application</h5>
+                            </div>
                         </div>
-                        <div>
-                            Application Admin Menu: <input type="checkbox" data-size="small"
-                                {% if app.applicationsettings.display_app_admin_menu == True %}
-                                                           checked
-                                {% endif %}
-                                                           data-toggle="toggle"
-                                                           data-on="Enabled" data-off="Disabled" data-onstyle="success"
-                                                           data-offstyle="danger" id="application_admin_menu_toggler">
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Long Name : <a href="#">{{ app.verbose_name }}</a></div>
+                                <div>URL : <a href="#">{{ app.url }}</a></div>
+                                <div>NamedURL : <a href="#">{{ app.namedUrl }}</a></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>Is Active : <a href="#">{{ app.active }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                                <div>Owner : <a href="#">{{ app.owner }}</a></div>
+                            </div>
                         </div>
 
-
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="col-lg-4  border-right">
-                        Application API:
-                        <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler" data-on="Enabled"
-                               data-off="Disabled">
+
+                </div>
+            </div>
+            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                <div class="card-deck mt-3">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-plug"></i> Models
+                            <div class="pull-right">
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                {% csrf_token %}
+
+                                <table class="table table-hover table-striped" id="app_models">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Model Name</th>
+                                        <th>Definition</th>
+                                        <th>Ops</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.panel -->
+
+
+                    <div class="card fields-panel">
+                        <div class="card-header">
+                            <i class="fas fa-plug"></i> Fields
+
+                        </div>
+                        <!-- /.card-header -->
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                {% csrf_token %}
+
+                                <table class="table table-hover table-striped" id="model_fields">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Field Name</th>
+                                        <th>Definition</th>
+                                        <th>Type</th>
+                                        <th>Parameters</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.card-body -->
                     </div>
 
                 </div>
 
             </div>
+            <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
 
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-plug"></i> Pages
+                        <div class="pull-right">
+
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% csrf_token %}
+
+                            <table class="table table-hover table-striped" id="app_pages">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Page Name</th>
+                                    <th>URL</th>
+                                    <th>Ops</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for page in pages %}
+                                    <tr>
+                                    <td>ss</td>
+                                        <td>{{ page.page_name }}</td>
+                                        <td>{{ page.page_layout.layout_name }}</td>
+                                    <td>ss</td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.panel -->
+
+            </div>
+            <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                <div class="card mt-3">
+
+                    <div class="card-header">
+                        <i class="fas fa-plug"></i> SETTINGS
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-right">
+                            <div class="col-lg-4 border-right">
+                                Application API:
+                                <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler"
+                                       data-on="Enabled"
+                                        {% if app.applicationsettings.api_enabled == True %}
+                                       checked
+                                        {% endif %}
+                                       data-off="Disabled" data-onstyle="success"
+                                       data-offstyle="danger">
+                            </div>
+                            <div class="col-lg-4 border-right">
+                                <div class="mb-1">
+                                    WBDAP Admin Menu:
+
+                                    <input type="checkbox" data-size="small"
+                                            {% if app.applicationsettings.display_wbdap_admin_menu == True %}
+                                           checked
+                                            {% endif %}
+                                           data-toggle="toggle"
+                                           data-on="Enabled" data-off="Disabled" data-onstyle="success"
+                                           data-offstyle="danger" id="wbdap_admin_menu_toggler"><br>
+                                </div>
+                                <div>
+                                    Application Admin Menu: <input type="checkbox" data-size="small"
+                                        {% if app.applicationsettings.display_app_admin_menu == True %}
+                                                                   checked
+                                        {% endif %}
+                                                                   data-toggle="toggle"
+                                                                   data-on="Enabled" data-off="Disabled"
+                                                                   data-onstyle="success"
+                                                                   data-offstyle="danger"
+                                                                   id="application_admin_menu_toggler">
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-4  border-right">
+                                Application API:
+                                <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler"
+                                       data-on="Enabled"
+                                       data-off="Disabled">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
+
+
+        {#        <div class="card">#}
+        {##}
+        {#            <div class="card-header">#}
+        {#                <i class="fas fa-plug"></i> SETTINGS#}
+        {#            </div>#}
+        {#            <div class="card-body">#}
+        {#                <div class="row text-right">#}
+        {#                    <div class="col-lg-4 border-right">#}
+        {#                        Application API:#}
+        {#                        <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler" data-on="Enabled"#}
+        {#                                    {% if app.applicationsettings.api_enabled == True %}#}
+        {#                                   checked#}
+        {#                                    {% endif %}#}
+        {#                               data-off="Disabled" data-onstyle="success"#}
+        {#                               data-offstyle="danger">#}
+        {#                    </div>#}
+        {#                    <div class="col-lg-4 border-right">#}
+        {#                        <div class="mb-1">#}
+        {#                            WBDAP Admin Menu:#}
+        {##}
+        {#                            <input type="checkbox" data-size="small"#}
+        {#                                    {% if app.applicationsettings.display_wbdap_admin_menu == True %}#}
+        {#                                   checked#}
+        {#                                    {% endif %}#}
+        {#                                   data-toggle="toggle"#}
+        {#                                   data-on="Enabled" data-off="Disabled" data-onstyle="success"#}
+        {#                                   data-offstyle="danger" id="wbdap_admin_menu_toggler"><br>#}
+        {#                        </div>#}
+        {#                        <div>#}
+        {#                            Application Admin Menu: <input type="checkbox" data-size="small"#}
+        {#                                {% if app.applicationsettings.display_app_admin_menu == True %}#}
+        {#                                                           checked#}
+        {#                                {% endif %}#}
+        {#                                                           data-toggle="toggle"#}
+        {#                                                           data-on="Enabled" data-off="Disabled" data-onstyle="success"#}
+        {#                                                           data-offstyle="danger" id="application_admin_menu_toggler">#}
+        {#                        </div>#}
+        {##}
+        {##}
+        {#                    </div>#}
+        {#                    <div class="col-lg-4  border-right">#}
+        {#                        Application API:#}
+        {#                        <input type="checkbox" data-toggle="toggle" data-size="small" id="api_toggler" data-on="Enabled"#}
+        {#                               data-off="Disabled">#}
+        {#                    </div>#}
+        {##}
+        {#                </div>#}
+        {##}
+        {#            </div>#}
+        {##}
+        {#        </div>#}
     </div>
-    <!-- /.row -->
+
 
 
 {% endblock %}
@@ -184,7 +310,10 @@
 
     <script>
         $(document).ready(function () {
-
+            $('#myTab a').on('click', function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            })
             var csrf_token = $("input[name='csrfmiddlewaretoken']").attr('value');
 
 
@@ -234,6 +363,13 @@
 
     <script>
         $(document).ready(function () {
+
+
+            var page_table = $('#app_pages').DataTable({
+                "paging": true,
+                "select": true,
+            });
+
 
             var model_editor = new $.fn.dataTable.Editor({
                 ajax: {

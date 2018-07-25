@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
+from ckeditor.fields import RichTextField
+
 import logging
 
 logger = logging.getLogger('applicationManager_models')
@@ -50,6 +52,23 @@ class Application(models.Model):
 class ApplicationAdmin(admin.ModelAdmin):
     pass
 
+
+class PageLayout(models.Model):
+    layout_name = models.CharField(max_length=25, blank=False, null=False)
+    content = RichTextField()
+
+@admin.register(PageLayout)
+class PageLayoutAdmin(admin.ModelAdmin):
+    pass
+
+class ApplicationPage(models.Model):
+    app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE, related_name='pages')
+    page_name = models.CharField(max_length=25, blank=False, null=False)
+    page_layout = models.ForeignKey(PageLayout, blank=False, null=False,on_delete=models.CASCADE)
+
+@admin.register(ApplicationPage)
+class ApplicationPageAdmin(admin.ModelAdmin):
+    pass
 
 
 class ApplicationSettings(models.Model):

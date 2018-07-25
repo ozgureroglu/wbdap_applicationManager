@@ -27,7 +27,8 @@ from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
-from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings
+from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings, \
+    ApplicationPage
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
@@ -646,9 +647,10 @@ def application_info(request, id):
     if request.POST:
         logger.info('receved post')
 
-    app = Application.objects.get(id = id)
+    app = Application.objects.get(id=id)
     app_config = apps.get_app_config(app.app_name)
     models = app_config.get_models()
+    pages = ApplicationPage.objects.filter(app_id=id)
 
     # Here the term model denotes the native models of django not the AppModel of applicationManager application
     # for m in models:
@@ -659,8 +661,9 @@ def application_info(request, id):
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
-                  'models': models}
-                  )
+                   'models': models,
+                   'pages': pages
+                   })
 
 
 class AppModelListView(ListView):
