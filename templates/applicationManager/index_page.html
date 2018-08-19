@@ -57,6 +57,7 @@
                                 <table id="application_list_table" class="display" cellspacing="0" width="100%">
                                     <thead>
                                     <tr>
+
                                         <th>Application Name</th>
                                         <th>Verbose Name</th>
                                         <th>Core App</th>
@@ -73,8 +74,8 @@
                                                 {% csrf_token %}
                                                 <td>
                                                     {% if app.core_app == False %}
-{#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
-{#                                                           target="_blank"></a>#}
+                                                        {#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
+                                                        {#                                                           target="_blank"></a>#}
                                                         <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
                                                            target="_blank">
                                                             <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
@@ -125,14 +126,15 @@
                                                 <td style="text-align: left">
 
                                                     <!-- Single button -->
-                                                    <div class="btn-group" >
+                                                    <div class="btn-group">
                                                         <button type="button"
                                                                 class="btn btn-xs btn-primary dropdown-toggle"
                                                                 data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false">
                                                             Actions <span class="caret"></span>
                                                         </button>
-                                                        <ul class="dropdown-menu" style="overflow-x: visible;overflow-y: visible">
+                                                        <ul class="dropdown-menu"
+                                                            style="overflow-x: visible;overflow-y: visible">
                                                             <li>
                                                                 <a href="{% url 'applicationManager:load-data' app.id %}"> <span
                                                                         class="glyphicon glyphicon-floppy-open"
@@ -235,10 +237,33 @@
 
 
 
+    <script>
+        $(document).ready(function () {
+            /* Formatting function for row details - modify as you need */
+            function format(d) {
+                // `d` is the original data object for the row
+                return '<small><table class="table table-hover text-muted" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Email:</td>' +
+                    '<td>' + d.email + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Last login:</td>' +
+                    '<td>' + d.last_login + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Extra info:</td>' +
+                    '<td>And any further details here (images etc)...</td>' +
+                    '</tr>' +
+                    '</table></small>';
+            }
+        });
+
+    </script>
+
+
 
     <script>
-
-
         var $table = $('#table');
         var $button = $('#button');
         var csrftoken = getCookie('csrftoken');

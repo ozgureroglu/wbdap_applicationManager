@@ -140,7 +140,7 @@ class UpdateFieldForm(ModelForm):
 
 class ApplicationCreateForm1(ModelForm):
     class Meta:
-        exclude = ['description']
+        exclude = ['description','url', 'namedUrl','owner','uuid']
         model = Application
 
 
@@ -178,10 +178,10 @@ class ApplicationCreateForm2(forms.Form):
     jquery_version = forms.CharField(label='JQuery version', widget=forms.Select(choices=JQUERY_VERS))
 
 
-
-class CustomRadioSelect(RadioSelect):
-    template_name = 'applicationManager/forms/template.html'
-    option_template_name = 'applicationManager/forms/radio_option_custom.html'
+#
+# class CustomRadioSelect(RadioSelect):
+#     template_name = 'applicationManager/forms/template.html'
+#     option_template_name = 'applicationManager/forms/radio_option_custom.html'
 
 
 class ApplicationCreateForm3(forms.Form):
@@ -201,4 +201,8 @@ class ApplicationCreateForm3(forms.Form):
     # )
     #
     # layout_opts = forms.ChoiceField(choices=LAYOUT_OPTS, widget=CustomRadioSelect())
+
+    # class Meta:
+    #     fields = ['description']
+    #     model = ApplicationPage
     pass

@@ -1,4 +1,5 @@
 from django.contrib.auth.views import redirect_to_login
+from django.shortcuts import render, redirect
 
 class SimpleMiddleware:
     def __init__(self, get_response):
@@ -12,16 +13,18 @@ class SimpleMiddleware:
 
         if request.path.startswith('/applicationManager/'):
             if not request.user.is_superuser:
-                return redirect_to_login(request.path)
+                # return redirect_to_login(request.path)
+                return redirect('login')
             # Continue processing the request as usual:
 
 
 
+        # this is the seperation point between req and resp
         response = self.get_response(request)
 
-        print('after view')
 
         # Code to be executed for each request/response after
         # the view is called.
+        print('after view')
 
         return response

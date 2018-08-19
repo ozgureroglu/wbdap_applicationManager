@@ -7,6 +7,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
+from scrapy.signals import response_received
 
 from applicationManager.util.api_utils import create_api
 from wbdap import settings
@@ -44,11 +45,10 @@ logger = logging.getLogger("wbdap.debug")
 def landing_page(request):
     if (request.user.has_perm('applicationManager.has_access')):
         print('has access')
+        return redirect("applicationManager:dashboard")
 
-    return render(request,
-                  'applicationManager/landing.html',
-                  {'hide_sidebar_toggle_button': True}
-                  )
+    else:
+        return render(request, 'applicationManager/landing.html', {})
 
 
 @login_required
@@ -1071,15 +1071,14 @@ def editors(request):
 
 FORMS = [("Basic Info", ApplicationCreateForm1),
          ("Description", ApplicationCreateForm4),
-
          ("libs", ApplicationCreateForm2),
          ("Page Layout", ApplicationCreateForm3),
          ]
 
 TEMPLATES = {"Basic Info": "applicationManager/forms/wf.html",
              "libs": "applicationManager/forms/wf.html",
-             "Page Layout": "applicationManager/forms/page_layout_form.html",
              "Description": "applicationManager/forms/wf.html",
+             "Page Layout": "applicationManager/forms/page_layout_form.html",
              }
 
 
@@ -1093,14 +1092,29 @@ class ApplicationCreateWizard(SessionWizardView):
         context = super(ApplicationCreateWizard, self).get_context_data(form=form, **kwargs)
         if self.steps.current == 'layout':
             context.update({'layouts': ApplicationLayout.objects.all()})
+            print(context)
         return context
 
     def done(self, form_list, form_dict, **kwargs):
-        print('done')
-        print(form_dict)
-        print(form_list)
 
-        # create_container(form_dict)
+        # form_data= [form.cleaned_data for form in form_list]
+        # print(form_data)
+        # print(form_data[0])
+        d = form_dict['Basic Info'].cleaned_data
+        app = Application(# Zorunlu alanlar
+                          app_name=d['app_name'],
+                          verbose_name=d['verbose_name'],
+                          active=d['active'],
+                          coming_soon_page=d['coming_soon_page'],
+                          core_app=d['core_app'],
+                          owner_id=self.request.user.id,
+                        uuid= uuid.uuid4(),
+                           # Zorunlu olmayan alanlar
+                          url=d['app_name'],
+                          namedUrl=d['app_name'],
 
+        )
+
+        app.save()
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:dashboard'))

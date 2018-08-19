@@ -1,5 +1,5 @@
 {#{% include '/user_list.html' %}#}
-{% extends "docker_manager/docker_manager_app_template.html" %}
+{% extends "applicationManager/applicationManager_app_template.html" %}
 
 {% load i18n %}
 {% load crispy_forms_tags %}
@@ -8,56 +8,96 @@
     {{ wizard.form.media }}
 {% endblock %}
 
-{% block page_content %}
-    <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-    <form action="" method="post">{% csrf_token %}
-        <table style="border: 1px solid red">
-            {{ wizard.management_form }}
-            {% if wizard.form.forms %}
+{% block head_stylesheet %}
+    {{ block.super }}
+    <style>
+        .bg {
+            position: fixed;
+            left: 0;
+            right: 0;
+            z-index: -10000;
 
-                {% crispy wizard.form.management_form %}
-                {% for form in wizard.form.forms %}
-                    {% crispy form %}
-                {% endfor %}
-            {% else %}
-                {#    {{ wizard.form }}#}
-                {#                                {% crispy wizard.form %}#}
+            display: block;
+            /*background-color: #00CC00;*/
+            background-image: url('{{ STATIC_URL }}projectCore/images/wizard.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
 
-                {% for layout in layouts %}
-                    <div class="col-md-3">
-                        <input type="radio" name="layout_choice_field" value="{{ layout.id }}">
-                        <label for="">{{ layout.name }}</label>
-                    </div>
+            width: 100%;
+            height: 100%;
+            /*opacity: 0.9;*/
 
-                {% endfor %}
-                 <div class="clearfix">
-                <br><br>
-
-                {#                    {% for choice in wizard.form.layout_opts.field.choices %}#}
-                {#                        <div class="col-md-3">#}
-                {#                            <input type="radio" name="my_choice_field" value="{{ choice.0 }}"#}
-                {#                                    {% ifequal form.my_choice_field.data choice.0 %}#}
-                {#                                   checked="checked"#}
-                {#                                    {% endifequal %}/>#}
-                {#                            <label for="">{{ choice.1 }}</label>#}
-                {#                        </div>#}
-                {#                    {% endfor %}#}
-
-
-
-            {% endif %}
-        </table>
-
-
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit"
-                    value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-            <button name="wizard_goto_step" type="submit"
-                    value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
-        {% endif %}
-        <input type="submit" value="{% trans "submit" %}"/>
-        </div>
-    </form>
+        {#-webkit-filter: blur(8px);#}{#-moz-filter: blur(8px);#}{#-o-filter: blur(8px);#}{#-ms-filter: blur(8px);#}{#filter: blur(2px);#}
+        }
+    </style>
 {% endblock %}
+
+
+{% block full_screen_background %}
+    <div class="bg"></div>
+{% endblock %}
+
+
+{% block page_content %}
+
+    {{ layouts }}
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+{#            <div class="card" style="background: rgba(50, 50, 50, 0.8)">#}
+            <div class="card" style="background: rgba(254, 150, 35, 0.8);">
+                <div class="card-header text-center">
+                    <strong class="text-white"><h4>CREATE NEW PROJECT</h4></strong>
+                    <h5>{{ wizard.steps.current }}  </h5>
+                    <small class="text-black-50"><p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p></small>
+                </div>
+
+                <form action="" method="post">{% csrf_token %}
+                    <div class="card-body">
+                        <table>
+                            {{ wizard.management_form }}
+                            {% if wizard.form.forms %}
+                                {#    {{ wizard.form.management_form }}#}
+                                {% crispy wizard.form.management_form %}
+                                {% for form in wizard.form.forms %}
+                                    {% crispy form %}
+
+                                                            {% for layout in layouts %}
+                                          <div class="card">
+    <img class="card-img-top" src=".../100px200/" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+                                        {% endfor %}
+
+
+                                {% endfor %}
+                            {% else %}
+
+
+
+                                {#    {{ wizard.form }}#}
+                                {% crispy wizard.form %}
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        {% if wizard.steps.prev %}
+                            <button class="btn" name="wizard_goto_step" type="submit"
+                                    value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                            <button class="btn"name="wizard_goto_step" type="submit"
+                                    value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+                        {% endif %}
+
+                        <input class="btn btn-primary" type="submit" value="{% trans "submit" %}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
 
 

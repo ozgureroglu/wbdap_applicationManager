@@ -50,7 +50,7 @@
                             <tr>
                                 <th></th>
                                 <th>Application Name</th>
-                                {#                                        <th>Verbose Name</th>#}
+                                                                        <th>Verbose Name</th>
                                 <th>Core App</th>
                                 <th>Owner</th>
 
@@ -63,6 +63,7 @@
                                 <tr>
                                     <form action="" method="POST" id="appForm_{{ app.id }}">
                                         {% csrf_token %}
+                                    <td></td>
                                         <td>
                                             {% if app.core_app == False %}
                                                 {#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}

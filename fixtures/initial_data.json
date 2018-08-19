@@ -1,5 +1,21 @@
 [
 {
+  "model": "applicationManager.pagelayout",
+  "pk": 1,
+  "fields": {
+    "layout_name": "Three Column Layout",
+    "content": "<pre>\r\n{% extends &quot;projectCore/template_level_40_datatables_resources.html&quot; %}\r\n{% load staticfiles %}\r\n\r\n{% block body_layout %}\r\n\r\n    {% block full_screen_background %}&lt;!-- add a full screen background to page --&gt;{% endblock %}\r\n    {% block menu_navbar_toggler_buttons %}&lt;!-- add a navbar to place menu toggler buttons --&gt;{% endblock %}\r\n\r\n    {% block wrapper %}\r\n        &lt;div id=&quot;wrapper&quot;&gt;\r\n\r\n            {% block offcanvas-app-navs %}\r\n                {% block offcanvas-app-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-admin-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-tmp-nav-wrapper %}{% endblock %}\r\n            {% endblock %}\r\n\r\n            {% block page-content-wrapper %}\r\n                &lt;div id=&quot;page-content-wrapper&quot;&gt;\r\n                    {% block content_layout %}\r\n                        {# Project_Base_Template : Body icinde olmasi gereken hersey bu block degistirilerek olusturulmalidir.&lt;br&gt;#}\r\n                    {% endblock %}\r\n                &lt;/div&gt;\r\n            {% endblock %}\r\n        &lt;/div&gt;\r\n    {% endblock %}\r\n\r\n{% endblock %}</pre>"
+  }
+},
+{
+  "model": "applicationManager.pagelayout",
+  "pk": 2,
+  "fields": {
+    "layout_name": "Two column layout",
+    "content": "{% extends \"projectCore/template_level_40_datatables_resources.html\" %}\r\n{% load staticfiles %}\r\n\r\n{% block body_layout %}\r\n\r\n    {% block full_screen_background %}<!-- add a full screen background to page -->{% endblock %}\r\n    {% block menu_navbar_toggler_buttons %}<!-- add a navbar to place menu toggler buttons -->{% endblock %}\r\n\r\n    {% block wrapper %}\r\n        <div id=\"wrapper\">\r\n\r\n            {% block offcanvas-app-navs %}\r\n                {% block offcanvas-app-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-admin-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-tmp-nav-wrapper %}{% endblock %}\r\n            {% endblock %}\r\n\r\n            {% block page-content-wrapper %}\r\n                <div id=\"page-content-wrapper\">\r\n                    {% block content_layout %}\r\n                        {# Project_Base_Template : Body icinde olmasi gereken hersey bu block degistirilerek olusturulmalidir.<br>#}\r\n                    {% endblock %}\r\n                </div>\r\n            {% endblock %}\r\n        </div>\r\n    {% endblock %}\r\n\r\n{% endblock %}"
+  }
+},
+{
   "model": "applicationManager.application",
   "pk": 616,
   "fields": {
@@ -10,7 +26,7 @@
     "active": false,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "2b7d63cb-5575-4351-9fbb-e0114e689a52"
   }
@@ -26,7 +42,7 @@
     "active": true,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": true,
     "uuid": "abe0a943-9f06-407f-98ff-83b5c889f205"
   }
@@ -42,7 +58,7 @@
     "active": true,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "46aa8dec-4074-4650-bf4a-ba2e479a5f84"
   }
@@ -58,7 +74,7 @@
     "active": false,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "e4d01c3a-37f1-4e54-936e-8342dd6ba8d1"
   }
@@ -74,7 +90,7 @@
     "active": false,
     "description": "Generic data scraper with storage capability.",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "18e1fa62-d9e8-49e1-ada7-e473f2eef860"
   }
@@ -90,7 +106,7 @@
     "active": true,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": true,
     "uuid": "c6b4af68-da35-4a73-8231-d41ed16fc5ae"
   }
@@ -106,7 +122,7 @@
     "active": false,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": true,
     "uuid": "ad9be11a-631f-4492-a98f-a506cd32db45"
   }
@@ -122,7 +138,7 @@
     "active": false,
     "description": "A database of businesses which can be investigated and used for starting an startup.",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "1935b6ae-ea2d-409d-a7cf-38d80fc19ffa"
   }
@@ -138,7 +154,7 @@
     "active": true,
     "description": "Readme file",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": true,
     "uuid": "a39546fe-c528-40a6-88e9-d4fa220e85ce"
   }
@@ -154,7 +170,7 @@
     "active": true,
     "description": "sciDB",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "92b2d551-9c33-4612-a627-ffffa351e3dd"
   }
@@ -170,7 +186,7 @@
     "active": true,
     "description": "projectManager",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "de1167cc-360e-4799-b729-b2af23f0ef63"
   }
@@ -186,7 +202,7 @@
     "active": false,
     "description": "webcoding",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "3c94f17c-9a82-4c8a-be85-2796701c5ab8"
   }
@@ -202,7 +218,7 @@
     "active": false,
     "description": "filemanager",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": true,
     "uuid": "e50e1e91-b1c0-4b57-a9b8-502266e97ed8"
   }
@@ -218,7 +234,7 @@
     "active": false,
     "description": "docker_manager",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "2c40e692-310c-4c15-be22-912efa453d7a"
   }
@@ -234,7 +250,7 @@
     "active": false,
     "description": "jamesAdministrator",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "7086b833-f98b-4f29-8fc0-ec65a02cc8ac"
   }
@@ -250,7 +266,7 @@
     "active": false,
     "description": "mentor",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "5995c608-a5fd-4ad7-a066-c6aaccf12cb5"
   }
@@ -266,7 +282,7 @@
     "active": true,
     "description": "mailapp",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f588-4edc-a895-8f6a167141d6"
   }
@@ -282,7 +298,7 @@
     "active": false,
     "description": "rulemall",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f578-4edc-a895-8f6a167141d6"
   }
@@ -298,7 +314,7 @@
     "active": false,
     "description": "gametest",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f578-4edc-a895-3f6a167141d6"
   }
@@ -314,7 +330,7 @@
     "active": false,
     "description": "scraper",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b6913c2"
   }
@@ -330,9 +346,173 @@
     "active": false,
     "description": "testapp",
     "coming_soon_page": true,
-    "owner": 1,
+    "owner": 24,
     "core_app": false,
     "uuid": "236ba6ab-271c-4da6-8d4c-2f05fa87c7ff"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 777,
+  "fields": {
+    "app_name": "activityStream",
+    "verbose_name": "activityStream",
+    "url": "activityStream",
+    "namedUrl": "activityStream",
+    "active": true,
+    "description": "activityStream",
+    "coming_soon_page": true,
+    "owner": 24,
+    "core_app": false,
+    "uuid": "236ba6aa-271c-4da6-8d4c-2f05fa87c7ff"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 778,
+  "fields": {
+    "app_name": "flashcards",
+    "verbose_name": "flashcards",
+    "url": "flashcards",
+    "namedUrl": "flashcards",
+    "active": true,
+    "description": "flashcards",
+    "coming_soon_page": false,
+    "owner": 24,
+    "core_app": false,
+    "uuid": "236bb6aa-271c-4da6-8d4c-2f05fa87c7ff"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 779,
+  "fields": {
+    "app_name": "elasticsearchapp",
+    "verbose_name": "elasticsearchapp",
+    "url": "elasticsearchapp",
+    "namedUrl": "elasticsearchapp",
+    "active": true,
+    "description": "elasticsearchapp",
+    "coming_soon_page": false,
+    "owner": 24,
+    "core_app": false,
+    "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b69a3c2"
+  }
+},
+{
+  "model": "applicationManager.applicationpage",
+  "pk": 1,
+  "fields": {
+    "app": 618,
+    "page_type": "predefined",
+    "page_name": "about",
+    "page_layout": 1
+  }
+},
+{
+  "model": "applicationManager.applicationpage",
+  "pk": 2,
+  "fields": {
+    "app": 775,
+    "page_type": "predefined",
+    "page_name": "my landing",
+    "page_layout": 1
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 1,
+  "fields": {
+    "app": 618,
+    "api_enabled": true,
+    "display_wbdap_admin_menu": false,
+    "display_app_admin_menu": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 2,
+  "fields": {
+    "app": 727,
+    "api_enabled": false,
+    "display_wbdap_admin_menu": true,
+    "display_app_admin_menu": true
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 3,
+  "fields": {
+    "app": 616,
+    "api_enabled": false,
+    "display_wbdap_admin_menu": false,
+    "display_app_admin_menu": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 4,
+  "fields": {
+    "app": 622,
+    "api_enabled": false,
+    "display_wbdap_admin_menu": false,
+    "display_app_admin_menu": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 5,
+  "fields": {
+    "app": 777,
+    "api_enabled": false,
+    "display_wbdap_admin_menu": false,
+    "display_app_admin_menu": false
+  }
+},
+{
+  "model": "applicationManager.appmodel",
+  "pk": 1,
+  "fields": {
+    "name": "asdasd",
+    "definition": "asd",
+    "owner_app": 618
+  }
+},
+{
+  "model": "applicationManager.appmodel",
+  "pk": 2,
+  "fields": {
+    "name": "sdf",
+    "definition": "asd",
+    "owner_app": 618
+  }
+},
+{
+  "model": "applicationManager.applicationlayout",
+  "pk": 1,
+  "fields": {
+    "name": "two_col"
+  }
+},
+{
+  "model": "applicationManager.applicationlayout",
+  "pk": 2,
+  "fields": {
+    "name": "aasda"
+  }
+},
+{
+  "model": "applicationManager.applicationlayout",
+  "pk": 3,
+  "fields": {
+    "name": "ssdfsdf"
+  }
+},
+{
+  "model": "applicationManager.applicationlayout",
+  "pk": 4,
+  "fields": {
+    "name": "dfgdfgdf"
   }
 }
 ]
