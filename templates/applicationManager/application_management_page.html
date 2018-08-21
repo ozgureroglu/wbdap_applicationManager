@@ -66,9 +66,7 @@
             </div>
             <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
-                <div class="card-deck mt-3">
-
-                    <div class="card">
+                    <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-plug"></i> Models
                             <div class="pull-right">
@@ -84,7 +82,7 @@
                                 <table class="table table-hover table-striped" id="app_models">
                                     <thead>
                                     <tr>
-                                        <th></th>
+{#                                        <th></th>#}
                                         <th>Model Name</th>
                                         <th>Definition</th>
                                         <th>Ops</th>
@@ -100,7 +98,6 @@
                         <!-- /.card-body -->
                     </div>
                     <!-- /.panel -->
-
 
                     <div class="card fields-panel">
                         <div class="card-header">
@@ -133,7 +130,12 @@
                         <!-- /.card-body -->
                     </div>
 
-                </div>
+
+{#                #}
+{#                <div class="card-deck mt-3">#}
+{##}
+{#             #}
+{#                </div>#}
 
             </div>
             <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
@@ -488,12 +490,12 @@
                     selector: 'td:first-child'
                 },
                 "columns": [
-                    {
-                        data: null,
-                        defaultContent: '',
-                        className: 'select-checkbox not_editable',
-                        orderable: false
-                    },
+                    {#{#}
+                    {#    data: null,#}
+                    {#    defaultContent: '',#}
+                    {#    className: 'select-checkbox not_editable',#}
+                    {#    orderable: false#}
+                    {#},#}
                     {"data": "name"},
                     {"data": "definition"},
                     //{
