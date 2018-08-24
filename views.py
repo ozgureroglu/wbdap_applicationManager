@@ -29,7 +29,7 @@ from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings, \
-    ApplicationPage
+    ApplicationPage, ApplicationUrl
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
@@ -64,7 +64,28 @@ def dashboard(request):
     return render(request,
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
+@login_required
+def application_router(request,uuid,url_name):
+    app = Application.objects.get(uuid=uuid)
+    app_name = app.app_name
+    reload(sys.modules[settings.ROOT_URLCONF])
+    # return redirect('applicationManager:dashboard')
+    return redirect("/" + app_name + '/')
 
+@login_required
+def dyn_view_loader(request,uuid,url_name):
+
+    dyn_view_code = ApplicationUrl.objects.get(url_name=url_name).view_method.view_code
+    print(dyn_view_code)
+    exec(dyn_view_code)
+    app = Application.objects.get(uuid=uuid)
+    app_name = app.app_name
+    reload(sys.modules[settings.ROOT_URLCONF])
+    # return redirect('applicationManager:dashboard')
+    return redirect("/" + app_name + '/')
+
+
+dyn_view_loader
 
 def genuuid_all(request):
     for app in Application.objects.all():
@@ -1108,7 +1129,7 @@ class ApplicationCreateWizard(SessionWizardView):
                           coming_soon_page=d['coming_soon_page'],
                           core_app=d['core_app'],
                           owner_id=self.request.user.id,
-                        uuid= uuid.uuid4(),
+                          uuid= uuid.uuid4(),
                            # Zorunlu olmayan alanlar
                           url=d['app_name'],
                           namedUrl=d['app_name'],

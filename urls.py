@@ -38,6 +38,13 @@ urlpatterns = [
     path('createApplication/', createApplication, name='createApplication'),
     path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
     # path('deleteApplication/<pk>/', ApplicationDelete.as_view(), name='deleteApplication'),
+    # ---------------------------
+    # path('application/router/<uuid:uuid>/', application_router, name='application-router'),
+
+    path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
+
+    # ---------------------------
+
 
     path('application/<int:id>/', application_info, name='application-info'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),

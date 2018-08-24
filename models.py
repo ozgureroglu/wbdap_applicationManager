@@ -69,6 +69,38 @@ class ApplicationAdmin(admin.ModelAdmin):
     pass
 
 
+class ApplicationViewMethod(models.Model):
+    view_name = models.CharField(max_length=50,null=True, blank=True)
+    view_code = models.TextField(max_length=500,null=True, blank=True,default=None)
+    #TODO: it is really important to integrate ace_editor, as thois rich text editor is not very usable.
+    # view_code = RichTextField()
+    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.CASCADE, related_name='views62')
+
+
+    def __str__(self):
+        return self.view_name
+
+@admin.register(ApplicationViewMethod)
+class ApplicationViewMethodAdmin(admin.ModelAdmin):
+    pass
+
+
+
+
+class ApplicationUrl(models.Model):
+    url_pattern = models.CharField(max_length=50,null=True, blank=True)
+    view_method = models.ForeignKey(ApplicationViewMethod, on_delete=models.CASCADE,related_name='mapped_view')
+    url_name = models.CharField(max_length=50,null=True, blank=True)
+
+    def __str__(self):
+        return self.url_name
+
+@admin.register(ApplicationUrl)
+class ApplicationUrlAdmin(admin.ModelAdmin):
+    pass
+
+
+
 PAGE_TYPES =   (
     ('predefined','Predefined Template'),
     ('empty','Empty Page'),
