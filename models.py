@@ -128,11 +128,57 @@ class ApplicationPageAdmin(admin.ModelAdmin):
     pass
 
 
+SETTING_TYPES = (
+    ('boolean','Boolean Type'),
+    ('text','Text Input Type'),
+)
+
+
+class SettingDefinition(models.Model):
+    name = models.CharField(max_length=30, blank=False, null=False, default=None)
+    verbose_name = models.CharField(max_length=60, blank=False, null=False, default=None)
+    # type = models.CharField(max_length=30, choices=SETTING_TYPES, blank=False, null=False, default='boolean')
+    # value = models.BooleanField(max_length=30, blank=False, null=False, default=False)
+    definition = models.CharField(max_length=100, blank=False, null=False, default=None)
+
+    def __str__(self):
+        return self.name
+
+
+    def __unicode__(self):
+        return self.name
+
+@admin.register(SettingDefinition)
+class SettingDefinitionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'definition')
+
+class AppSettingsList(models.Model):
+    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING)
+    setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
+    value = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.app.app_name+'_settings'
+
+
+    def __unicode__(self):
+        return self.app.app_name + '_settings'
+
+
+    class Meta:
+        unique_together = ("app", "setting")
+
+@admin.register(AppSettingsList)
+class AppSettingsListAdmin(admin.ModelAdmin):
+        list_display = ('app', 'setting', 'value')
+
+
+
 class ApplicationSettings(models.Model):
     app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE)
-    api_enabled = models.BooleanField(default=False, blank=False)
-    display_wbdap_admin_menu = models.BooleanField(default=False, blank=False)
-    display_app_admin_menu = models.BooleanField(default=False, blank=False)
+    api_enabled = models.BooleanField(default=False, blank=False, help_text='If checked, enables the DRF API for the app')
+    display_wbdap_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables the global WBDAP admin menu on each page of the application')
+    display_app_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables app specific admin menu on each page of the application')
 
 
     def toogle_setting(self, ttype):
@@ -141,14 +187,11 @@ class ApplicationSettings(models.Model):
         try:
             val = getattr(self, ttype)
 
-
             setattr(self, ttype, not val)
             self.save()
 
         except AttributeError as e:
             logger.fatal(e)
-
-
 
 
     def __unicode__(self):

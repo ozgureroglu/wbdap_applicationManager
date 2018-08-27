@@ -29,7 +29,7 @@ from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings, \
-    ApplicationPage, ApplicationUrl
+    ApplicationPage, ApplicationUrl, AppSettingsList
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
@@ -683,7 +683,8 @@ def application_info(request, id):
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
                    'models': models,
-                   'pages': pages
+                   'pages': pages,
+                   'appsettings':AppSettingsList.objects.filter(app_id=id)
                    })
 
 
