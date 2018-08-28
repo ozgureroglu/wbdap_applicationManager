@@ -206,7 +206,7 @@
                                         {#                                            <td>{{ setting.value }}</td>#}
                                         <td>
                                             <input type="checkbox" data-toggle="toggle" data-size="small"
-                                                   id="api_toggler"
+                                                   id="{{ setting.setting.id }}" class="toggler_input"
                                                    data-on="Enabled"
                                                     {% if setting.value == True %}
                                                    checked
@@ -304,6 +304,14 @@
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                 },
+            });
+
+
+            $(".toggler_input").on('change', function () {
+                var setting_id = $(this).attr('id');
+                $.post("{% url 'applicationManager:trigger' app.id %}", {'setting_id': setting_id}, function (data, status) {
+                    {#alert("Data: " + data + "\nStatus: " + status);#}
+                }, "json");
             });
 
 

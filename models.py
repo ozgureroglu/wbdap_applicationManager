@@ -1,3 +1,4 @@
+from dill import settings
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
@@ -152,7 +153,7 @@ class SettingDefinition(models.Model):
 class SettingDefinitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'definition')
 
-class AppSettingsList(models.Model):
+class ApplicationSettingsList(models.Model):
     app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING)
     setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
     value = models.BooleanField(default=False)
@@ -165,46 +166,63 @@ class AppSettingsList(models.Model):
         return self.app.app_name + '_settings'
 
 
-    class Meta:
-        unique_together = ("app", "setting")
+    def toogle_setting(self):
 
-@admin.register(AppSettingsList)
-class AppSettingsListAdmin(admin.ModelAdmin):
-        list_display = ('app', 'setting', 'value')
+        # print(getattr(self.setting, ttype))
 
-
-
-class ApplicationSettings(models.Model):
-    app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE)
-    api_enabled = models.BooleanField(default=False, blank=False, help_text='If checked, enables the DRF API for the app')
-    display_wbdap_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables the global WBDAP admin menu on each page of the application')
-    display_app_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables app specific admin menu on each page of the application')
-
-
-    def toogle_setting(self, ttype):
-        print(ttype)
-        print(getattr(self, ttype))
         try:
-            val = getattr(self, ttype)
+            # setting = ApplicationSettingsList.objects.get(app_id=id, setting_id=setting_id)
+            # val = setting.value
+            # setting.value = not val
+            # # setattr(self.setting, ttype, not val)
+            # setting.save()
 
-            setattr(self, ttype, not val)
+            self.value = not self.value
             self.save()
 
         except AttributeError as e:
             logger.fatal(e)
 
+    class Meta:
+        unique_together = ("app", "setting")
 
-    def __unicode__(self):
-        return self.app.app_name+"_settings"
-
-    def __str__(self):
-        return self.app.app_name+"_settings"
+@admin.register(ApplicationSettingsList)
+class ApplicationSettingsListAdmin(admin.ModelAdmin):
+    list_display = ('app', 'setting', 'value')
 
 
+#
+# class ApplicationSettings(models.Model):
+#     app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE)
+#     api_enabled = models.BooleanField(default=False, blank=False, help_text='If checked, enables the DRF API for the app')
+#     display_wbdap_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables the global WBDAP admin menu on each page of the application')
+#     display_app_admin_menu = models.BooleanField(default=False, blank=False, help_text='If checked, enables app specific admin menu on each page of the application')
+#
+#
+#     def toogle_setting(self, ttype):
+#         print(ttype)
+#         print(getattr(self, ttype))
+#         try:
+#             val = getattr(self, ttype)
+#
+#             setattr(self, ttype, not val)
+#             self.save()
+#
+#         except AttributeError as e:
+#             logger.fatal(e)
+#
+#
+#     def __unicode__(self):
+#         return self.app.app_name+"_settings"
+#
+#     def __str__(self):
+#         return self.app.app_name+"_settings"
 
-@admin.register(ApplicationSettings)
-class AppSettingsAdmin(admin.ModelAdmin):
-        pass
+
+#
+# @admin.register(ApplicationSettings)
+# class AppSettingsAdmin(admin.ModelAdmin):
+#         pass
 
 
 

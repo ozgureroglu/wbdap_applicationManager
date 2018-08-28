@@ -28,8 +28,8 @@ from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
-from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings, \
-    ApplicationPage, ApplicationUrl, AppSettingsList
+from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
+    ApplicationPage, ApplicationUrl, ApplicationSettingsList
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
@@ -641,17 +641,11 @@ def updateAppsDB(request):
 @require_POST
 def trigger(request, id):
 
-    print('triggered')
-    ttype = request.POST['type']
-
-    obj, created = ApplicationSettings.objects.get_or_create(app_id=id,defaults={},)
-
-    obj.toogle_setting(ttype)
-
+    setting_id = request.POST['setting_id']
+    obj, created = ApplicationSettingsList.objects.get_or_create(app_id=id,setting_id = setting_id, defaults={},)
+    obj.toogle_setting()
 
     # Application.objects.get(id = id).applicationsettings.toogle_setting(request.POST['type'])
-
-
     # create_api('testapp')
     return JsonResponse({}, safe=False)
 
@@ -679,12 +673,18 @@ def application_info(request, id):
     #
 
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
+
+    #TODO: Not so beautiful place to the this
+
+
+
+
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
                    'models': models,
                    'pages': pages,
-                   'appsettings':AppSettingsList.objects.filter(app_id=id)
+                   'appsettings': ApplicationSettingsList.objects.filter(app_id=id)
                    })
 
 
