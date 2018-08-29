@@ -29,13 +29,14 @@ from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
-    ApplicationPage, ApplicationUrl, ApplicationSettingsList
+    ApplicationPage, ApplicationUrl, ApplicationSettings
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
-from applicationManager.signals.signals import application_created_signal, application_removed_signal
+from applicationManager.signals.signals import application_created_signal, application_removed_signal, \
+    soft_application_removed_signal, soft_application_created_signal
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -204,14 +205,26 @@ def delete_application(request, id):
     app = Application.objects.get(id=id)
     logger.info('Deleting application %s', app.app_name)
 
-    try:
+
+    if app.soft_app == True:
+        try:
+            app.delete()
+        except Exception as e:
+            logger.fatal('An exception occured while deleting application : %s', e)
+            return False
+
+        soft_application_removed_signal.send(sender=Application.__class__, test="testString",
+                                    application=app)
+    else:
+        try:
+            app.delete()
+        except Exception as e:
+            logger.fatal('An exception occured while deleting application : %s', e)
+            return False
+
         application_removed_signal.send(sender=Application.__class__, test="testString",
-                                        application=Application.objects.get(app_name=app.app_name))
-    except Exception as e:
-        logger.fatal('An exception occured while deleting application : %s', e)
-        return False
-        # app = Application.objects.get(appName = request.POST[key])
-        # app.delete()
+                                    application=Application.objects.get(app_name=app.app_name))
+
     return redirect('applicationManager:dashboard')
 
 
@@ -642,7 +655,7 @@ def updateAppsDB(request):
 def trigger(request, id):
 
     setting_id = request.POST['setting_id']
-    obj, created = ApplicationSettingsList.objects.get_or_create(app_id=id,setting_id = setting_id, defaults={},)
+    obj, created = ApplicationSettings.objects.get_or_create(app_id=id, setting_id = setting_id, defaults={}, )
     obj.toogle_setting()
 
     # Application.objects.get(id = id).applicationsettings.toogle_setting(request.POST['type'])
@@ -663,8 +676,6 @@ def application_info(request, id):
         logger.info('received post')
 
     app = Application.objects.get(id=id)
-
-    print(app.settings_list.get(app_id=id,setting__name='api_enabled').value)
 
     app_config = apps.get_app_config(app.app_name)
     models = app_config.get_models()
@@ -687,7 +698,7 @@ def application_info(request, id):
                    'app': Application.objects.get(id=id),
                    'models': models,
                    'pages': pages,
-                   'appsettings': ApplicationSettingsList.objects.filter(app_id=id)
+                   'appsettings': ApplicationSettings.objects.filter(app_id=id)
                    })
 
 
@@ -1137,9 +1148,13 @@ class ApplicationCreateWizard(SessionWizardView):
                            # Zorunlu olmayan alanlar
                           url=d['app_name'],
                           namedUrl=d['app_name'],
+                          soft_app=True,
 
         )
 
         app.save()
+
+        soft_application_created_signal.send(sender=Application.__class__, test="testString",
+                                             application=app)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:dashboard'))

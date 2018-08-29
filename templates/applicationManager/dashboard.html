@@ -50,10 +50,9 @@
                             <tr>
                                 <th></th>
                                 <th>Application Name</th>
-                                                                        <th>Verbose Name</th>
+                                <th>Verbose Name</th>
                                 <th>Core App</th>
                                 <th>Owner</th>
-
                                 <th style="text-align:left">Operations</th>
                             </tr>
                             </thead>
@@ -63,12 +62,16 @@
                                 <tr>
                                     <form action="" method="POST" id="appForm_{{ app.id }}">
                                         {% csrf_token %}
-                                    <td></td>
+                                        <td></td>
                                         <td>
                                             {% if app.core_app == False %}
                                                 {#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
                                                 {#                                                           target="_blank"></a>#}
-                                                <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                {% if app.soft_app == True %}
+                                                    <a href="{% url 'applicationManager:dyn-view-loader' app.uuid 'sayhello' %}"
+                                                {% else %}
+                                                    <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                {% endif %}
                                                    target="_blank">
                                                     <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
                                                 </a>

@@ -43,7 +43,7 @@ urlpatterns = [
 
     path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
 
-    # ---------------------------
+    # ------------------------------------------------------
 
 
     path('application/<int:id>/', application_info, name='application-info'),

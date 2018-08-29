@@ -50,6 +50,7 @@ class Application(models.Model):
     description = models.TextField(max_length=500) # Description of the application
     coming_soon_page = models.BooleanField(default=True, blank=False) # want to include a coming_soon page
 
+    soft_app = models.BooleanField(default=False, null=False,blank=False)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING) # Owner of this application
     core_app = models.BooleanField(default=False, null=False,blank=False)
     # uuid = models.UUIDField(primary_key=False, editable=True, blank=True,null=True)
@@ -153,7 +154,7 @@ class SettingDefinition(models.Model):
 class SettingDefinitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'definition')
 
-class ApplicationSettingsList(models.Model):
+class ApplicationSettings(models.Model):
     app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING,related_name='settings_list')
     setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
     value = models.BooleanField(default=False)
@@ -171,7 +172,7 @@ class ApplicationSettingsList(models.Model):
         # print(getattr(self.setting, ttype))
 
         try:
-            # setting = ApplicationSettingsList.objects.get(app_id=id, setting_id=setting_id)
+            # setting = ApplicationSettings.objects.get(app_id=id, setting_id=setting_id)
             # val = setting.value
             # setting.value = not val
             # # setattr(self.setting, ttype, not val)
@@ -186,8 +187,8 @@ class ApplicationSettingsList(models.Model):
     class Meta:
         unique_together = ("app", "setting")
 
-@admin.register(ApplicationSettingsList)
-class ApplicationSettingsListAdmin(admin.ModelAdmin):
+@admin.register(ApplicationSettings)
+class ApplicationSettingsAdmin(admin.ModelAdmin):
     list_display = ('app', 'setting', 'value')
 
 

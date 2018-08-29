@@ -52,13 +52,17 @@ def django_current_app_name_processor(request):
 def get_app(request):
     app_name = resolve(request.path)._func_path
     app = (app_name.split("."))[0]
-
-    return Application.objects.get(app_name = app)
+    if not app == 'django':
+        return Application.objects.get(app_name = app)
+    else:
+        return None
 
 
 def add_app_settings_processor(request):
     app = get_app(request)
     data={}
+    if app == None:
+        return {}
     if not app.settings_list.filter(app_id=app.id).count() == 0:
 
         for s in app.settings_list.filter(app_id=app.id):
