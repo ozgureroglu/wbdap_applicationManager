@@ -49,6 +49,23 @@ def django_current_app_name_processor(request):
 #     # print(request.path.split("/")[1]+":index")
 #     return {'curApp_index': request.path.split("/")[1] + ":index"}
 
+def get_app(request):
+    app_name = resolve(request.path)._func_path
+    app = (app_name.split("."))[0]
+
+    return Application.objects.get(app_name = app)
+
+
+def add_app_settings_processor(request):
+    app = get_app(request)
+    data={}
+    if not app.settings_list.filter(app_id=app.id).count() == 0:
+
+        for s in app.settings_list.filter(app_id=app.id):
+            data[s.setting.name] = s.value
+    print(data)
+    return data
+
 
 def get_current_app_type(request):
     """

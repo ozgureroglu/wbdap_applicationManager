@@ -154,7 +154,7 @@ class SettingDefinitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'definition')
 
 class ApplicationSettingsList(models.Model):
-    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING)
+    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING,related_name='settings_list')
     setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
     value = models.BooleanField(default=False)
 

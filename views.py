@@ -54,7 +54,7 @@ def landing_page(request):
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
-        applications = Application.objects.all();
+        applications = Application.objects.all()
     else:
         if Application.objects.filter(owner_id=request.user.id):
             applications = Application.objects.get(owner_id=request.user.id)
@@ -660,9 +660,12 @@ def get_application_models(request, id):
 @login_required
 def application_info(request, id):
     if request.POST:
-        logger.info('receved post')
+        logger.info('received post')
 
     app = Application.objects.get(id=id)
+
+    print(app.settings_list.get(app_id=id,setting__name='api_enabled').value)
+
     app_config = apps.get_app_config(app.app_name)
     models = app_config.get_models()
     pages = ApplicationPage.objects.filter(app_id=id)
