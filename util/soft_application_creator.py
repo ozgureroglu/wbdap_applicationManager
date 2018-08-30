@@ -2,7 +2,8 @@ __author__ = 'ozgur'
 
 from shutil import copyfile
 from django.core.management import call_command
-from applicationManager.models import Application, AppModel, SettingDefinition, ApplicationSettings
+from applicationManager.models import Application, AppModel, SettingDefinition, ApplicationSettings, \
+    ApplicationViewMethod, ApplicationComponentTemplate
 from applicationManager.signals.signals import application_creation_failed_signal
 
 import mako
@@ -79,8 +80,17 @@ class SoftApplicationCreator:
 
     def create_settings(self):
         setting_defs = SettingDefinition.objects.all()
+
         for s in setting_defs:
-            ApplicationSettings.objects.create(app_id=self.id, setting_id=s.id)
+            ApplicationSettings.objects.create(app_id=self.application.id, setting_id=s.id)
+
+    def create_default_urls(self):
+        pass
+
+    def create_default_views(self):
+        tmp = ApplicationComponentTemplate.objects.get(temp_name='index_page')
+        tmp.get_required_context_params()
+        # ApplicationViewMethod.objects.create(view_name='landing_page', app_id=self.application.id)
 
 
     # Creates the application and all necessary other folders

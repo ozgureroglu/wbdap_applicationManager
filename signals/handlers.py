@@ -1,3 +1,5 @@
+from applicationManager.util.soft_application_creator import SoftApplicationCreator
+
 __author__ = 'ozgur'
 
 import logging
@@ -27,6 +29,10 @@ def application_created(sender, **kwargs):
 def soft_application_created(sender, **kwargs):
     logger.info("soft_application_created signal receieved")
     app = kwargs['application']
+
+    sac = SoftApplicationCreator(app)
+    sac.create_settings()
+    sac.create_default_views()
 
 
 

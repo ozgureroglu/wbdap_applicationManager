@@ -155,7 +155,7 @@ class SettingDefinitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'definition')
 
 class ApplicationSettings(models.Model):
-    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.DO_NOTHING,related_name='settings_list')
+    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.CASCADE,related_name='settings_list')
     setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
     value = models.BooleanField(default=False)
 
@@ -190,6 +190,51 @@ class ApplicationSettings(models.Model):
 @admin.register(ApplicationSettings)
 class ApplicationSettingsAdmin(admin.ModelAdmin):
     list_display = ('app', 'setting', 'value')
+
+
+TEMPLATE_TYPES=(
+    ('generic', 'Generic Template'),
+    ('view', 'View Template'),
+    ('url', 'URL Template'),
+    ('html', 'Django Template Template'),
+    ('file', 'File Template'),
+)
+
+TEMPLATE_ENGINE=(
+    ('django', 'Django Template'),
+    ('jinja2', 'Jinja2 Template'),
+    ('mako', 'Mako Template'),
+    ('mustache', 'Mustache Template'),
+)
+
+
+
+class ApplicationComponentTemplate(models.Model):
+    temp_name = models.CharField(max_length=50, null=True, blank=True)
+    temp_type = models.CharField(max_length=60, choices=TEMPLATE_TYPES, blank=False, null=False, default='generic')
+    temp_code = models.TextField(max_length=500, null=True, blank=True, default=None)
+    temp_engine = models.CharField(max_length=60, choices=TEMPLATE_ENGINE, blank=False, null=False, default='django')
+    definition = models.TextField(max_length=200, blank=True, null=False, default=None)
+    # TODO: it is really important to integrate ace_editor, as thois rich text editor is not very usable.
+
+    def __str__(self):
+        return self.temp_name
+
+    def get_required_context_params(self):
+        import re
+        tc = self.temp_code
+        # p = re.compile("\{\{ (.*?) \}\}")
+        res = re.findall("\{\{(.*?)\}\}",tc)
+        return set(res)
+
+    def render_template(self,context):
+        pass
+
+@admin.register(ApplicationComponentTemplate)
+class ApplicationComponentTemplateAdmin(admin.ModelAdmin):
+    list_display = ('temp_name','temp_type','temp_engine','definition')
+
+
 
 
 #
