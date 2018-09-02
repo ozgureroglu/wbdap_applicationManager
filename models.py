@@ -224,11 +224,17 @@ class ApplicationComponentTemplate(models.Model):
         import re
         tc = self.temp_code
         # p = re.compile("\{\{ (.*?) \}\}")
-        res = re.findall("\{\{(.*?)\}\}",tc)
-        return set(res)
+        dq = set(re.findall("\{\{(.*?)\}\}",tc))
+        print(dq)
+        sq = set(re.findall("\{\%(.*?)\%\}",tc))
 
-    def render_template(self,context):
+        return dq
+
+    def render_template(self, context):
         pass
+
+    class Meta:
+        unique_together = ('temp_name', 'temp_type')
 
 @admin.register(ApplicationComponentTemplate)
 class ApplicationComponentTemplateAdmin(admin.ModelAdmin):

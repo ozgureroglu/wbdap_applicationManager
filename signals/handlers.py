@@ -33,6 +33,8 @@ def soft_application_created(sender, **kwargs):
     sac = SoftApplicationCreator(app)
     sac.create_settings()
     sac.create_default_views()
+    sac.create_default_urls()
+
 
 
 

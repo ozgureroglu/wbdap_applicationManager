@@ -74,10 +74,13 @@ def application_router(request,uuid,url_name):
     return redirect("/" + app_name + '/')
 
 @login_required
-def dyn_view_loader(request,uuid,url_name):
+def dyn_view_loader(request,uuid,url_name=None):
+    if url_name == None:
+        url_name = 'index-page'
 
     dyn_view_code = ApplicationUrl.objects.get(url_name=url_name).view_method.view_code
     print(dyn_view_code)
+
     exec(dyn_view_code)
     app = Application.objects.get(uuid=uuid)
     app_name = app.app_name

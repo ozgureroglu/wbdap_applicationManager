@@ -3,7 +3,7 @@ __author__ = 'ozgur'
 from shutil import copyfile
 from django.core.management import call_command
 from applicationManager.models import Application, AppModel, SettingDefinition, ApplicationSettings, \
-    ApplicationViewMethod, ApplicationComponentTemplate
+    ApplicationViewMethod, ApplicationComponentTemplate, ApplicationUrl
 from applicationManager.signals.signals import application_creation_failed_signal
 
 import mako
@@ -11,8 +11,9 @@ import os
 import logging
 import datetime
 from mako import runtime
-from mako.template import Template
-from django.template import loader
+from mako.template import Template as MakoTemplate
+from django.template import loader, Context, Template
+
 from io import StringIO
 from django.conf import settings
 
@@ -85,12 +86,38 @@ class SoftApplicationCreator:
             ApplicationSettings.objects.create(app_id=self.application.id, setting_id=s.id)
 
     def create_default_urls(self):
-        pass
+        # create index_page
+        url = ApplicationUrl(url_pattern='/',view_method=ApplicationViewMethod.objects.get(view_name='index_page'),url_name='index-page')
+        url.save()
+
+        # create landing_page
+        url = ApplicationUrl(url_pattern='/', view_method=ApplicationViewMethod.objects.get(view_name='landing_page'),
+                             url_name='landing-page')
+        url.save()
 
     def create_default_views(self):
-        tmp = ApplicationComponentTemplate.objects.get(temp_name='index_page')
-        tmp.get_required_context_params()
-        # ApplicationViewMethod.objects.create(view_name='landing_page', app_id=self.application.id)
+        # Create index-page view from temp
+        tmp_obj = ApplicationComponentTemplate.objects.get(temp_name='index_page')
+        # tmp_obj.get_required_context_params()
+        # alternative methods exists. but as we need other attributes of the componenttemplates
+        # we use the above 2 lines to get temp, instead of https://docs.djangoproject.com/en/2.1/ref/templates/api/#loading-a-template
+        temp = Template(tmp_obj.temp_code)
+        context = Context({"applicationName": self.application.app_name})
+        vm = ApplicationViewMethod.objects.create(view_name= 'index_page',view_code=temp.render(context), app_id=self.application.id)
+        vm.save()
+
+
+        # Create index-page view from temp
+        tmp_obj = ApplicationComponentTemplate.objects.get(temp_name='landing_page')
+        # tmp_obj.get_required_context_params()
+        # alternative methods exists. but as we need other attributes of the componenttemplates
+        # we use the above 2 lines to get temp, instead of https://docs.djangoproject.com/en/2.1/ref/templates/api/#loading-a-template
+        temp = Template(tmp_obj.temp_code)
+        context = Context({"applicationName": self.application.app_name})
+        m = ApplicationViewMethod.objects.create(view_name= 'landing_page',view_code=temp.render(context), app_id=self.application.id)
+        vm.save()
+
+
 
 
     # Creates the application and all necessary other folders

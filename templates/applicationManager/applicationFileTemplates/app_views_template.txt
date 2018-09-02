@@ -10,7 +10,7 @@ logger = logging.getLogger('django.request')
 
 
 def landing_page(request):
-    return render(request,'{{applicationName}}/landing.html')
+    return render(request,'{{ applicationName     }}/landing.html')
 
 def index_page(request):
     return render(request,'{{applicationName}}/landing.html')
