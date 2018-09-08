@@ -1,10 +1,14 @@
+import datetime
+import subprocess
 import sys
 import logging
 import uuid
 import tarfile
 import json
+from distutils.errors import DistutilsError
 
 from django.http import JsonResponse
+from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
 from scrapy.signals import response_received
@@ -1067,6 +1071,125 @@ def download_app(request, id):
             arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
     tar.close()
     return response
+
+
+@login_required
+def package_app(request, id):
+    app = Application.objects.get(id=id)
+    version = '0.1'
+    dest = os.path.join(settings.FILESYSTEM_DIR, "wbdap_"+app.app_name)
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    # os.mkdir(dest, mode=0o755)
+
+    from shutil import copytree
+    source = os.path.join(settings.PROJECT_PATH, app.app_name)
+    copytree(source, dest)
+
+    # Create README.rst
+    readme = open(os.path.join(dest,"README.rst"),"w+")
+    readme_temp_file =open("applicationManager/templates/applicationManager/applicationFileTemplates/readme.rst.tmp","r")
+    readme_temp_content = readme_temp_file.read()
+    readme_temp_file.close()
+    readme_temp_obj = Template(readme_temp_content)
+
+    context = Context({'applicationName':app.app_name,'applicationDescription':app.description})
+    rendered_temp = readme_temp_obj.render(context)
+    readme.write(rendered_temp)
+
+
+    # Create license file
+
+    lic = open(os.path.join(dest, "LICENSE"), "w+")
+    lic_temp_file = open("applicationManager/templates/applicationManager/applicationFileTemplates/BSD_Lic.txt.tmp", "r")
+    lic_temp_content = lic_temp_file.read()
+    lic_temp_file.close()
+    lic_temp_obj = Template(lic_temp_content)
+
+    import django
+
+    context = Context({'year': datetime.datetime.now().year,
+                       'copyright_holder': settings.COMPANY_NAME,
+                       'django_version': django.VERSION,
+                       'version': version})
+    rendered_temp = lic_temp_obj.render(context)
+    lic.write(rendered_temp)
+
+
+    # Create setup.py
+
+    setup = open(os.path.join(dest, "setup.py"), "w+")
+    setup_temp_file = open("applicationManager/templates/applicationManager/applicationFileTemplates/setup.py.tmp", "r")
+    setup_temp_content = setup_temp_file.read()
+    setup_temp_file.close()
+    setup_temp_obj = Template(setup_temp_content)
+
+
+    context = Context({'applicationName':app.app_name,
+                       'applicationDescription':app.description,
+                       'authorName': app.owner.username,
+                       'authorEmail': app.owner.email,
+                       'version': version
+                       })
+
+    rendered_temp = setup_temp_obj.render(context)
+    setup.write(rendered_temp)
+    os.chmod(os.path.join(dest, "setup.py"),0o744)
+
+    # Create MANIFEST.in
+
+    manifest = open(os.path.join(dest, "MANIFEST.in"), "w+")
+    manifest_temp_file = open("applicationManager/templates/applicationManager/applicationFileTemplates/manifest.in.tmp", "r")
+    manifest_temp_content = manifest_temp_file.read()
+    manifest_temp_file.close()
+    manifest_temp_obj = Template(manifest_temp_content)
+
+
+    context = Context({'applicationName':app.app_name,
+                       'applicationDescription':app.description,
+                       'authorName': app.owner.username,
+                       'authorEmail': app.owner.email})
+    rendered_temp = manifest_temp_obj.render(context)
+    manifest.write(rendered_temp)
+
+
+    # Run the packaging command
+
+    fpath = "wbdap_"+ app.app_name
+
+    cwd = os.path.join(os.getcwd(),'filesystem/wbdap_'+app.app_name)
+
+    os.chdir(cwd)
+
+    from setuptools import sandbox
+
+    setup_script = os.path.join(cwd,'setup.py')
+
+    args = ['sdist']
+
+    try:
+        command = ["python3", setup_script, "sdist"]
+
+        # subprocess.call(["python3.6", "setup.py", "sdist"], shell=False)
+        p = subprocess.Popen(["python3", setup_script, "sdist"], stdout=subprocess.DEVNULL, shell=False,
+                             preexec_fn=os.setsid)
+
+    except SystemExit as v:
+        raise DistutilsError("Setup script exited with %s" % (v.args[0],))
+
+
+    response = HttpResponse(content_type='application/x-gzip')  # mimetype is replaced by content_type for django 1.7
+    response['Content-Disposition'] = 'attachment; filename=%s' % app.app_name
+    #
+    # tar = tarfile.open(fileobj=response, mode="w:gz")
+    # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
+    #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
+    # tar.close()
+    return response
+
+
+
+
 
 
 # If we are calling this ,method we are sure that there exist a application holding the model

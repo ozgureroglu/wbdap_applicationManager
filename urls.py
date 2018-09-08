@@ -52,6 +52,7 @@ urlpatterns = [
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),
     path('application/<int:id>/loaddata/', load_data, name='load-data'),
     path('application/<int:id>/download/', download_app, name='download-app'),
+    path('application/<int:id>/package/', package_app, name='package-app'),
     path('application/<int:id>/newfile/', create_file, name='create-file'),
     path('application/<int:id>/trigger/', trigger, name='trigger'),
     path('application/<int:id>/activate/', application_activate, name='application-activate'),

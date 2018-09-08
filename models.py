@@ -25,7 +25,6 @@ class PageLayout(models.Model):
     layout_name = models.CharField(max_length=25, blank=False, null=False)
     content = RichTextField()
 
-
     def __str__(self):
         return self.layout_name
 

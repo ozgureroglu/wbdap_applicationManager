@@ -1,0 +1,14 @@
+    # Create manifest.in
+    manifest = open(os.path.join(dest, "MANIFEST.in"), "w+")
+    manifest_temp_file = open("applicationManager/templates/applicationManager/applicationFileTemplates/manifest.in.tmp", "r")
+    manifest_temp_content = manifest_temp_file.read()
+    manifest_temp_obj = Template(manifest_temp_content)
+
+
+    context = Context({'applicationName':app.app_name,
+                       'applicationDescription':app.description,
+                       'authorName': app.owner.username,
+                       'authorEmail': app.owner.email})
+    rendered_temp = manifest_temp_obj.render(context)
+    manifest.write(rendered_temp)
+
