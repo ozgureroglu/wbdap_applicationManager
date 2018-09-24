@@ -24,8 +24,9 @@
     "url": "examApp",
     "namedUrl": "examApp",
     "active": false,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "2b7d63cb-5575-4351-9fbb-e0114e689a52"
@@ -40,8 +41,9 @@
     "url": "projectCore",
     "namedUrl": "projectCore",
     "active": true,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": true,
     "uuid": "abe0a943-9f06-407f-98ff-83b5c889f205"
@@ -56,8 +58,9 @@
     "url": "blog",
     "namedUrl": "blog",
     "active": true,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "46aa8dec-4074-4650-bf4a-ba2e479a5f84"
@@ -72,8 +75,9 @@
     "url": "realEstateRecommender",
     "namedUrl": "realEstateRecommender",
     "active": false,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "e4d01c3a-37f1-4e54-936e-8342dd6ba8d1"
@@ -90,6 +94,7 @@
     "active": false,
     "description": "Generic data scraper with storage capability.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "18e1fa62-d9e8-49e1-ada7-e473f2eef860"
@@ -104,8 +109,9 @@
     "url": "applicationManager",
     "namedUrl": "applicationManager",
     "active": true,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": true,
     "uuid": "c6b4af68-da35-4a73-8231-d41ed16fc5ae"
@@ -120,8 +126,9 @@
     "url": "authenticationApp",
     "namedUrl": "authenticationApp",
     "active": false,
-    "description": "Readme file",
+    "description": "Readme This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": true,
     "uuid": "ad9be11a-631f-4492-a98f-a506cd32db45"
@@ -138,6 +145,7 @@
     "active": false,
     "description": "A database of businesses which can be investigated and used for starting an startup.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "1935b6ae-ea2d-409d-a7cf-38d80fc19ffa"
@@ -152,8 +160,9 @@
     "url": "identityManager",
     "namedUrl": "identityManager",
     "active": true,
-    "description": "Readme file",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": true,
     "uuid": "a39546fe-c528-40a6-88e9-d4fa220e85ce"
@@ -168,8 +177,9 @@
     "url": "sciDB",
     "namedUrl": "sciDB",
     "active": true,
-    "description": "sciDB",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "92b2d551-9c33-4612-a627-ffffa351e3dd"
@@ -184,8 +194,9 @@
     "url": "projectManager",
     "namedUrl": "projectManager",
     "active": true,
-    "description": "projectManager",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "de1167cc-360e-4799-b729-b2af23f0ef63"
@@ -200,8 +211,9 @@
     "url": "webcoding",
     "namedUrl": "webcoding",
     "active": false,
-    "description": "webcoding",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "3c94f17c-9a82-4c8a-be85-2796701c5ab8"
@@ -216,8 +228,9 @@
     "url": "filemanager",
     "namedUrl": "filemanager",
     "active": false,
-    "description": "filemanager",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": true,
     "uuid": "e50e1e91-b1c0-4b57-a9b8-502266e97ed8"
@@ -232,8 +245,9 @@
     "url": "docker_manager",
     "namedUrl": "docker_manager",
     "active": false,
-    "description": "docker_manager",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "2c40e692-310c-4c15-be22-912efa453d7a"
@@ -248,8 +262,9 @@
     "url": "jamesAdministrator",
     "namedUrl": "jamesAdministrator",
     "active": false,
-    "description": "jamesAdministrator",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "7086b833-f98b-4f29-8fc0-ec65a02cc8ac"
@@ -264,8 +279,9 @@
     "url": "mentor",
     "namedUrl": "mentor",
     "active": false,
-    "description": "mentor",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "5995c608-a5fd-4ad7-a066-c6aaccf12cb5"
@@ -280,8 +296,9 @@
     "url": "mailapp",
     "namedUrl": "mailapp",
     "active": true,
-    "description": "mailapp",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f588-4edc-a895-8f6a167141d6"
@@ -296,8 +313,9 @@
     "url": "rulemall",
     "namedUrl": "rulemall",
     "active": false,
-    "description": "rulemall",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f578-4edc-a895-8f6a167141d6"
@@ -312,8 +330,9 @@
     "url": "gametest",
     "namedUrl": "gametest",
     "active": false,
-    "description": "gametest",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "80799d1b-f578-4edc-a895-3f6a167141d6"
@@ -328,8 +347,9 @@
     "url": "scraper",
     "namedUrl": "scraper",
     "active": false,
-    "description": "scraper",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b6913c2"
@@ -344,8 +364,9 @@
     "url": "testapp",
     "namedUrl": "testapp",
     "active": false,
-    "description": "testapp",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "236ba6ab-271c-4da6-8d4c-2f05fa87c7ff"
@@ -360,8 +381,9 @@
     "url": "activityStream",
     "namedUrl": "activityStream",
     "active": true,
-    "description": "activityStream",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": true,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "236ba6aa-271c-4da6-8d4c-2f05fa87c7ff"
@@ -376,8 +398,9 @@
     "url": "flashcards",
     "namedUrl": "flashcards",
     "active": true,
-    "description": "flashcards",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": false,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "236bb6aa-271c-4da6-8d4c-2f05fa87c7ff"
@@ -392,11 +415,67 @@
     "url": "elasticsearchapp",
     "namedUrl": "elasticsearchapp",
     "active": true,
-    "description": "elasticsearchapp",
+    "description": "This is a django app which has been created as a component of the WBDAP project.",
     "coming_soon_page": false,
+    "soft_app": false,
     "owner": 24,
     "core_app": false,
     "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b69a3c2"
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 804,
+  "fields": {
+    "app_name": "asd",
+    "verbose_name": "asd",
+    "url": "asd",
+    "namedUrl": "asd",
+    "active": true,
+    "description": "",
+    "coming_soon_page": true,
+    "soft_app": true,
+    "owner": 25,
+    "core_app": false,
+    "uuid": "29ed2a7c-5b45-4346-a73b-88a5114c2c99"
+  }
+},
+{
+  "model": "applicationManager.applicationview",
+  "pk": 3,
+  "fields": {
+    "view_name": "index_page",
+    "view_code": "def index_page(request):\r\n    return render(request,'asd/landing.html' )",
+    "app": 804
+  }
+},
+{
+  "model": "applicationManager.applicationview",
+  "pk": 4,
+  "fields": {
+    "view_name": "landing_page",
+    "view_code": "return render(request,'asd/landing.html')",
+    "app": 804
+  }
+},
+{
+  "model": "applicationManager.applicationurl",
+  "pk": 1,
+  "fields": {
+    "url_pattern": "/",
+    "view_method": 3,
+    "url_name": "index-page",
+"app_id": 774
+  }
+},
+{
+  "model": "applicationManager.applicationurl",
+  "pk": 2,
+  "fields": {
+    "url_pattern": "/",
+    "view_method": 4,
+    "url_name": "landing-page",
+"app_id": 774
   }
 },
 {
@@ -420,23 +499,48 @@
   }
 },
 {
+  "model": "applicationManager.settingdefinition",
+  "pk": 1,
+  "fields": {
+    "name": "api_enabled",
+    "verbose_name": "Eanble DRF API",
+    "definition": "When selected enables the DRF API for the application"
+  }
+},
+{
+  "model": "applicationManager.settingdefinition",
+  "pk": 2,
+  "fields": {
+    "name": "display_wbdap_admin_menu",
+    "verbose_name": "Display wbdap admin menu",
+    "definition": "Display global admin menu"
+  }
+},
+{
+  "model": "applicationManager.settingdefinition",
+  "pk": 3,
+  "fields": {
+    "name": "display_app_admin_menu",
+    "verbose_name": "Display application specific admin menu",
+    "definition": "Display application specific admin menu"
+  }
+},
+{
   "model": "applicationManager.applicationsettings",
   "pk": 1,
   "fields": {
-    "app": 618,
-    "api_enabled": true,
-    "display_wbdap_admin_menu": false,
-    "display_app_admin_menu": false
+    "app": 616,
+    "setting": 1,
+    "value": false
   }
 },
 {
   "model": "applicationManager.applicationsettings",
   "pk": 2,
   "fields": {
-    "app": 727,
-    "api_enabled": false,
-    "display_wbdap_admin_menu": true,
-    "display_app_admin_menu": true
+    "app": 616,
+    "setting": 2,
+    "value": false
   }
 },
 {
@@ -444,29 +548,744 @@
   "pk": 3,
   "fields": {
     "app": 616,
-    "api_enabled": false,
-    "display_wbdap_admin_menu": false,
-    "display_app_admin_menu": false
+    "setting": 3,
+    "value": false
   }
 },
 {
   "model": "applicationManager.applicationsettings",
   "pk": 4,
   "fields": {
-    "app": 622,
-    "api_enabled": false,
-    "display_wbdap_admin_menu": false,
-    "display_app_admin_menu": false
+    "app": 617,
+    "setting": 1,
+    "value": false
   }
 },
 {
   "model": "applicationManager.applicationsettings",
   "pk": 5,
   "fields": {
+    "app": 617,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 6,
+  "fields": {
+    "app": 617,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 7,
+  "fields": {
+    "app": 618,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 8,
+  "fields": {
+    "app": 618,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 9,
+  "fields": {
+    "app": 618,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 10,
+  "fields": {
+    "app": 620,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 11,
+  "fields": {
+    "app": 620,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 12,
+  "fields": {
+    "app": 620,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 13,
+  "fields": {
+    "app": 621,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 14,
+  "fields": {
+    "app": 621,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 15,
+  "fields": {
+    "app": 621,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 16,
+  "fields": {
+    "app": 622,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 17,
+  "fields": {
+    "app": 622,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 18,
+  "fields": {
+    "app": 622,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 19,
+  "fields": {
+    "app": 624,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 20,
+  "fields": {
+    "app": 624,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 21,
+  "fields": {
+    "app": 624,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 22,
+  "fields": {
+    "app": 625,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 23,
+  "fields": {
+    "app": 625,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 24,
+  "fields": {
+    "app": 625,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 25,
+  "fields": {
+    "app": 626,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 26,
+  "fields": {
+    "app": 626,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 27,
+  "fields": {
+    "app": 626,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 28,
+  "fields": {
+    "app": 627,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 29,
+  "fields": {
+    "app": 627,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 30,
+  "fields": {
+    "app": 627,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 31,
+  "fields": {
+    "app": 727,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 32,
+  "fields": {
+    "app": 727,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 33,
+  "fields": {
+    "app": 727,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 34,
+  "fields": {
+    "app": 748,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 35,
+  "fields": {
+    "app": 748,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 36,
+  "fields": {
+    "app": 748,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 37,
+  "fields": {
+    "app": 749,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 38,
+  "fields": {
+    "app": 749,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 39,
+  "fields": {
+    "app": 749,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 40,
+  "fields": {
+    "app": 750,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 41,
+  "fields": {
+    "app": 750,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 42,
+  "fields": {
+    "app": 750,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 43,
+  "fields": {
+    "app": 752,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 44,
+  "fields": {
+    "app": 752,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 45,
+  "fields": {
+    "app": 752,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 46,
+  "fields": {
+    "app": 753,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 47,
+  "fields": {
+    "app": 753,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 48,
+  "fields": {
+    "app": 753,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 49,
+  "fields": {
+    "app": 771,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 50,
+  "fields": {
+    "app": 771,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 51,
+  "fields": {
+    "app": 771,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 52,
+  "fields": {
+    "app": 772,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 53,
+  "fields": {
+    "app": 772,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 54,
+  "fields": {
+    "app": 772,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 55,
+  "fields": {
+    "app": 773,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 56,
+  "fields": {
+    "app": 773,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 57,
+  "fields": {
+    "app": 773,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 58,
+  "fields": {
+    "app": 774,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 59,
+  "fields": {
+    "app": 774,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 60,
+  "fields": {
+    "app": 774,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 61,
+  "fields": {
+    "app": 775,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 62,
+  "fields": {
+    "app": 775,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 63,
+  "fields": {
+    "app": 775,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 64,
+  "fields": {
     "app": 777,
-    "api_enabled": false,
-    "display_wbdap_admin_menu": false,
-    "display_app_admin_menu": false
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 65,
+  "fields": {
+    "app": 777,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 66,
+  "fields": {
+    "app": 777,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 67,
+  "fields": {
+    "app": 778,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 68,
+  "fields": {
+    "app": 778,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 69,
+  "fields": {
+    "app": 778,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 70,
+  "fields": {
+    "app": 779,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 71,
+  "fields": {
+    "app": 779,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 72,
+  "fields": {
+    "app": 779,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 142,
+  "fields": {
+    "app": 804,
+    "setting": 1,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 143,
+  "fields": {
+    "app": 804,
+    "setting": 2,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationsettings",
+  "pk": 144,
+  "fields": {
+    "app": 804,
+    "setting": 3,
+    "value": false
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 1,
+  "fields": {
+    "temp_name": "landing_page",
+    "temp_type": "view",
+    "temp_content": "return render(request,'{{applicationName}}/landing.html')",
+    "temp_engine": "django",
+    "definition": "landing page template"
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 2,
+  "fields": {
+    "temp_name": "index_page",
+    "temp_type": "view",
+    "temp_content": "return render(request,'{{applicationName}}/landing.html' )",
+    "temp_engine": "django",
+    "definition": "index page template"
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 3,
+  "fields": {
+    "temp_name": "dashboard_page",
+    "temp_type": "view",
+    "temp_content": "return render(request,'{{applicationName}}/dashboard.html')",
+    "temp_engine": "django",
+    "definition": "dashboard view icin execute edilecek kod blogudur. File template degildir."
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 4,
+  "fields": {
+    "temp_name": "urls.py",
+    "temp_type": "file",
+    "temp_content": "__author__ = 'ozgur'\r\n\r\nfrom django.urls import path\r\nfrom {{ applicationName }}.views import *\r\n\r\n# Uncomment the next two lines to enable the admin:\r\nfrom django.contrib import admin\r\nadmin.autodiscover()\r\n\r\napp_name ='{{applicationName}}'\r\nurlpatterns = [\r\n\r\n    #Index page of the application\r\n    path('welcome/', landing_page, name='landing'),\r\n    path('', index_page, name='index'),\r\n    path('dashboard/', dashboard, name='dashboard'),\r\n]",
+    "temp_engine": "django",
+    "definition": "urls.py dosyaisinin uretilmesi icin kullanilacak olan dosya sablonudur."
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 5,
+  "fields": {
+    "temp_name": "setuptools_setup.py",
+    "temp_type": "python",
+    "temp_content": "# coding=utf-8\r\n#!/Users/ozgur/.virtualenvs/wbdap/bin/python\r\n\r\nimport os\r\nfrom setuptools import find_packages, setup\r\n\r\nwith open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:\r\n    README = readme.read()\r\n\r\n# allow setup.py to be run from any path\r\nos.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))\r\n\r\nsetup(\r\n    name='django-{{applicationName}}',\r\n    version='{{version}}',\r\n    packages=find_packages(),\r\n    include_package_data=True,\r\n    license='BSD License'",
+    "temp_engine": "django",
+    "definition": "A standart setup file template"
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 6,
+  "fields": {
+    "temp_name": "setuptools_README.rst",
+    "temp_type": "file",
+    "temp_content": "=====\r\n{{applicationName}}\r\n=====\r\n\r\n{{applicationDescription}} It is a simple Django app to ... .\r\n\r\nDetailed documentation is in the \"docs\" directory.\r\n\r\nQuick start\r\n-----------\r\n\r\n1. Add \"{{applicationName}}\" to your INSTALLED_APPS setting like this::\r\n\r\n    INSTALLED_APPS = [\r\n        ...\r\n        '{{applicationName}}',\r\n    ]\r\n\r\n2. Include the {{applicationName}} URLconf in your project urls.py like this::\r\n\r\n    path('{{applicationName}}/', include('{{applicationName}}.urls')),\r\n\r\n3. Run `python manage.py migrate` to create the {{applicationName}} models.\r\n\r\n4. Start the development server and visit http://127.0.0.1:8000/admin/\r\n   to create {{applicationName}} model instances(you'll need the Admin app enabled).\r\n\r\n5. Visit http://127.0.0.1:8000/{{applicationName}}/ to access the application.",
+    "temp_engine": "django",
+    "definition": "A generic README.rst template for setuptools package"
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 7,
+  "fields": {
+    "temp_name": "setuptools_LICENSE_BSD",
+    "temp_type": "file",
+    "temp_content": "Copyright (c) {{year}}, {{copyright_holder}}\r\nAll rights reserved.\r\n\r\nRedistribution and use in source and binary forms, with or without\r\nmodification, are permitted provided that the following conditions are met:\r\n1. Redistributions of source code must retain the above copyright\r\n   notice, this list of conditions and the following disclaimer.\r\n2. Redistributions in binary form must reproduce the above copyright\r\n   notice, this list of conditions and the following disclaimer in the\r\n   documentation and/or other materials provided with the distribution.\r\n3. All advertising materials mentioning features or use of this software\r\n   must display the following acknowledgement:\r\n   This product includes software developed by the <organization>.\r\n4. Neither the name of the <organization> nor the\r\n   names of its contributors may be used to endorse or promote products\r\n   derived from this software without specific prior written permission.\r\n\r\nTHIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY\r\nEXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\nDISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY\r\nDIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\nON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "temp_engine": "django",
+    "definition": "BSD License"
+  }
+},
+{
+  "model": "applicationManager.applicationcomponenttemplate",
+  "pk": 8,
+  "fields": {
+    "temp_name": "setuptools_MANIFEST.in",
+    "temp_type": "file",
+    "temp_content": "include LICENSE\r\ninclude README.rst\r\nrecursive-include static *\r\nrecursive-include templates *\r\nrecursive-include fixtures *\r\nrecursive-include migrations *",
+    "temp_engine": "django",
+    "definition": "manifest.in template for django setuptools"
   }
 },
 {

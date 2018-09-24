@@ -50,10 +50,9 @@
                             <tr>
                                 <th></th>
                                 <th>Application Name</th>
-                                                                        <th>Verbose Name</th>
+                                <th>Verbose Name</th>
                                 <th>Core App</th>
                                 <th>Owner</th>
-
                                 <th style="text-align:left">Operations</th>
                             </tr>
                             </thead>
@@ -63,12 +62,16 @@
                                 <tr>
                                     <form action="" method="POST" id="appForm_{{ app.id }}">
                                         {% csrf_token %}
-                                    <td></td>
+                                        <td></td>
                                         <td>
                                             {% if app.core_app == False %}
                                                 {#                                                        <a href="{% url app.namedUrl|add:":index" %}"#}
                                                 {#                                                           target="_blank"></a>#}
-                                                <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                {% if app.soft_app == True %}
+                                                    <a href="{% url 'applicationManager:dyn-view-loader' app.uuid 'sayhello' %}"
+                                                {% else %}
+                                                    <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}"
+                                                {% endif %}
                                                    target="_blank">
                                                     <i class="fa fa-desktop fa-fw"></i> {{ app.app_name |capfirst }}
                                                 </a>
@@ -131,7 +134,7 @@
 
                                                     {% if app.core_app == False %}
                                                         {% if  app.active %}
-                                                            <a class="dropdown-item" style="background-color: green"
+                                                            <a class="dropdown-item" style="background-color: green; color: white"
                                                                href="{% url 'applicationManager:application-activate' app.id %}"
                                                             >Active</a>
                                                         {% else %}
@@ -173,6 +176,10 @@
                                                             icon-id="{{ app.id }}"></span> Download as
                                                         tar.gz</a>
 
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'applicationManager:package-app' app.id %}"><span
+                                                            class="glyphicon glyphicon-download"
+                                                            icon-id="{{ app.id }}"></span> Dist package</a>
 
                                                     <div class="dropdown-divider"></div>
 

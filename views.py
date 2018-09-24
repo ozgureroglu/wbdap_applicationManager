@@ -1,10 +1,15 @@
+import datetime
+import subprocess
 import sys
 import logging
 import uuid
 import tarfile
 import json
+from distutils.errors import DistutilsError
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
 from scrapy.signals import response_received
@@ -22,20 +27,21 @@ from django.core import serializers
 from django.urls import reverse_lazy, reverse, URLResolver
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls.resolvers import RegexPattern, get_resolver
+from django.urls.resolvers import RegexPattern, get_resolver, URLPattern
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
 from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
-from applicationManager.models import Application, AppModel, Field, ApplicationLayout, ApplicationSettings, \
-    ApplicationPage
+from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
+    ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
-from applicationManager.signals.signals import application_created_signal, application_removed_signal
+from applicationManager.signals.signals import application_created_signal, application_removed_signal, \
+    soft_application_removed_signal, soft_application_created_signal
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -54,7 +60,7 @@ def landing_page(request):
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
-        applications = Application.objects.all();
+        applications = Application.objects.all()
     else:
         if Application.objects.filter(owner_id=request.user.id):
             applications = Application.objects.get(owner_id=request.user.id)
@@ -64,6 +70,83 @@ def dashboard(request):
     return render(request,
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
+@login_required
+def application_router(request,uuid,url_name):
+    app = Application.objects.get(uuid=uuid)
+    app_name = app.app_name
+    reload(sys.modules[settings.ROOT_URLCONF])
+    # return redirect('applicationManager:dashboard')
+    return redirect("/" + app_name + '/')
+
+@login_required
+def dyn_view_loader(request,uuid,url_name=None):
+    if url_name == None:
+        url_name = 'index-page'
+
+    #TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
+    # But this method is more suitable for static pages:https://stackoverflow.com/questions/9439899/django-dynamic-urls
+
+
+    dyn_view_code = ApplicationUrl.objects.get(url_name=url_name).view_method.view_code
+    print(dyn_view_code)
+
+    exec(dyn_view_code)
+    app = Application.objects.get(uuid=uuid)
+    app_name = app.app_name
+    reload(sys.modules[settings.ROOT_URLCONF])
+    # return redirect('applicationManager:dashboard')
+    for x in sys.modules:
+        if 'asd' in x:
+            print(x)
+    # after the following line a new req-res phase begins: so there should be new urlpath for the following requset
+    # return redirect("/" + app_name + '/')
+    return render(request,'applicationManager/test.html',{})
+
+
+def dyn_view_loader(request,uuid,url_path=None):
+    print('printing url path: '+url_path)
+    if url_path == None:
+        url_path = 'indexpage'
+
+    #TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
+    # But this method is more suitable for static pages:https://stackoverflow.com/questions/9439899/django-dynamic-urls
+
+
+    # dyn_view_code = ApplicationUrl.objects.get(app__uuid=uuid,url_name=url_name).view_method.view_code
+    # print(dyn_view_code)
+
+    # exec(dyn_view_code)
+    # app = Application.objects.get(uuid=uuid)
+    # app_name = app.app_name
+    # reload(sys.modules[settings.ROOT_URLCONF])
+    # return redirect('applicationManager:dashboard')
+    # for x in sys.modules:
+    #     if 'asd' in x:
+    #         print(x)
+    # after the following line a new req-res phase begins: so there should be new urlpath for the following requset
+    # return redirect("/" + app_name + '/')
+    #TODO: asagidakiler normal uygulamalardaki gibi yapilabilmeli
+    try:
+        view = ApplicationUrl.objects.get(app__uuid=uuid, url_pattern=url_path).view_method
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,str(e))
+        return redirect(reverse('applicationManager:dashboard'))
+
+    print(view.view_code)
+    print(view.__class__)
+    exec(view.view_code)
+    temp = None
+    try:
+        temp = ApplicationComponentTemplate.objects.get(id= view.template_id)
+        return render(request, temp.temp_name + '__' + temp.temp_type, {})
+
+    except ObjectDoesNotExist as e:
+        print(e.__class__.__name__)
+        messages.add_message(request,messages.ERROR,'Template field not set for view')
+        return redirect(reverse('applicationManager:dashboard'))
+
+
+
 
 
 def genuuid_all(request):
@@ -183,14 +266,26 @@ def delete_application(request, id):
     app = Application.objects.get(id=id)
     logger.info('Deleting application %s', app.app_name)
 
-    try:
+
+    if app.soft_app == True:
+        try:
+            app.delete()
+        except Exception as e:
+            logger.fatal('An exception occured while deleting application : %s', e)
+            return False
+
+        soft_application_removed_signal.send(sender=Application.__class__, test="testString",
+                                    application=app)
+    else:
+        try:
+            app.delete()
+        except Exception as e:
+            logger.fatal('An exception occured while deleting application : %s', e)
+            return False
+
         application_removed_signal.send(sender=Application.__class__, test="testString",
-                                        application=Application.objects.get(app_name=app.app_name))
-    except Exception as e:
-        logger.fatal('An exception occured while deleting application : %s', e)
-        return False
-        # app = Application.objects.get(appName = request.POST[key])
-        # app.delete()
+                                    application=Application.objects.get(app_name=app.app_name))
+
     return redirect('applicationManager:dashboard')
 
 
@@ -620,17 +715,11 @@ def updateAppsDB(request):
 @require_POST
 def trigger(request, id):
 
-    print('triggered')
-    ttype = request.POST['type']
-
-    obj, created = ApplicationSettings.objects.get_or_create(app_id=id,defaults={},)
-
-    obj.toogle_setting(ttype)
-
+    setting_id = request.POST['setting_id']
+    obj, created = ApplicationSettings.objects.get_or_create(app_id=id, setting_id = setting_id, defaults={}, )
+    obj.toogle_setting()
 
     # Application.objects.get(id = id).applicationsettings.toogle_setting(request.POST['type'])
-
-
     # create_api('testapp')
     return JsonResponse({}, safe=False)
 
@@ -645,9 +734,10 @@ def get_application_models(request, id):
 @login_required
 def application_info(request, id):
     if request.POST:
-        logger.info('receved post')
+        logger.info('received post')
 
     app = Application.objects.get(id=id)
+
     app_config = apps.get_app_config(app.app_name)
     models = app_config.get_models()
     pages = ApplicationPage.objects.filter(app_id=id)
@@ -658,11 +748,18 @@ def application_info(request, id):
     #
 
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
+
+    #TODO: Not so beautiful place to the this
+
+
+
+
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
                    'models': models,
-                   'pages': pages
+                   'pages': pages,
+                   'appsettings': ApplicationSettings.objects.filter(app_id=id)
                    })
 
 
@@ -1030,6 +1127,128 @@ def download_app(request, id):
     return response
 
 
+@login_required
+def package_app(request, id):
+    app = Application.objects.get(id=id)
+    version = '0.1'
+    dest = os.path.join(settings.FILESYSTEM_DIR, "wbdap_"+app.app_name)
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    # os.mkdir(dest, mode=0o755)
+
+    from shutil import copytree
+    source = os.path.join(settings.PROJECT_PATH, app.app_name)
+    copytree(source, dest)
+
+    template_dir = os.path.join(settings.PROJECT_PATH,"applicationManager/templates/applicationManager/applicationFileTemplates")
+
+    # Create README.rst
+    readme = open(os.path.join(dest,"README.rst"),"w+")
+    readme_temp_file =open(os.path.join(template_dir,"readme.rst.tmp"),"r")
+    readme_temp_content = readme_temp_file.read()
+    readme_temp_file.close()
+    readme_temp_obj = Template(readme_temp_content)
+
+    context = Context({'applicationName':app.app_name,'applicationDescription':app.description})
+    rendered_temp = readme_temp_obj.render(context)
+    readme.write(rendered_temp)
+
+
+    # Create license file
+
+    lic = open(os.path.join(dest, "LICENSE"), "w+")
+    lic_temp_file = open(os.path.join(template_dir,"BSD_Lic.txt.tmp"), "r")
+    lic_temp_content = lic_temp_file.read()
+    lic_temp_file.close()
+    lic_temp_obj = Template(lic_temp_content)
+
+    import django
+
+    context = Context({'year': datetime.datetime.now().year,
+                       'copyright_holder': settings.COMPANY_NAME,
+                       'django_version': django.VERSION,
+                       'version': version})
+    rendered_temp = lic_temp_obj.render(context)
+    lic.write(rendered_temp)
+
+
+    # Create setup.py
+
+    setup = open(os.path.join(dest, "setup.py"), "w+")
+    setup_temp_file = open(os.path.join(template_dir,"setup.py.tmp"), "r")
+    setup_temp_content = setup_temp_file.read()
+    setup_temp_file.close()
+    setup_temp_obj = Template(setup_temp_content)
+
+
+    context = Context({'applicationName':app.app_name,
+                       'applicationDescription':app.description,
+                       'authorName': app.owner.username,
+                       'authorEmail': app.owner.email,
+                       'version': version
+                       })
+
+    rendered_temp = setup_temp_obj.render(context)
+    setup.write(rendered_temp)
+    os.chmod(os.path.join(dest, "setup.py"),0o744)
+
+    # Create MANIFEST.in
+
+    manifest = open(os.path.join(dest, "MANIFEST.in"), "w+")
+    manifest_temp_file = open(os.path.join(template_dir,"manifest.in.tmp"), "r")
+    manifest_temp_content = manifest_temp_file.read()
+    manifest_temp_file.close()
+    manifest_temp_obj = Template(manifest_temp_content)
+
+
+    context = Context({'applicationName':app.app_name,
+                       'applicationDescription':app.description,
+                       'authorName': app.owner.username,
+                       'authorEmail': app.owner.email})
+    rendered_temp = manifest_temp_obj.render(context)
+    manifest.write(rendered_temp)
+
+
+    # Run the packaging command
+
+    fpath = "wbdap_"+ app.app_name
+
+    cwd = os.path.join(settings.PROJECT_PATH,'filesystem/wbdap_'+app.app_name)
+
+    os.chdir(cwd)
+
+    from setuptools import sandbox
+
+    setup_script = os.path.join(cwd,'setup.py')
+
+    args = ['sdist']
+
+    try:
+        command = ["python3", setup_script, "sdist"]
+
+        # subprocess.call(["python3.6", "setup.py", "sdist"], shell=False)
+        p = subprocess.Popen(["python3", setup_script, "sdist"], stdout=subprocess.DEVNULL, shell=False,
+                             preexec_fn=os.setsid)
+
+    except SystemExit as v:
+        raise DistutilsError("Setup script exited with %s" % (v.args[0],))
+
+
+    response = HttpResponse(content=os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"),content_type='application/x-gzip')  # mimetype is replaced by content_type for django 1.7
+    response['Content-Disposition'] = 'attachment; filename=%s' % "django-"+app.app_name+"-"+version+"tar.gz"
+    #
+    # tar = tarfile.open(fileobj=response, mode="w:gz")
+    # tar.add(os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"))
+    # # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
+    # #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
+    # tar.close()
+    return response
+
+
+
+
+
+
 # If we are calling this ,method we are sure that there exist a application holding the model
 @login_required
 def scaffold(request, app_id, model_id):
@@ -1108,13 +1327,40 @@ class ApplicationCreateWizard(SessionWizardView):
                           coming_soon_page=d['coming_soon_page'],
                           core_app=d['core_app'],
                           owner_id=self.request.user.id,
-                        uuid= uuid.uuid4(),
+                          uuid= uuid.uuid4(),
                            # Zorunlu olmayan alanlar
                           url=d['app_name'],
                           namedUrl=d['app_name'],
+                          soft_app=True,
 
         )
 
         app.save()
+
+        soft_application_created_signal.send(sender=Application.__class__, test="testString",
+                                             application=app)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:dashboard'))
+
+
+
+
+def test(request):
+    print('test')
+
+    from applicationManager.util.soft_application_creator import SoftApplicationCreator
+    sac = SoftApplicationCreator(application=Application.objects.get(app_name='examApp'))
+    sac.load_urls( )
+
+    #
+    # for up in get_resolver().url_patterns:
+    #     print(up)
+    #     # URLPattern()
+
+
+
+
+
+    return HttpResponse('response')
+
+

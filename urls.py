@@ -38,6 +38,14 @@ urlpatterns = [
     path('createApplication/', createApplication, name='createApplication'),
     path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
     # path('deleteApplication/<pk>/', ApplicationDelete.as_view(), name='deleteApplication'),
+    # ---------------------------
+    # path('application/router/<uuid:uuid>/', application_router, name='application-router'),
+
+    # path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
+    path('router/<uuid:uuid>/<path:url_path>/', dyn_view_loader, name='dyn-view-loader'),
+
+    # ------------------------------------------------------
+
 
     path('application/<int:id>/', application_info, name='application-info'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),
@@ -45,6 +53,7 @@ urlpatterns = [
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),
     path('application/<int:id>/loaddata/', load_data, name='load-data'),
     path('application/<int:id>/download/', download_app, name='download-app'),
+    path('application/<int:id>/package/', package_app, name='package-app'),
     path('application/<int:id>/newfile/', create_file, name='create-file'),
     path('application/<int:id>/trigger/', trigger, name='trigger'),
     path('application/<int:id>/activate/', application_activate, name='application-activate'),
@@ -83,5 +92,6 @@ urlpatterns = [
     path('deserializeConfs/', deserializeConfs, name='deserializeConfs'),
 
     path('editor/', editors, name='editors'),
+    path('test/', test, name='test'),
 
 ]
