@@ -41,7 +41,8 @@ urlpatterns = [
     # ---------------------------
     # path('application/router/<uuid:uuid>/', application_router, name='application-router'),
 
-    path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
+    # path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
+    path('router/<uuid:uuid>/<path:url_path>/', dyn_view_loader, name='dyn-view-loader'),
 
     # ------------------------------------------------------
 
@@ -91,5 +92,6 @@ urlpatterns = [
     path('deserializeConfs/', deserializeConfs, name='deserializeConfs'),
 
     path('editor/', editors, name='editors'),
+    path('test/', test, name='test'),
 
 ]

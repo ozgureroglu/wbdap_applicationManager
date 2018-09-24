@@ -3,7 +3,7 @@
 Wrapper for loading templates from the database.
 """
 
-from django.core.exceptions import SuspiciousFileOperation
+from django.core.exceptions import SuspiciousFileOperation, MultipleObjectsReturned
 from django.template import Origin, TemplateDoesNotExist
 from django.utils._os import safe_join
 
@@ -16,11 +16,27 @@ class DatabaseLoader(BaseLoader):
 
 
     def get_contents(self, origin):
+        print('origin.name : '+str(origin.name))
+        print('origin.temp_name : ' + str(origin.template_name))
         try:
-            # print(origin.template_name)
-            if ApplicationComponentTemplate.objects.filter(temp_name=origin.template_name).exists():
-                return ApplicationComponentTemplate.objects.get(temp_name=origin.template_name)
-        except KeyError:
+            name, type = origin.template_name.split('__')
+        except ValueError as e:
+            print(e)
+            name=type = None
+            raise TemplateDoesNotExist(origin)
+
+
+        try:
+            # print('template_name: '+str(ApplicationComponentTemplate.objects.get(temp_name=origin.template_name)))
+            #
+            # print('count: '+str(ApplicationComponentTemplate.objects.get(temp_name=origin.template_name).count()))
+            temp = ApplicationComponentTemplate.objects.get(temp_name=name, temp_type=type)
+            return temp.temp_content
+
+        except MultipleObjectsReturned as e:
+            print(e.__class__.__name__)
+            raise MultipleObjectsReturned
+        except TemplateDoesNotExist as e:
             raise TemplateDoesNotExist(origin)
 
     def get_template_sources(self, template_name, template_dirs=None):
@@ -38,7 +54,8 @@ class DatabaseLoader(BaseLoader):
             #     continue
 
 
-        print(template_name)
+
+
         yield Origin(
             name=template_name,
             template_name=template_name,

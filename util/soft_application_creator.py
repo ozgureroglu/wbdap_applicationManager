@@ -1,10 +1,16 @@
+import sys
+import types
+
+from applicationManager.db_module_importer import DBModuleImporter
+
 __author__ = 'ozgur'
 
 from shutil import copyfile
 from django.core.management import call_command
 from applicationManager.models import Application, AppModel, SettingDefinition, ApplicationSettings, \
-    ApplicationViewMethod, ApplicationComponentTemplate, ApplicationUrl
+    ApplicationView, ApplicationComponentTemplate, ApplicationUrl
 from applicationManager.signals.signals import application_creation_failed_signal
+from django.urls import path
 
 import mako
 import os
@@ -87,13 +93,20 @@ class SoftApplicationCreator:
 
     def create_default_urls(self):
         # create index_page
-        url = ApplicationUrl(url_pattern='/',view_method=ApplicationViewMethod.objects.get(view_name='index_page'),url_name='index-page')
+        url = ApplicationUrl(url_pattern='/', view_method=ApplicationView.objects.get(view_name='index_page'), url_name='index-page', app_id=self.application.id)
         url.save()
 
         # create landing_page
-        url = ApplicationUrl(url_pattern='/', view_method=ApplicationViewMethod.objects.get(view_name='landing_page'),
-                             url_name='landing-page')
+        url = ApplicationUrl(url_pattern='/', view_method=ApplicationView.objects.get(view_name='landing_page'),
+                             url_name='landing-page', app_id=self.application.id)
         url.save()
+
+        # create sayhello
+        url = ApplicationUrl(url_pattern='/sayhello', view_method=ApplicationView.objects.get(view_name='sayhello'),
+                             url_name='sayhello', app_id=self.application.id)
+        url.save()
+
+
 
     def create_default_views(self):
         # Create index-page view from temp
@@ -103,7 +116,7 @@ class SoftApplicationCreator:
         # we use the above 2 lines to get temp, instead of https://docs.djangoproject.com/en/2.1/ref/templates/api/#loading-a-template
         temp = Template(tmp_obj.temp_code)
         context = Context({"applicationName": self.application.app_name})
-        vm = ApplicationViewMethod.objects.create(view_name= 'index_page',view_code=temp.render(context), app_id=self.application.id)
+        vm = ApplicationView.objects.create(view_name='index_page', view_code=temp.render(context), app_id=self.application.id)
         vm.save()
 
 
@@ -114,8 +127,86 @@ class SoftApplicationCreator:
         # we use the above 2 lines to get temp, instead of https://docs.djangoproject.com/en/2.1/ref/templates/api/#loading-a-template
         temp = Template(tmp_obj.temp_code)
         context = Context({"applicationName": self.application.app_name})
-        m = ApplicationViewMethod.objects.create(view_name= 'landing_page',view_code=temp.render(context), app_id=self.application.id)
+        m = ApplicationView.objects.create(view_name='landing_page', view_code=temp.render(context), app_id=self.application.id)
         vm.save()
+
+        # Create sayhello view from temp
+        tmp_obj = ApplicationComponentTemplate.objects.get(temp_name='sayhello')
+        # tmp_obj.get_required_context_params()
+        # alternative methods exists. but as we need other attributes of the componenttemplates
+        # we use the above 2 lines to get temp, instead of https://docs.djangoproject.com/en/2.1/ref/templates/api/#loading-a-template
+        temp = Template(tmp_obj.temp_code)
+        context = Context({"applicationName": self.application.app_name})
+        m = ApplicationView.objects.create(view_name='sayhello', view_code=temp.render(context),
+                                           app_id=self.application.id)
+        vm.save()
+
+    def load_views_module(self):
+        modname = self.application.app_name + '_views'
+        views_in_db = ApplicationView.objects.filter(app_id=self.application.id)
+        views_module = types.ModuleType(modname)
+        sys.modules[modname] = views_module
+
+        for v in views_in_db:
+            exec(v.view_code,views_module)
+
+
+    def load_urls(self):
+        modname = self.application.app_name+'_urls'
+        urlpatterns = []
+        paths_in_db = ApplicationUrl.objects.filter(app_id=self.application.id)
+
+
+        paths_module = types.ModuleType(modname)
+        sys.modules[modname] = paths_module
+
+        for p in paths_in_db:
+            urlpatterns.append(path(p.url_pattern, p.view_method.view_name, name=p.url_name))
+
+        exec(urlpatterns, paths_module)
+
+        #
+        #
+        # import sys
+        # import importlib
+        # import io
+        #
+        # DBModuleImporter()
+        # # Returns a memory-based file object and return is the same of the command open
+        # f = io.StringIO("def hello():return 'Hello World A!'")
+        #
+        # # imp.creat
+        # # e_new deprecetad so use the replacement
+        # m = types.ModuleType('asd_views')
+        #
+        #
+        #
+        #
+        #
+        # # print(m.__class__)
+        # # # print(m.__file__)
+        # # # print(m.__builtins__)
+        # # # print(m.__name__)
+        # #
+        # # print(dir(m))
+        # #
+        # #
+        # # sys.modules['aaaaaaaaa'] = m
+        # # #prints none as our module has no loader here
+        # # print(sys.modules['aaaaaaaaa'].__loader__)
+        # #
+        #
+        #
+        # for m in sys.modules:
+        #     if 'identityManager' in m:
+        #         print(m)
+        #         # print(sys.modules[m].__loader__)
+        #
+        # # for p in paths_in_db:
+        # #     path(p.url_pattern,p.view_method, p.url_name)
+        #
+
+
 
 
 
