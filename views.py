@@ -1283,7 +1283,7 @@ def package_app(request, id):
 
 
 
-# If we are calling this ,method we are sure that there exist a application holding the model
+# If we are calling this ,method we are sure that there exist a application holding the mo
 @login_required
 def scaffold(request, app_id, model_id):
     # fields = "char:title  text:body int:posts"
