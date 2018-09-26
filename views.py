@@ -6,12 +6,14 @@ import uuid
 import tarfile
 import json
 from distutils.errors import DistutilsError
+from wsgiref.util import FileWrapper
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
+from openpyxl.compat import file
 from scrapy.signals import response_received
 
 from applicationManager.util.api_utils import create_api
@@ -25,7 +27,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse_lazy, reverse, URLResolver
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render, redirect
 from django.urls.resolvers import RegexPattern, get_resolver, URLPattern
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
@@ -1152,6 +1154,7 @@ def package_app(request, id):
     context = Context({'applicationName':app.app_name,'applicationDescription':app.description})
     rendered_temp = readme_temp_obj.render(context)
     readme.write(rendered_temp)
+    readme.close()
 
 
     # Create license file
@@ -1170,7 +1173,7 @@ def package_app(request, id):
                        'version': version})
     rendered_temp = lic_temp_obj.render(context)
     lic.write(rendered_temp)
-
+    lic.close()
 
     # Create setup.py
 
@@ -1190,6 +1193,8 @@ def package_app(request, id):
 
     rendered_temp = setup_temp_obj.render(context)
     setup.write(rendered_temp)
+    setup.close()
+
     os.chmod(os.path.join(dest, "setup.py"),0o744)
 
     # Create MANIFEST.in
@@ -1207,6 +1212,7 @@ def package_app(request, id):
                        'authorEmail': app.owner.email})
     rendered_temp = manifest_temp_obj.render(context)
     manifest.write(rendered_temp)
+    manifest.close()
 
 
     # Run the packaging command
@@ -1219,30 +1225,58 @@ def package_app(request, id):
 
     from setuptools import sandbox
 
-    setup_script = os.path.join(cwd,'setup.py')
+    setup_script = os.path.join(cwd, 'setup.py')
 
     args = ['sdist']
 
     try:
         command = ["python3", setup_script, "sdist"]
+        # f = open('/tmp/readme.txt', 'w+')
+        # f2 = open('/tmp/readme2.txt', 'w+')
+        subprocess.call(command, stdout=None, stderr=None, shell=False)
+        # p = subprocess.Popen(["python3", setup_script, "sdist"], stdout=subprocess.DEVNULL, shell=False,
+        #                      preexec_fn=os.setsid)
 
-        # subprocess.call(["python3.6", "setup.py", "sdist"], shell=False)
-        p = subprocess.Popen(["python3", setup_script, "sdist"], stdout=subprocess.DEVNULL, shell=False,
-                             preexec_fn=os.setsid)
 
     except SystemExit as v:
         raise DistutilsError("Setup script exited with %s" % (v.args[0],))
+    except Exception as e:
+        print(e)
+
+    output_name = "django-"+app.app_name+"-"+version+".tar.gz"
+    # response = FileResponse(filename=os.path.join(cwd,"dist/"+ output_name),as_attachment = False)  # mimetype is replaced by content_type for django 1.7
+    # response['Content-Type'] = 'x-gzip'
 
 
-    response = HttpResponse(content=os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"),content_type='application/x-gzip')  # mimetype is replaced by content_type for django 1.7
-    response['Content-Disposition'] = 'attachment; filename=%s' % "django-"+app.app_name+"-"+version+"tar.gz"
+    # output = tarfile.open('GeneratedGraph.tar.gz', mode='w')
+    # try:
+    #     output.add(filename)
+    # except Exception, e:
+    #   logger.warning("Unable to write to tar")
+    #   raise OCPCAError("Unable to write to tar")
+    # finally:
+    #     output.close()
+    tar_file_path = os.path.join(cwd, "dist/" + output_name)
+    print(tar_file_path)
+    with tarfile.open(tar_file_path, mode='r:gz') as fh:
+    # wrapper = FileWrapper(tar_file_path)
+    #
+    # print(wrapper.__class__)
+
+        response = HttpResponse(content=fh.fileobj.read(),content_type='application/x-gzip')
+    # response['Content-Length'] = os.path.getsize(os.path.join(cwd,"dist/"+ output_name))
+        response['Content-Disposition'] = 'attachment; filename=%s' % output_name
+
+
+    # response['Content-Disposition'] = 'attachment; filename=%s' % "django-"+app.app_name+"-"+version+".tar.gz"
+    #     response['Content-Encoding'] = 'tar'
     #
     # tar = tarfile.open(fileobj=response, mode="w:gz")
     # tar.add(os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"))
     # # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
     # #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
     # tar.close()
-    return response
+        return response
 
 
 
