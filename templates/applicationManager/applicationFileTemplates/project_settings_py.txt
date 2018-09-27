@@ -320,7 +320,7 @@ INSTALLED_APPS = [
     # 'projectManagement',
     # 'issueTracker',
     'autofixture',
-    'commentManager',
+    'commentApp',
 
     # begin_applist
     {% for appName in appList %}'{{appName}}',
