@@ -129,15 +129,15 @@ def get_current_view_name(request):
 
 
 
-def app_access_check(request):
-    """
-    Better to do in middleware
-    :param request:
-    :return:
-    """
-    app_name = resolve(request.path).app_name
-    if (request.user.has_perm(app_name+"_access")):
-        return {'has_access': True}
-    else:
-        return {'has_access': False}
-
+# def app_access_check(request):
+#     """
+#     Better to do in middleware
+#     :param request:
+#     :return:
+#     """
+#     app_name = resolve(request.path).app_name
+#     if (request.user.has_perm(app_name+"_access")):
+#         return {'has_access': True}
+#     else:
+#         return {'has_access': False}
+#

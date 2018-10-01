@@ -599,6 +599,7 @@ def show_urls():
 def redirect_to_app(request, uuid):
     app = Application.objects.get(uuid=uuid)
     app_name = app.app_name
+    logger.info('will redirect to app : '+app_name)
     reload(sys.modules[settings.ROOT_URLCONF])
     # return redirect('applicationManager:dashboard')
     return redirect("/" + app_name + '/')
