@@ -224,20 +224,6 @@
   }
 },
 {
-  "model": "applicationManager.application",
-  "pk": 752,
-  "fields": {
-    "app_name": "jamesAdministrator",
-    "verbose_name": "jamesAdministrator",
-    "url": "jamesAdministrator",
-    "namedUrl": "jamesAdministrator",
-    "active": false,
-    "readmeContent": "jamesAdministrator",
-    "owner": 1,
-    "native": false
-  }
-},
-{
   "model": "applicationManager.model",
   "pk": 1,
   "fields": {
