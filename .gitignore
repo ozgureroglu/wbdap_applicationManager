@@ -54,3 +54,5 @@ var/
 
 static_root/
 staticroot/
+migrations/__pycache__/
+migrations/__pycache__/*
