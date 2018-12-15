@@ -40,21 +40,21 @@ class ApplicationManagerAppConfig(AppConfig):
         import applicationManager.signals.handlers
 
 
-        if not self.ready_run:
-            if not self.db_table_exists('applicationManager_'):
-                try:
-                    call_command('migrate', 'applicationManager')
-
-                except:
-                    logger.fatal('unable to migrate applicationManager app ')
-
-            if self.db_table_exists('applicationManager_application'):
-                # if there is no data in applicationManager_application table fill it
-                cursor = connection.cursor()
-                sql = """SELECT count(*) as tot FROM applicationManager_application"""
-                cursor.execute(sql)
-                data = cursor.fetchone()
-                if data[0] == 0:
-                    call_command('loaddata', 'applicationManager/fixtures/initial_data.json')
-
-        self.ready_run = True
+        # if not self.ready_run:
+        #     if not self.db_table_exists('applicationManager_'):
+        #         try:
+        #             call_command('migrate', 'applicationManager')
+        #
+        #         except:
+        #             logger.fatal('unable to migrate applicationManager app ')
+        #
+        #     if self.db_table_exists('applicationManager_application'):
+        #         # if there is no data in applicationManager_application table fill it
+        #         cursor = connection.cursor()
+        #         sql = """SELECT count(*) as tot FROM applicationManager_application"""
+        #         cursor.execute(sql)
+        #         data = cursor.fetchone()
+        #         if data[0] == 0:
+        #             call_command('loaddata', 'applicationManager/fixtures/initial_data.json')
+        #
+        # self.ready_run = True
