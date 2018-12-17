@@ -6,7 +6,7 @@
 
 {% block application_head_stylesheet %}
     {{ block.super }}
-    <link href="{{ STATIC_URL }}projectCore/css/business-frontpage.css" rel="stylesheet">
+    <link href="{% static "projectCore/css/business-frontpage.css" %}" rel="stylesheet">
 {% endblock %}
 
 {

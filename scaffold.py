@@ -249,7 +249,7 @@ APP_TEMPLATE_CONTENT ="""
     {%% block head_stylesheet %%}
         {{ block.super }}
         {%% if not request.path == '/%(app)s/' %%}
-            <link href="{{ STATIC_URL }}%(app)s/css/%(app)s.css" rel="stylesheet">
+            <link href="{% static "%(app)s/css/%(app)s.css" %}" rel="stylesheet">
         {%% endif %%}
     {%% endblock %%}
     

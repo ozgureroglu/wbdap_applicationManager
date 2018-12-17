@@ -6,7 +6,7 @@
 {% block head_stylesheet %}
     {{ block.super }}
     {% if not request.path == '/${applicationName}/' %}
-        <link href="{{ STATIC_URL }}${applicationName}/css/${applicationName}.css" rel="stylesheet">
+        <link href="{% static "${applicationName}/css/${applicationName}.css" %}" rel="stylesheet">
     {% endif %}
 {% endblock %}
 

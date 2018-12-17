@@ -5,7 +5,7 @@
 
 {% block head_stylesheet %}
     {{ block.super }}
-    <link href="{{ STATIC_URL }}${applicationName}/css/one-page-wonder.css" rel="stylesheet">
+    <link href="{% static "${applicationName}/css/one-page-wonder.css" %}" rel="stylesheet">
 {% endblock %}
 
 
