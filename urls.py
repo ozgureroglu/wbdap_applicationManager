@@ -26,6 +26,7 @@ urlpatterns = [
 
 
     path('', landing_page, name='landing'),
+    path('applications/', applications, name='applications'),
     path('cdt/', countdown_test_page, name='cdt'),
     path('dashboard/', dashboard, name='dashboard'),
     # ---------------------------------------------------
@@ -47,7 +48,7 @@ urlpatterns = [
     # ------------------------------------------------------
 
 
-    path('application/<int:id>/', application_info, name='application-info'),
+    path('application/<int:id>/', application_managent_page, name='application-managent-page'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),
     path('application/<int:id>/delete/', delete_application, name='delete-application'),
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),

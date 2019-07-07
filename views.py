@@ -72,6 +72,22 @@ def dashboard(request):
     return render(request,
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
+
+@login_required
+def applications(request):
+    if request.user.is_superuser:
+        applications = Application.objects.all()
+    else:
+        if Application.objects.filter(owner_id=request.user.id):
+            applications = Application.objects.get(owner_id=request.user.id)
+        else:
+            applications = None
+
+    return render(request,
+                  'applicationManager/applications.html', {'user': request.user, 'all_apps': applications}
+                  )
+
+
 @login_required
 def application_router(request,uuid,url_name):
     app = Application.objects.get(uuid=uuid)
@@ -402,7 +418,7 @@ def application_activate(request, id):
         # # print(get_app_template_dirs('templates'))
 
     app.save()
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 def get_installed_apps_names():
@@ -735,7 +751,7 @@ def get_application_models(request, id):
 
 
 @login_required
-def application_info(request, id):
+def application_managent_page(request, id):
     if request.POST:
         logger.info('received post')
 
@@ -751,10 +767,6 @@ def application_info(request, id):
     #
 
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
-
-    #TODO: Not so beautiful place to the this
-
-
 
 
     return render(request, 'applicationManager/application_management_page.html',
@@ -951,7 +963,7 @@ class ModelCreateView(CreateView):
     form_class = CreateModelForm
 
     # fields = ['modelName','app']
-    # success_url = reverse_lazy('applicationManager:application-info',args={'id':})
+    # success_url = reverse_lazy('applicationManager:application-management-page',args={'id':})
     # def get_form_kwargs(self):
     #     kwargs = self.form_class.helper.
     #     # return super(ModelCreateView, self).get_form_kwargs()
@@ -968,7 +980,7 @@ class ModelCreateView(CreateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-info', kwargs={'id': self.kwargs['id']})
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
         # print(self.success_url)
         return super(ModelCreateView, self).get_success_url()
 
@@ -985,7 +997,7 @@ class FieldCreateView(CreateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-info', kwargs={'id': self.kwargs['app_id']})
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['app_id']})
         print(self.success_url)
         return super(FieldCreateView, self).get_success_url()
 
@@ -1001,7 +1013,7 @@ class FieldCreateView(CreateView):
 
     # def get_success_url(self):
     #     # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-    #     self.success_url = reverse('applicationManager:application-info',kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
+    #     self.success_url = reverse('applicationManager:application-management-page',kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
     #     print('success url '+self.success_url)
     #     # print(self.success_url)
     #     return super(FieldCreateView, self).get_success_url()
@@ -1043,7 +1055,7 @@ class ModelUpdate(UpdateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-info', kwargs={'id': self.kwargs['id']})
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
         return super(ModelUpdate, self).get_success_url()
 
 
@@ -1056,7 +1068,7 @@ class FieldUpdateView(UpdateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-info', kwargs={'id': self.kwargs['app_id']})
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['app_id']})
         return super(FieldUpdateView, self).get_success_url()
 
     def get_context_data(self, **kwargs):
@@ -1080,7 +1092,7 @@ class ModelDelete(DeleteView):
     def get_success_url(self):
         print(self.kwargs['id'])
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-info', kwargs={'id': self.kwargs['id']})
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
         print(self.success_url)
         return super(ModelDelete, self).get_success_url()
 
@@ -1094,7 +1106,7 @@ class FieldDeleteView(DeleteView):
         # self.success_url = reverse('applicationManager:field-list',
         #                            kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
 
-        self.success_url = reverse('applicationManager:application-info',
+        self.success_url = reverse('applicationManager:application-management-page',
                                    kwargs={'id': self.kwargs['app_id']})
         print(self.success_url)
         return super(FieldDeleteView, self).get_success_url()

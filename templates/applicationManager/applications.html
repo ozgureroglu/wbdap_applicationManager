@@ -1,0 +1,173 @@
+{% extends 'projectCore/sb_admin2_index_template.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    {{ block.super }}
+
+    <link href="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.css" %}"
+          rel="stylesheet">
+{% endblock %}
+
+
+{% block page_content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Application Manager</h1>
+        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more
+            information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official
+                DataTables documentation</a>.</p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Applications</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Name</th>
+                            <th>Core App</th>
+                            <th>Owner</th>
+                            <th>Active</th>
+                            <th>Salary</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Name</th>
+                            <th>Core App</th>
+                            <th>Owner</th>
+                            <th>Active</th>
+                            <th>Salary</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for app in all_apps %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'applicationManager:redirect-to-app' app.uuid %}">
+                                    {{ app.app_name |capfirst }}
+                                        </a>
+                                </td>
+                                <td>System Architect</td>
+                                <td>
+                                    {% if app.core_app == False %}
+                                        External
+                                    {% else %}
+                                        Core
+                                    {% endif %}</td>
+                                <td>{{ app.owner | capfirst }}</td>
+
+                                <td>
+                                    {% if app.core_app == False %}
+                                        {% if  app.active %}
+                                            <a style="background-color: green; color: white"
+                                               href="{% url 'applicationManager:application-activate' app.id %}"
+                                            >Enabled</a>
+                                        {% else %}
+                                            <a style="background-color: red; color: white"
+                                               href="{% url 'applicationManager:application-activate' app.id %}"
+                                            >Disabled</a>
+                                        {% endif %}
+                                    {% endif %}</td>
+                                <td>
+                                    <!-- Single button -->
+                                    <div class="btn-group">
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Actions <span class="caret"></span>
+                                        </button>
+
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                            <div class="dropdown-divider"></div>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:generate-data' app.id %}"> <span
+                                                    class="glyphicon glyphicon-floppy-open"
+                                                    icon-id="{{ app.id }}"></span> Generate Dummy
+                                                Data</a>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:load-data' app.id %}"> <span
+                                                    class="glyphicon glyphicon-floppy-open"
+                                                    icon-id="{{ app.id }}"></span> Load Fixture Data</a>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:dump-app-data' app.id %}"> <span
+                                                    class="glyphicon glyphicon-floppy-save"
+                                                    icon-id="{{ app.id }}"></span> Dump Application
+                                                Data</a>
+
+                                            <div class="dropdown-divider"></div>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:download-app' app.id %}"><span
+                                                    class="glyphicon glyphicon-download"
+                                                    icon-id="{{ app.id }}"></span> Download as
+                                                tar.gz</a>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:package-app' app.id %}"><span
+                                                    class="glyphicon glyphicon-download"
+                                                    icon-id="{{ app.id }}"></span> Dist package</a>
+
+                                            <div class="dropdown-divider"></div>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:create-file' app.id %}"><span
+                                                    class="glyphicon glyphicon-cloud-upload"
+                                                    icon-id="{{ app.id }}"></span> Upload to
+                                                cloud</a>
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:genuuid-app' app.id %}"><span
+                                                    class="glyphicon glyphicon-key"
+                                                    icon-id="{{ app.id }}"></span> Generate UUID</a>
+
+                                            <div class="dropdown-divider"></div>
+
+
+                                            <a class="dropdown-item"
+                                               href="{% url 'applicationManager:delete-application' app.id %}"
+                                               id="delete_selected"
+                                               onmouseover="this.style.background='red';this.style.color='white'"
+                                               onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>
+
+
+                                        </div>
+
+
+                                        <a class="nav-link collapsed"
+                                           href="{% url 'applicationManager:application-managent-page' app.id %}">
+                                            <i class="fas fa-fw fa-home"></i>
+                                        </a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+{% endblock %}
+
+
+{% block body__jscript %}
+    {{ block.super }}
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/js/demo/datatables-demo.js" %}"></script>
+{% endblock %}
