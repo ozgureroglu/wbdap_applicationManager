@@ -60,7 +60,7 @@ def landing_page(request):
 
 
 @login_required
-def dashboard(request):
+def applications(request):
     if request.user.is_superuser:
         applications = Application.objects.all()
     else:
@@ -70,7 +70,7 @@ def dashboard(request):
             applications = None
 
     return render(request,
-                  'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
+                  'applicationManager/applications.html', {'user': request.user, 'all_apps': applications}
                   )
 @login_required
 def application_router(request,uuid,url_name):
@@ -732,6 +732,39 @@ def get_application_models(request, id):
     app = Application.objects.get(id=id)
     appConfig = apps.get_app_config(app.appName)
     return render(request, 'applicationManager/app_module_list.html', {'models': appConfig.models})
+
+
+@login_required
+def application_management_page(request, id):
+    if request.POST:
+        logger.info('received post')
+
+    app = Application.objects.get(id=id)
+
+    app_config = apps.get_app_config(app.app_name)
+    models = app_config.get_models()
+    pages = ApplicationPage.objects.filter(app_id=id)
+
+    # Here the term model denotes the native models of django not the AppModel of applicationManager application
+    # for m in models:
+    #     print(m.__name__)
+    #
+
+    # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
+
+    #TODO: Not so beautiful place to the this
+
+
+
+
+    return render(request, 'applicationManager/application_management_page.html',
+                  {'app_form': CreateApplicationForm,
+                   'app': Application.objects.get(id=id),
+                   'models': models,
+                   'pages': pages,
+                   'appsettings': ApplicationSettings.objects.filter(app_id=id)
+                   })
+
 
 
 @login_required
