@@ -48,7 +48,7 @@ urlpatterns = [
     # ------------------------------------------------------
 
 
-    path('application/<int:id>/', application_managent_page, name='application-managent-page'),
+    path('application/<int:id>/', application_management_page, name='application-management-page'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),
     path('application/<int:id>/delete/', delete_application, name='delete-application'),
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),

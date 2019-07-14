@@ -751,7 +751,7 @@ def get_application_models(request, id):
 
 
 @login_required
-def application_managent_page(request, id):
+def application_management_page(request, id):
     if request.POST:
         logger.info('received post')
 
