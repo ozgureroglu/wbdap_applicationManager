@@ -229,7 +229,7 @@ def createApplication(request):
         variables = {'form': form}
         return render(
             request,
-            'applicationManager/createApplication.html',
+            'applicationManager/createApplicationForm.html',
             variables
         )
 

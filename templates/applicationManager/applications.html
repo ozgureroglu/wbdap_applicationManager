@@ -19,11 +19,14 @@
             information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official
                 DataTables documentation</a>.</p>
 
-        <!-- DataTales Example -->
+        <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Applications</h6>
             </div>
+             <div class="card-body">
+                <a href="{% url 'applicationManager:createApplication' %}"><button type="button" class="btn btn-success" >Create New Application</button></a>
+             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
