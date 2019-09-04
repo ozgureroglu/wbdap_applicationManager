@@ -1344,7 +1344,7 @@ FORMS = [("Basic Info", ApplicationCreateForm1),
 TEMPLATES = {"Basic Info": "applicationManager/forms/wf.html",
              "libs": "applicationManager/forms/wf.html",
              "Description": "applicationManager/forms/wf.html",
-             "Page Layout": "applicationManager/forms/page_layout_form.html",
+             "Page Layout": "applicationManager/forms/wf.html",
              }
 
 

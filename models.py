@@ -327,12 +327,17 @@ class ModelFieldAdmin(admin.ModelAdmin):
 
 class ApplicationLayout(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField(max_length=200,blank=True, null=True)  # Description of the applicationlayout
     # image_url = models.URLField()
     # live_url = models.URLField()
 
     def __unicode__(self):
         return self.name
 
+
+@admin.register(ApplicationLayout)
+class ApplicationLayoutAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
 
 
 
