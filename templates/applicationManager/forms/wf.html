@@ -4,9 +4,7 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head %}
-    {{ wizard.form.media }}
-{% endblock %}
+
 
 {% block head_stylesheet %}
     {{ block.super }}
@@ -19,7 +17,7 @@
 
             display: block;
             /*background-color: #00CC00;*/
-            background-image: url('{% static "projectCore/images/wizard.jpg');
+            background-image: url('{% static "projectCore/images/wizard.jpg" %}');
             background-repeat: no-repeat;
             background-size: cover;
 

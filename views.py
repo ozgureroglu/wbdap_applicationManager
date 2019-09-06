@@ -229,7 +229,8 @@ def createApplication(request):
         variables = {'form': form}
         return render(
             request,
-            'applicationManager/createApplicationForm.html',
+            # 'applicationManager/createApplicationForm.html',
+            'applicationManager/createApplication.html',
             variables
         )
 
@@ -1341,10 +1342,10 @@ FORMS = [("Basic Info", ApplicationCreateForm1),
          ("Page Layout", ApplicationCreateForm3),
          ]
 
-TEMPLATES = {"Basic Info": "applicationManager/forms/wf.html",
-             "libs": "applicationManager/forms/wf.html",
-             "Description": "applicationManager/forms/wf.html",
-             "Page Layout": "applicationManager/forms/page_layout_form.html",
+TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
+             "libs": "applicationManager/forms/formpage.html",
+             "Description": "applicationManager/forms/formpage.html",
+             "Page Layout": "applicationManager/forms/formpage.html",
              }
 
 
