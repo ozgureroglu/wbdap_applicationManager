@@ -1,0 +1,90 @@
+{% extends 'projectCore/sb_admin2_index_template.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    {{ block.super }}
+
+    <link href="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.css" %}"
+          rel="stylesheet">
+{% endblock %}
+
+
+{% block page_content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Application Manager</h1>
+        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more
+            information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official
+                DataTables documentation</a>.</p>
+
+        <!-- DataTables Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Django Projects</h6>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'applicationManager:createProject' %}">
+                    <button type="button" class="btn btn-success">Create New Django Project</button>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Port</th>
+                            <th>Status</th>
+                            <th>Operations</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Port</th>
+                            <th>Status</th>
+                            <th>Operations</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for django_project in all_projects %}
+                            <tr>
+                                <td>
+                                    <a href="">
+                                        {{ django_project.name |capfirst }}
+                                    </a>
+                                </td>
+
+                                <td>{{ django_project.port }}</td>
+                                <td>{{ django_project.status | capfirst }}</td>
+                                <td>
+                                    <!-- Single button -->
+
+
+                                    <a class="nav-link collapsed"
+                                       href="{% url 'applicationManager:project-management-page' django_project.id %}">
+                                        <i class="fas fa-fw fa-cog"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+{% endblock %}
+
+
+{% block body__jscript %}
+    {{ block.super }}
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
+    <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/js/demo/datatables-demo.js" %}"></script>
+{% endblock %}

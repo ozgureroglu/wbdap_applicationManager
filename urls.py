@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('', landing_page, name='landing'),
     path('applications/', applications, name='applications'),
+    path('projects/', projects, name='projects'),
     path('cdt/', countdown_test_page, name='cdt'),
     path('dashboard/', dashboard, name='dashboard'),
     # ---------------------------------------------------
@@ -36,7 +37,8 @@ urlpatterns = [
     path('genuuidall/', genuuid_all, name='genuuid-all'),
     path('reindexApps/', reindexApps, name='reindexApps'),
 
-    path('createApplication/', createApplication, name='createApplication'),
+    path('createApplication/', ApplicationCreateWizard.as_view(FORMS), name='createApplication'),
+    path('createProject/', createProject, name='createProject'),
     path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
     # path('deleteApplication/<pk>/', ApplicationDelete.as_view(), name='deleteApplication'),
     # ---------------------------
@@ -49,6 +51,7 @@ urlpatterns = [
 
 
     path('application/<int:id>/', application_management_page, name='application-management-page'),
+    path('project/<int:id>/', project_management_page, name='project-management-page'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),
     path('application/<int:id>/delete/', delete_application, name='delete-application'),
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),

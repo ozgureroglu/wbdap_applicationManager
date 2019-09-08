@@ -6,7 +6,7 @@ from django.forms import ModelForm, RadioSelect
 from django.urls import reverse
 from openpyxl.chart import label
 
-from applicationManager.models import Application, AppModel, Field
+from applicationManager.models import Application, AppModel, Field, ApplicationDefaultPages, DjangoProject
 
 __author__ = 'ozgur'
 
@@ -65,6 +65,26 @@ class CreateApplicationForm(ModelForm):
     class Meta:
         model = Application
         fields = ["app_name", 'verbose_name', 'url', 'namedUrl', "description", "core_app"]
+
+
+class CreateProjectForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Fieldset((''), 'name', 'port','description' ),
+            ButtonHolder(
+                Submit('save', ('Submit'), css_class='btn btn-primary '),
+                Reset('reset', ('Cancel'), css_class='btn')
+            )
+        )
+
+        # self.helper.add_input(Submit('submit', 'Submit'))
+        super(CreateProjectForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = DjangoProject
+        fields = ["name", "port", "description"]
 
 
 
@@ -184,25 +204,8 @@ class ApplicationCreateForm2(forms.Form):
 #     option_template_name = 'applicationManager/forms/radio_option_custom.html'
 
 
-class ApplicationCreateForm3(forms.Form):
-    # LAYOUT_OPTS = (
-    #     ('3-column', '3-column'),
-    #     ('3-column-header', '3-column-header'),
-    #     ('3-column-header-footer', '3-column-header-footer'),
-    #     ('3.2.0', 'jQuery Core 3.2.0'),
-    #     ('3.1.1', 'jQuery Core 3.1.1'),
-    #     ('3.1.0', 'jQuery Core 3.1.0'),
-    #     ('3.0.0', 'jQuery Core 3.0.0'),
-    #     ('2.2.4', 'jQuery Core 2.2.4'),
-    #     ('2.2.3', 'jQuery Core 2.2.3'),
-    #     ('2.2.2', 'jQuery Core 2.2.2'),
-    #     ('2.2.1', 'jQuery Core 2.2.1'),
-    #     ('2.2.0', 'jQuery Core 2.2.0'),
-    # )
-    #
-    # layout_opts = forms.ChoiceField(choices=LAYOUT_OPTS, widget=CustomRadioSelect())
+class ApplicationCreateForm3(ModelForm):
+    class Meta:
+        fields = ['coming_soon_page','about_us_page','contact_us_page','landing_page','maintenance_page']
+        model = ApplicationDefaultPages
 
-    # class Meta:
-    #     fields = ['description']
-    #     model = ApplicationPage
-    pass
