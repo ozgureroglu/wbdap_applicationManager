@@ -142,7 +142,7 @@ class DjangoProjectDeleteAPIView(DestroyAPIView):
 #
 #
 # # -----------------------------------------
-#
+# # Following are the class based views (viewsets : sets of class based views)
 # class ApplicationViewSet(ModifiedViewSet):
 #     """
 #     API endpoint that allows users to view existing exams.

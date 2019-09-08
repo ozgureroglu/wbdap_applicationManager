@@ -851,7 +851,7 @@ def project_management_page(request, id):
 
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
 
-    return render(request, 'applicationManager/application_management_page.html',
+    return render(request, 'applicationManager/project_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': prj,
                    # 'models': models,

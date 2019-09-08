@@ -13,15 +13,13 @@
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
-
-
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">{{ app.verbose_name | upper }}</h1>
+        <h1 class="h3 mb-2 text-gray-800">{{ app.name | upper }}</h1>
         <p  class="mb-4">{{ app.description }}</p>
 
         <div class="row">
             <div class="col-xl-3 col-md-6 mb-4">
-                <input type="checkbox" checked data-toggle="toggle" data-on="Active" data-off="Passive" data-onstyle="success" data-offstyle="danger">
+                <input type="checkbox" id="startproject" {% if app.status %}checked{% else %} {% endif %}data-toggle="toggle" data-on="Active" data-off="Passive" data-onstyle="success" data-offstyle="danger">
             </div>
         </div>
 

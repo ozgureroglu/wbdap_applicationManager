@@ -1,8 +1,6 @@
 from rest_framework.serializers import HyperlinkedModelSerializer, HyperlinkedIdentityField, ModelSerializer
 from applicationManager.models import  DjangoProject
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
+
 
 
 # --------- CRUD Serializers -----------------------------
@@ -18,7 +16,7 @@ class DjangoProjectCreateSerializer(ModelSerializer):
         # Following kwarg avoids the password to be returned
         # extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self,validated_data):
+    def create(self, validated_data):
         """
         This method overrides the ModelSerializers create method, so that model creation behaves differently than
         the default one. If we want to change the create behaviour at APIView level this method will be defined as
