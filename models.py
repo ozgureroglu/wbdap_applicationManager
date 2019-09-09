@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 import logging
 
@@ -23,7 +25,9 @@ class PasswordSettingsAdmin(admin.ModelAdmin):
 
 class PageLayout(models.Model):
     layout_name = models.CharField(max_length=25, blank=False, null=False)
-    content = RichTextField()
+    layout_description = models.TextField(max_length=250, blank=True, null=True)
+    layout_icon_name = models.CharField(max_length=50, blank=True, null=True)
+    layout_template_code = RichTextField()
 
     def __str__(self):
         return self.layout_name
@@ -34,11 +38,32 @@ class PageLayout(models.Model):
 
 @admin.register(PageLayout)
 class PageLayoutAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('layout_name','layout_description',)
 
 
 
-# model for applications that have been created by this applicationManager.
+class DjangoProject(models.Model):
+    name = models.CharField(max_length=25, null=False, blank=False) # app_name parameter for urls.py
+    port = models.IntegerField(null=False, blank=False, validators=[MaxValueValidator(10000), MinValueValidator(1000)])
+    status = models.BooleanField(default=False, null=False, blank=False)
+    description = models.TextField(max_length=400)
+
+
+    def __str__(self):
+        return self.name
+
+
+    def __unicode__(self):
+        return self.name
+
+
+@admin.register(DjangoProject)
+class DjangoProjectAdmin(admin.ModelAdmin):
+    list_display = ('name', 'port', 'status')
+
+
+
+# Model for applications that have been created by this applicationManager.
 class Application(models.Model):
     app_name = models.CharField(max_length=25,null=False, blank=False) # app_name parameter for urls.py
     verbose_name = models.CharField(max_length=50, null=False, blank=False) #Human readable form of the name
@@ -47,7 +72,7 @@ class Application(models.Model):
 
     active = models.BooleanField(default=True, blank=True)
     description = models.TextField(max_length=500) # Description of the application
-    coming_soon_page = models.BooleanField(default=True, blank=False) # want to include a coming_soon page
+
 
     soft_app = models.BooleanField(default=False, null=False,blank=False)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING) # Owner of this application
@@ -69,16 +94,29 @@ class Application(models.Model):
 class ApplicationAdmin(admin.ModelAdmin):
     pass
 
+class ApplicationDefaultPages(models.Model):
+    app = models.ForeignKey(Application,blank=False,null=False,on_delete=models.CASCADE)
+    coming_soon_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
+    about_us_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
+    contact_us_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
+    landing_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
+    maintenance_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
 
+
+    def __str__(self):
+        return self.app.app_name
+
+@admin.register(ApplicationDefaultPages)
+class ApplicationDefaultPagesAdmin(admin.ModelAdmin):
+    list_display = ('app','coming_soon_page','about_us_page','contact_us_page','landing_page','maintenance_page',)
 
 TEMPLATE_TYPES=(
-    ('generic', 'Generic Template'),
+    ('generic', 'Generic Purpose Template'),
     ('view', 'View Template'),
     ('url', 'URL Template'),
-    ('html', 'Django Template (Template)'),
+    ('html', 'HTML file Template'),
     ('license', 'License File Template'),
     ('python', 'Python File Template'),
-    ('file', 'File Template'),
 )
 
 TEMPLATE_ENGINE=(

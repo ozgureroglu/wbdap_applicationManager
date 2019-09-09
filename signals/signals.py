@@ -8,3 +8,7 @@ application_created_signal = django.dispatch.Signal(providing_args=["test", "app
 application_removed_signal = django.dispatch.Signal(providing_args=["test", "application"])
 application_creation_failed_signal = django.dispatch.Signal(providing_args=["test", "application"])
 model_changed_signal = django.dispatch.Signal(providing_args=["test", "application"])
+
+
+project_metadata_created_signal = django.dispatch.Signal(providing_args=["test", "application"])
+project_metadata_removed_signal = django.dispatch.Signal(providing_args=["test", "application"])

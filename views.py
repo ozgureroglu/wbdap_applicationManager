@@ -34,16 +34,19 @@ from django.views.generic import UpdateView, ListView, DetailView, CreateView
 from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
-    UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4
+    UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4, \
+    CreateProjectForm
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
-    ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate
+    ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate, DjangoProject
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
     load_application_data
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
 from applicationManager.signals.signals import application_created_signal, application_removed_signal, \
-    soft_application_removed_signal, soft_application_created_signal
+    soft_application_removed_signal, soft_application_created_signal, project_metadata_created_signal, \
+    project_metadata_removed_signal
+from django.db import transaction
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -73,6 +76,7 @@ def dashboard(request):
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
+
 @login_required
 def applications(request):
     if request.user.is_superuser:
@@ -89,21 +93,35 @@ def applications(request):
 
 
 @login_required
-def application_router(request,uuid,url_name):
+def projects(request):
+    if request.user.is_superuser:
+        djangoProjects = DjangoProject.objects.all()
+
+
+    return render(request,
+                  'applicationManager/projects.html', {'user': request.user, 'all_projects': djangoProjects}
+                  )
+
+
+
+
+
+@login_required
+def application_router(request, uuid, url_name):
     app = Application.objects.get(uuid=uuid)
     app_name = app.app_name
     reload(sys.modules[settings.ROOT_URLCONF])
     # return redirect('applicationManager:dashboard')
     return redirect("/" + app_name + '/')
 
+
 @login_required
-def dyn_view_loader(request,uuid,url_name=None):
+def dyn_view_loader(request, uuid, url_name=None):
     if url_name == None:
         url_name = 'index-page'
 
-    #TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
+    # TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
     # But this method is more suitable for static pages:https://stackoverflow.com/questions/9439899/django-dynamic-urls
-
 
     dyn_view_code = ApplicationUrl.objects.get(url_name=url_name).view_method.view_code
     print(dyn_view_code)
@@ -118,17 +136,16 @@ def dyn_view_loader(request,uuid,url_name=None):
             print(x)
     # after the following line a new req-res phase begins: so there should be new urlpath for the following requset
     # return redirect("/" + app_name + '/')
-    return render(request,'applicationManager/test.html',{})
+    return render(request, 'applicationManager/test.html', {})
 
 
-def dyn_view_loader(request,uuid,url_path=None):
-    print('printing url path: '+url_path)
+def dyn_view_loader(request, uuid, url_path=None):
+    print('printing url path: ' + url_path)
     if url_path == None:
         url_path = 'indexpage'
 
-    #TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
+    # TODO: One option is to direct call of view by named url groups: Create urls as a parametric structure
     # But this method is more suitable for static pages:https://stackoverflow.com/questions/9439899/django-dynamic-urls
-
 
     # dyn_view_code = ApplicationUrl.objects.get(app__uuid=uuid,url_name=url_name).view_method.view_code
     # print(dyn_view_code)
@@ -143,11 +160,11 @@ def dyn_view_loader(request,uuid,url_path=None):
     #         print(x)
     # after the following line a new req-res phase begins: so there should be new urlpath for the following requset
     # return redirect("/" + app_name + '/')
-    #TODO: asagidakiler normal uygulamalardaki gibi yapilabilmeli
+    # TODO: asagidakiler normal uygulamalardaki gibi yapilabilmeli
     try:
         view = ApplicationUrl.objects.get(app__uuid=uuid, url_pattern=url_path).view_method
     except Exception as e:
-        messages.add_message(request,messages.ERROR,str(e))
+        messages.add_message(request, messages.ERROR, str(e))
         return redirect(reverse('applicationManager:dashboard'))
 
     print(view.view_code)
@@ -155,16 +172,13 @@ def dyn_view_loader(request,uuid,url_path=None):
     exec(view.view_code)
     temp = None
     try:
-        temp = ApplicationComponentTemplate.objects.get(id= view.template_id)
+        temp = ApplicationComponentTemplate.objects.get(id=view.template_id)
         return render(request, temp.temp_name + '__' + temp.temp_type, {})
 
     except ObjectDoesNotExist as e:
         print(e.__class__.__name__)
-        messages.add_message(request,messages.ERROR,'Template field not set for view')
+        messages.add_message(request, messages.ERROR, 'Template field not set for view')
         return redirect(reverse('applicationManager:dashboard'))
-
-
-
 
 
 def genuuid_all(request):
@@ -229,9 +243,51 @@ def createApplication(request):
         variables = {'form': form}
         return render(
             request,
-            'applicationManager/createApplicationForm.html',
+            # 'applicationManager/createApplicationForm.html',
+            'applicationManager/createApplication.html',
             variables
         )
+
+
+
+@login_required
+# Creates an application
+def createProject(request):
+    if request.method == "POST":
+
+        # We are creating the bound form
+        form = CreateProjectForm(request.POST)
+
+        if form.is_valid():
+            logger.info("Form is valid")
+            project = form.save(commit=False)
+            project.status = False
+
+            project.save()
+            try:
+                # Send the application created signal; first parameter is the sender,
+                # second one is a generic parameter, third one is the applications itself.
+              project_metadata_created_signal.send(sender=Application.__class__, test="testString",
+                                                project=DjangoProject.objects.get(app_name=project.name))
+            except Exception as e:
+                print(e)
+
+            return redirect('applicationManager:projects')
+            # return HttpResponse(status=200)
+        else:
+            logger.warning('Form is not valid')
+            return HttpResponse(status=400)
+    else:
+
+        form = CreateProjectForm()
+        variables = {'form': form}
+        return render(
+            request,
+            # 'applicationManager/createApplicationForm.html',
+            'applicationManager/createProject.html',
+            variables
+        )
+
 
 
 @login_required
@@ -284,7 +340,6 @@ def delete_application(request, id):
     app = Application.objects.get(id=id)
     logger.info('Deleting application %s', app.app_name)
 
-
     if app.soft_app == True:
         try:
             app.delete()
@@ -293,7 +348,7 @@ def delete_application(request, id):
             return False
 
         soft_application_removed_signal.send(sender=Application.__class__, test="testString",
-                                    application=app)
+                                             application=app)
     else:
         try:
             app.delete()
@@ -302,9 +357,9 @@ def delete_application(request, id):
             return False
 
         application_removed_signal.send(sender=Application.__class__, test="testString",
-                                    application=Application.objects.get(app_name=app.app_name))
+                                        application=Application.objects.get(app_name=app.app_name))
 
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 @login_required
@@ -316,7 +371,7 @@ def application_details(request, appid):
 @login_required
 def generate_data(request, appid):
     pass
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 @login_required
@@ -327,7 +382,7 @@ def dump_all_data(request):
         for mess in res:
             messages.add_message(request, messages.WARNING, mess)
 
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 @login_required
@@ -345,7 +400,7 @@ def load_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Load of application data (" + app.app_name + ") has failed.")
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 @login_required
@@ -363,7 +418,7 @@ def dump_app_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Dumping of application data(" + app.app_name + ") has been failed")
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 #
@@ -615,9 +670,9 @@ def show_urls():
 def redirect_to_app(request, uuid):
     app = Application.objects.get(uuid=uuid)
     app_name = app.app_name
-    logger.info('will redirect to app : '+app_name)
+    logger.info('will redirect to app : ' + app_name)
     reload(sys.modules[settings.ROOT_URLCONF])
-    # return redirect('applicationManager:dashboard')
+    # return redirect('applicationManager:applications')
     return redirect("/" + app_name + '/')
 
 
@@ -627,7 +682,7 @@ def reload_urlconf(urlconf=None):
     if urlconf in sys.modules:
         reload(sys.modules[urlconf])
 
-    return redirect('applicationManager:dashboard')
+    return redirect('applicationManager:applications')
 
 
 def getAppNameListByAppsPy():
@@ -731,11 +786,11 @@ def updateAppsDB(request):
         app.core_app = 1
         app.save()
 
+
 @require_POST
 def trigger(request, id):
-
     setting_id = request.POST['setting_id']
-    obj, created = ApplicationSettings.objects.get_or_create(app_id=id, setting_id = setting_id, defaults={}, )
+    obj, created = ApplicationSettings.objects.get_or_create(app_id=id, setting_id=setting_id, defaults={}, )
     obj.toogle_setting()
 
     # Application.objects.get(id = id).applicationsettings.toogle_setting(request.POST['type'])
@@ -768,7 +823,6 @@ def application_management_page(request, id):
 
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
 
-
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
@@ -778,21 +832,51 @@ def application_management_page(request, id):
                    })
 
 
+
+@login_required
+def project_management_page(request, id):
+    if request.POST:
+        logger.info('received post')
+
+    prj = DjangoProject.objects.get(id=id)
+
+
+    # models = app_config.get_models()
+    # pages = ApplicationPage.objects.filter(app_id=id)
+
+    # Here the term model denotes the native models of django not the AppModel of applicationManager application
+    # for m in models:
+    #     print(m.__name__)
+    #
+
+    # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
+
+    return render(request, 'applicationManager/project_management_page.html',
+                  {'app_form': CreateApplicationForm,
+                   'app': prj,
+                   # 'models': models,
+                   # 'pages': pages,
+                   # 'appsettings': ApplicationSettings.objects.filter(app_id=id)
+                   })
+
+
+
+
+
 class AppModelListView(ListView):
     model = AppModel
     http_method_names = ['get']
 
-    #TODO: This is not a suitable way of returning json for listview: because it is redefining the response of view,
+    # TODO: This is not a suitable way of returning json for listview: because it is redefining the response of view,
     # instead it should modify the exsiting response
     # Listview tarafindan json response donmesi icin assagidaki method override ediliyor.
     def render_to_response(self, context, **response_kwargs):
         print(self.kwargs)
-        app_conf = apps.get_app_config(Application.objects.get(id= self.kwargs['id']).app_name)
+        app_conf = apps.get_app_config(Application.objects.get(id=self.kwargs['id']).app_name)
         models = app_conf.get_models()
         data = {}
-        model_list=[]
+        model_list = []
         for model in models:
-
             print(model.__name__)
             model_list.append(model.__name__)
 
@@ -812,7 +896,6 @@ class AppModelListView(ListView):
         # return HttpResponse(json.dumps(data), content_type='application/json')
         return JsonResponse(data, safe=False)
 
-
     def get_context_data(self, **kwargs):
         context = super(AppModelListView, self).get_context_data(**kwargs)
         # If extra contex parameters are required
@@ -820,12 +903,12 @@ class AppModelListView(ListView):
         return context
 
 
-
 class JSONResponseMixin:
     """
     A mixin that can be used to render a JSON response.
     https://docs.djangoproject.com/en/2.0/topics/class-based-views/mixins/#jsonresponsemixin-example
     """
+
     def render_to_json_response(self, context, **response_kwargs):
         """
         Returns a JSON response, transforming 'context' to make the payload.
@@ -839,7 +922,7 @@ class JSONResponseMixin:
         """
 
         # Just serializing single object to json
-        context = serializers.serialize('json', [context['object']], ensure_ascii = False)
+        context = serializers.serialize('json', [context['object']], ensure_ascii=False)
         # Note: This is *EXTREMELY* naive; in reality, you'll need
         # to do much more complex handling to ensure that arbitrary
         # objects -- such as Django model instances or querysets
@@ -847,17 +930,14 @@ class JSONResponseMixin:
         return context
 
 
-
 class AppModelDetailView(JSONResponseMixin, DetailView):
     model = AppModel
     http_method_names = ['get']
-
 
     # Override render_to_response with the JSONResponseMixin's render_to_json_response using the same method signature
 
     def render_to_response(self, context, **response_kwargs):
         return self.render_to_json_response(context, **response_kwargs)
-
 
     # If you want to change the context
     def get_context_data(self, **kwargs):
@@ -872,7 +952,7 @@ class ApplicationUpdate(UpdateView):
     model = Application
     form_class = CreateApplicationForm
 
-    success_url = reverse_lazy('applicationManager:dashboard')
+    success_url = reverse_lazy('applicationManager:applications')
     template_name_suffix = '_update_form'
 
     #
@@ -929,16 +1009,14 @@ class ApplicationUpdate(UpdateView):
 #     pass
 
 
-
-class FieldListView(JSONResponseMixin,ListView):
+class FieldListView(JSONResponseMixin, ListView):
     model = Field
     http_method_names = ['get']
 
     def render_to_response(self, context, **response_kwargs):
         queryset = self.model.objects.all()
-        data = serializers.serialize('json',queryset)
+        data = serializers.serialize('json', queryset)
         return HttpResponse(data, content_type='application/json')
-
 
     # Bu metodu override etme sebebi donecek olan object listesini degistirmek ve
     # sadece modele ait olanlari donmek
@@ -997,7 +1075,8 @@ class FieldCreateView(CreateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['app_id']})
+        self.success_url = reverse('applicationManager:application-management-page',
+                                   kwargs={'id': self.kwargs['app_id']})
         print(self.success_url)
         return super(FieldCreateView, self).get_success_url()
 
@@ -1029,9 +1108,6 @@ class FieldCreateView(CreateView):
         if 'field_form' not in context:
             context['field_form'] = self.get_form()
         return context
-
-
-
 
 
 class FieldDetailView(JSONResponseMixin, DetailView):
@@ -1068,7 +1144,8 @@ class FieldUpdateView(UpdateView):
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['app_id']})
+        self.success_url = reverse('applicationManager:application-management-page',
+                                   kwargs={'id': self.kwargs['app_id']})
         return super(FieldUpdateView, self).get_success_url()
 
     def get_context_data(self, **kwargs):
@@ -1146,7 +1223,7 @@ def download_app(request, id):
 def package_app(request, id):
     app = Application.objects.get(id=id)
     version = '0.1'
-    dest = os.path.join(settings.FILESYSTEM_DIR, "wbdap_"+app.app_name)
+    dest = os.path.join(settings.FILESYSTEM_DIR, "wbdap_" + app.app_name)
     if os.path.exists(dest):
         shutil.rmtree(dest)
     # os.mkdir(dest, mode=0o755)
@@ -1155,25 +1232,25 @@ def package_app(request, id):
     source = os.path.join(settings.PROJECT_PATH, app.app_name)
     copytree(source, dest)
 
-    template_dir = os.path.join(settings.PROJECT_PATH,"applicationManager/templates/applicationManager/applicationFileTemplates")
+    template_dir = os.path.join(settings.PROJECT_PATH,
+                                "applicationManager/templates/applicationManager/applicationFileTemplates")
 
     # Create README.rst
-    readme = open(os.path.join(dest,"README.rst"),"w+")
-    readme_temp_file =open(os.path.join(template_dir,"readme.rst.tmp"),"r")
+    readme = open(os.path.join(dest, "README.rst"), "w+")
+    readme_temp_file = open(os.path.join(template_dir, "readme.rst.tmp"), "r")
     readme_temp_content = readme_temp_file.read()
     readme_temp_file.close()
     readme_temp_obj = Template(readme_temp_content)
 
-    context = Context({'applicationName':app.app_name,'applicationDescription':app.description})
+    context = Context({'applicationName': app.app_name, 'applicationDescription': app.description})
     rendered_temp = readme_temp_obj.render(context)
     readme.write(rendered_temp)
     readme.close()
 
-
     # Create license file
 
     lic = open(os.path.join(dest, "LICENSE"), "w+")
-    lic_temp_file = open(os.path.join(template_dir,"BSD_Lic.txt.tmp"), "r")
+    lic_temp_file = open(os.path.join(template_dir, "BSD_Lic.txt.tmp"), "r")
     lic_temp_content = lic_temp_file.read()
     lic_temp_file.close()
     lic_temp_obj = Template(lic_temp_content)
@@ -1191,14 +1268,13 @@ def package_app(request, id):
     # Create setup.py
 
     setup = open(os.path.join(dest, "setup.py"), "w+")
-    setup_temp_file = open(os.path.join(template_dir,"setup.py.tmp"), "r")
+    setup_temp_file = open(os.path.join(template_dir, "setup.py.tmp"), "r")
     setup_temp_content = setup_temp_file.read()
     setup_temp_file.close()
     setup_temp_obj = Template(setup_temp_content)
 
-
-    context = Context({'applicationName':app.app_name,
-                       'applicationDescription':app.description,
+    context = Context({'applicationName': app.app_name,
+                       'applicationDescription': app.description,
                        'authorName': app.owner.username,
                        'authorEmail': app.owner.email,
                        'version': version
@@ -1208,31 +1284,29 @@ def package_app(request, id):
     setup.write(rendered_temp)
     setup.close()
 
-    os.chmod(os.path.join(dest, "setup.py"),0o744)
+    os.chmod(os.path.join(dest, "setup.py"), 0o744)
 
     # Create MANIFEST.in
 
     manifest = open(os.path.join(dest, "MANIFEST.in"), "w+")
-    manifest_temp_file = open(os.path.join(template_dir,"manifest.in.tmp"), "r")
+    manifest_temp_file = open(os.path.join(template_dir, "manifest.in.tmp"), "r")
     manifest_temp_content = manifest_temp_file.read()
     manifest_temp_file.close()
     manifest_temp_obj = Template(manifest_temp_content)
 
-
-    context = Context({'applicationName':app.app_name,
-                       'applicationDescription':app.description,
+    context = Context({'applicationName': app.app_name,
+                       'applicationDescription': app.description,
                        'authorName': app.owner.username,
                        'authorEmail': app.owner.email})
     rendered_temp = manifest_temp_obj.render(context)
     manifest.write(rendered_temp)
     manifest.close()
 
-
     # Run the packaging command
 
-    fpath = "wbdap_"+ app.app_name
+    fpath = "wbdap_" + app.app_name
 
-    cwd = os.path.join(settings.PROJECT_PATH,'filesystem/wbdap_'+app.app_name)
+    cwd = os.path.join(settings.PROJECT_PATH, 'filesystem/wbdap_' + app.app_name)
 
     os.chdir(cwd)
 
@@ -1256,10 +1330,9 @@ def package_app(request, id):
     except Exception as e:
         print(e)
 
-    output_name = "django-"+app.app_name+"-"+version+".tar.gz"
+    output_name = "django-" + app.app_name + "-" + version + ".tar.gz"
     # response = FileResponse(filename=os.path.join(cwd,"dist/"+ output_name),as_attachment = False)  # mimetype is replaced by content_type for django 1.7
     # response['Content-Type'] = 'x-gzip'
-
 
     # output = tarfile.open('GeneratedGraph.tar.gz', mode='w')
     # try:
@@ -1272,28 +1345,23 @@ def package_app(request, id):
     tar_file_path = os.path.join(cwd, "dist/" + output_name)
     print(tar_file_path)
     with tarfile.open(tar_file_path, mode='r:gz') as fh:
-    # wrapper = FileWrapper(tar_file_path)
-    #
-    # print(wrapper.__class__)
+        # wrapper = FileWrapper(tar_file_path)
+        #
+        # print(wrapper.__class__)
 
-        response = HttpResponse(content=fh.fileobj.read(),content_type='application/x-gzip')
-    # response['Content-Length'] = os.path.getsize(os.path.join(cwd,"dist/"+ output_name))
+        response = HttpResponse(content=fh.fileobj.read(), content_type='application/x-gzip')
+        # response['Content-Length'] = os.path.getsize(os.path.join(cwd,"dist/"+ output_name))
         response['Content-Disposition'] = 'attachment; filename=%s' % output_name
 
-
-    # response['Content-Disposition'] = 'attachment; filename=%s' % "django-"+app.app_name+"-"+version+".tar.gz"
-    #     response['Content-Encoding'] = 'tar'
-    #
-    # tar = tarfile.open(fileobj=response, mode="w:gz")
-    # tar.add(os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"))
-    # # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
-    # #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
-    # tar.close()
+        # response['Content-Disposition'] = 'attachment; filename=%s' % "django-"+app.app_name+"-"+version+".tar.gz"
+        #     response['Content-Encoding'] = 'tar'
+        #
+        # tar = tarfile.open(fileobj=response, mode="w:gz")
+        # tar.add(os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"))
+        # # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
+        # #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
+        # tar.close()
         return response
-
-
-
-
 
 
 # If we are calling this ,method we are sure that there exist a application holding the mo
@@ -1337,14 +1405,14 @@ def editors(request):
 
 FORMS = [("Basic Info", ApplicationCreateForm1),
          ("Description", ApplicationCreateForm4),
-         ("libs", ApplicationCreateForm2),
-         ("Page Layout", ApplicationCreateForm3),
+         ("UI Libs", ApplicationCreateForm2),
+         ("Default Pages", ApplicationCreateForm3),
          ]
 
-TEMPLATES = {"Basic Info": "applicationManager/forms/wf.html",
-             "libs": "applicationManager/forms/wf.html",
-             "Description": "applicationManager/forms/wf.html",
-             "Page Layout": "applicationManager/forms/wf.html",
+TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
+             "UI Libs": "applicationManager/forms/formpage.html",
+             "Description": "applicationManager/forms/formpage.html",
+             "Default Pages": "applicationManager/forms/formpage.html",
              }
 
 
@@ -1361,35 +1429,35 @@ class ApplicationCreateWizard(SessionWizardView):
             print(context)
         return context
 
+    @transaction.atomic
     def done(self, form_list, form_dict, **kwargs):
-
         # form_data= [form.cleaned_data for form in form_list]
         # print(form_data)
         # print(form_data[0])
-        d = form_dict['Basic Info'].cleaned_data
-        app = Application(# Zorunlu alanlar
-                          app_name=d['app_name'],
-                          verbose_name=d['verbose_name'],
-                          active=d['active'],
-                          coming_soon_page=d['coming_soon_page'],
-                          core_app=d['core_app'],
-                          owner_id=self.request.user.id,
-                          uuid= uuid.uuid4(),
-                           # Zorunlu olmayan alanlar
-                          url=d['app_name'],
-                          namedUrl=d['app_name'],
-                          soft_app=True,
+        basic_info_data = form_dict['Basic Info'].cleaned_data
+        ui_libs_data = form_dict['UI Libs'].cleaned_data
+        description_info_data = form_dict['Description'].cleaned_data
+        default_pages_data = form_dict['Default Pages'].cleaned_data
+        app = Application(  # Zorunlu alanlar
+            app_name=basic_info_data['app_name'],
+            verbose_name=basic_info_data['verbose_name'],
+            active=basic_info_data['active'],
+            core_app=basic_info_data['core_app'],
+            owner_id=self.request.user.id,
+            uuid=uuid.uuid4(),
+            # Zorunlu olmayan alanlar
+            url=basic_info_data['app_name'],
+            namedUrl=basic_info_data['app_name'],
+            soft_app=True,
 
         )
 
         app.save()
 
-        soft_application_created_signal.send(sender=Application.__class__, test="testString",
+        project_metadata_created_signal.send(sender=Application.__class__, test="testString",
                                              application=app)
         # Following redirection done only after the last commit
-        return HttpResponseRedirect(reverse('applicationManager:dashboard'))
-
-
+        return HttpResponseRedirect(reverse('applicationManager:applications'))
 
 
 def test(request):
@@ -1397,17 +1465,11 @@ def test(request):
 
     from applicationManager.util.soft_application_creator import SoftApplicationCreator
     sac = SoftApplicationCreator(application=Application.objects.get(app_name='examApp'))
-    sac.load_urls( )
+    sac.load_urls()
 
     #
     # for up in get_resolver().url_patterns:
     #     print(up)
     #     # URLPattern()
 
-
-
-
-
     return HttpResponse('response')
-
-
