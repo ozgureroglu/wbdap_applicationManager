@@ -860,9 +860,6 @@ def project_management_page(request, id):
                    })
 
 
-
-
-
 class AppModelListView(ListView):
     model = AppModel
     http_method_names = ['get']

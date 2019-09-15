@@ -1,4 +1,4 @@
-from applicationManager.util.django_project_creator import DjangoProjectCreator
+from applicationManager.util.django_project_manager import DjangoProjectManager
 from applicationManager.util.soft_application_creator import SoftApplicationCreator
 
 __author__ = 'ozgur'
@@ -7,7 +7,7 @@ import logging
 
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \
-    project_metadata_created_signal, project_metadata_removed_signal
+    project_metadata_created_signal, project_metadata_removed_signal, project_started
 
 from django.dispatch import receiver
 
@@ -32,8 +32,19 @@ def application_created(sender, **kwargs):
 def project_metadata_created(sender, **kwargs):
     logger.info("project_created signal receieved")
 
-    dj_app_creator = DjangoProjectCreator(kwargs['application'])
+    dj_app_creator = DjangoProjectManager(kwargs['application'])
     dj_app_creator.create()
+
+
+# Called when he application is created
+@receiver(project_started)
+def project_started(sender, **kwargs):
+    logger.info("project_started signal receieved")
+
+    dj_app_creator = DjangoProjectManager(kwargs['application'])
+    dj_app_creator.runserver()
+
+
 
 
 
