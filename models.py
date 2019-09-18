@@ -47,6 +47,7 @@ class DjangoProject(models.Model):
     port = models.IntegerField(null=False, blank=False, validators=[MaxValueValidator(10000), MinValueValidator(1000)])
     status = models.BooleanField(default=False, null=False, blank=False)
     description = models.TextField(max_length=400)
+    pid = models.IntegerField(null=True, blank=False)
 
 
     def __str__(self):
@@ -59,7 +60,7 @@ class DjangoProject(models.Model):
 
 @admin.register(DjangoProject)
 class DjangoProjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'port', 'status')
+    list_display = ('name', 'port', 'status', 'pid')
 
 
 
