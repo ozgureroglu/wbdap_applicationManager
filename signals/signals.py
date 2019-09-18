@@ -12,3 +12,5 @@ model_changed_signal = django.dispatch.Signal(providing_args=["test", "applicati
 
 project_metadata_created_signal = django.dispatch.Signal(providing_args=["test", "application"])
 project_metadata_removed_signal = django.dispatch.Signal(providing_args=["test", "application"])
+
+project_started = django.dispatch.Signal(providing_args=["application"])
