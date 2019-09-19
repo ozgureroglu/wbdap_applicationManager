@@ -65,13 +65,13 @@ class %(model)s(models.Model):
 
 
 class DjangoProjectManager:
-    def __init__(self, application):
-        # Application object is coming from the database records whih holds the metadata of the application
+    def __init__(self, project):
+        # Project object is coming from the database records which holds the metadata of the project
 
-        self.application = application
+        self.project = project
         self.site_root = settings.SITE_ROOT
         self.sub_models = settings.SUB_MODEL_DIR
-        self.project_root_folder = os.path.join(self.site_root, self.application.name)
+        self.project_root_folder = os.path.join(self.site_root, self.project.name)
 
 
         try:
@@ -83,29 +83,30 @@ class DjangoProjectManager:
     def create(self):
 
         # Check if app root folder exists; if not go on to create
-        if not os.path.exists('{0}{1}'.format(self.site_root, self.application.name)):
+        if not os.path.exists('{0}{1}'.format(self.site_root, self.project.name)):
 
             # run_all_steps creates all other application folders
             try:
-                logger.info('Creating the project {0} ...'.format(self.application.app_name))
+                logger.info('Creating the project {0} ...'.format(self.propject.name))
 
-                call_command('startproject', self.application.app_name)
+                call_command('startproject', self.project.name)
 
             except Exception as e:
                 return False
             return True
 
         else:
-            logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.application.app_name))
+            logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.project.name))
             return False
 
     def runserver(self):
         #call_command ile cagrilamaz.
         wd = os.getcwd()
-        os.chdir(self.application.name)
+        os.chdir(self.project.name)
         cwd = os.getcwd()
-        process = subprocess.Popen(['python3', 'manage.py', 'runserver', str(self.application.port)],)
+        process = subprocess.Popen(['python3', 'manage.py', 'runserver', str(self.project.port)],)
         output = process.stdout
+        print(process.pid)
         os.chdir(wd)
         print(output)
         # call_command('runserver', self.application.port)

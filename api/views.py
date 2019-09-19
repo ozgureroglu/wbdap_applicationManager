@@ -110,8 +110,8 @@ class DjangoProjectDeleteAPIView(DestroyAPIView):
 def startProject(request, pk):
     app = DjangoProject.objects.get(id=pk)
     # try to run app
-    project_started.send(sender=Application.__class__, test="testString",
-                                         application=app)
+    project_started.send(sender=DjangoProject.__class__, test="testString",
+                                         project=app)
 
     return Response({'port':app.port})
 
