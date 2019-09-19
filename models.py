@@ -322,14 +322,14 @@ class ApplicationSettingsAdmin(admin.ModelAdmin):
 
 
 class DataDump(models.Model):
-    application = models.ForeignKey(Application,on_delete=models.CASCADE)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
 
 class AppModel(models.Model):
     name = models.CharField(max_length=30)
-    definition = models.TextField(max_length=250,blank=True,null=False)
-    owner_app = models.ForeignKey(Application,on_delete=models.CASCADE,related_name="models", blank=False,null=False)
+    definition = models.TextField(max_length=250, blank=True, null=False)
+    owner_app = models.ForeignKey(Application, on_delete=models.CASCADE, related_name="models", blank=False, null=False)
 
     def __str__(self):
         return self.name
