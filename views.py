@@ -47,8 +47,12 @@ from applicationManager.signals.signals import application_created_signal, appli
     soft_application_removed_signal, soft_application_created_signal, project_metadata_created_signal, \
     project_metadata_removed_signal
 from django.db import transaction
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+
 
 logger = logging.getLogger("wbdap.debug")
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 @login_required
@@ -76,7 +80,7 @@ def dashboard(request):
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
-
+@cache_page(CACHE_TTL)
 @login_required
 def applications(request):
     if request.user.is_superuser:
