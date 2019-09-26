@@ -52,6 +52,7 @@ from django.views.decorators.cache import cache_page
 
 
 logger = logging.getLogger("wbdap.debug")
+# cache ttl for redis
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
