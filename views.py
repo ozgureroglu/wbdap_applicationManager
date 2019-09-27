@@ -107,8 +107,28 @@ def projects(request):
                   'applicationManager/projects.html', {'user': request.user, 'all_projects': djangoProjects}
                   )
 
+@login_required
+def memcache_test(request):
+    # from django.conf import settings
+    # get caches confs
+    from django.core.cache import caches, cache
+    conf = settings.CACHES.get('memcached', None)
+    print(caches.__getitem__('memcached'))
+    memcached = caches.__getitem__('memcached')
 
+    cache_key = 'my_unique_key' # needs to be unique
+    cache_time = 86400 # time in seconds for cache to be valid
+    data = memcached.get(cache_key) # returns None if no key-value pair
 
+    if not data:
+        # my_service = Service()
+        # data = service.get_data()
+        data = "this is the data"
+
+    memcached.set(cache_key, data, cache_time)
+    return render(request,
+                      'applicationManager/dashboard.html',
+                      )
 
 
 @login_required

@@ -29,6 +29,9 @@ urlpatterns = [
     path('applications/', applications, name='applications'),
     path('projects/', projects, name='projects'),
     path('cdt/', countdown_test_page, name='cdt'),
+    path('memcachetest/', memcache_test, name='memcache_test'),
+
+    # ---------------------------------------------------
     path('dashboard/', dashboard, name='dashboard'),
     # ---------------------------------------------------
 
