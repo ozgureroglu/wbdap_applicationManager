@@ -1,5 +1,6 @@
 import subprocess
 
+from applicationManager.models import DjangoProject
 from applicationManager.signals.signals import application_creation_failed_signal
 
 __author__ = 'ozgur'
@@ -65,7 +66,7 @@ class %(model)s(models.Model):
 
 
 class DjangoProjectManager:
-    def __init__(self, project):
+    def __init__(self, project: DjangoProject):
         # Project object is coming from the database records which holds the metadata of the project
 
         self.project = project

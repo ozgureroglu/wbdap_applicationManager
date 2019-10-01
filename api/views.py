@@ -74,6 +74,7 @@ class DjangoProjectCreateAPIView(CreateAPIView):
     serializer_class = DjangoProjectCreateSerializer
 
 
+
 class DjangoProjectListAPIView(ListAPIView):
     queryset = DjangoProject.objects.all()
     serializer_class = DjangoProjectListSerializer

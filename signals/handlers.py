@@ -32,8 +32,8 @@ def application_created(sender, **kwargs):
 def project_metadata_created(sender, **kwargs):
     logger.info("project_created signal receieved")
 
-    dj_app_creator = DjangoProjectManager(kwargs['project'])
-    dj_app_creator.create()
+    # dj_app_creator = DjangoProjectManager(kwargs['project'])
+    # dj_app_creator.create()
 
 
 # Called when he application is created
