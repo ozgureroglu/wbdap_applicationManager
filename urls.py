@@ -26,13 +26,12 @@ urlpatterns = [
 
 
     path('', landing_page, name='landing'),
-    path('applications/', applications, name='applications'),
-    path('projects/', projects, name='projects'),
+
     path('cdt/', countdown_test_page, name='cdt'),
     path('memcachetest/', memcache_test, name='memcache_test'),
 
     # ---------------------------------------------------
-    path('dashboard/', dashboard, name='dashboard'),
+    # path('dashboard/', dashboard, name='dashboard'),
     # ---------------------------------------------------
 
     path('generatedata/<int:appid>/', generate_data, name='generate-data'),
@@ -40,9 +39,7 @@ urlpatterns = [
     path('genuuidall/', genuuid_all, name='genuuid-all'),
     path('reindexApps/', reindexApps, name='reindexApps'),
 
-    path('createApplication/', ApplicationCreateWizard.as_view(FORMS), name='createApplication'),
-    path('createProject/', createProject, name='createProject'),
-    path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
+
     # path('deleteApplication/<pk>/', ApplicationDelete.as_view(), name='deleteApplication'),
     # ---------------------------
     # path('application/router/<uuid:uuid>/', application_router, name='application-router'),
@@ -50,9 +47,16 @@ urlpatterns = [
     # path('application/router/<uuid:uuid>/view/<str:url_name>/', dyn_view_loader, name='dyn-view-loader'),
     path('router/<uuid:uuid>/<path:url_path>/', dyn_view_loader, name='dyn-view-loader'),
 
-    # ------------------------------------------------------
+    # --- PROJECTS ---------------------------------------------------
 
+    path('createProject/', createProject, name='createProject'),
+    path('projects/', projects, name='projects'),
+    path('project/<int:id>/delete', deleteProject, name='delete-project'),
 
+    # --- APPLICATIONS ---------------------------------------------------
+    path('createApplication/', ApplicationCreateWizard.as_view(FORMS), name='createApplication'),
+    path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
+    path('applications/', applications, name='applications'),
     path('application/<int:id>/', application_management_page, name='application-management-page'),
     path('project/<int:id>/', project_management_page, name='project-management-page'),
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),

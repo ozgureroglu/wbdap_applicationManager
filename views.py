@@ -8,12 +8,14 @@ import json
 from distutils.errors import DistutilsError
 from wsgiref.util import FileWrapper
 
+import requests
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
 from openpyxl.compat import file
+from rest_framework.authtoken.models import Token
 from scrapy.signals import response_received
 
 from applicationManager.util.api_utils import create_api
@@ -277,6 +279,11 @@ def createApplication(request):
 
 @login_required
 # Creates an application
+def deleteProject(request):
+    pass
+
+@login_required
+# Creates an application
 def createProject(request):
     if request.method == "POST":
 
@@ -284,21 +291,29 @@ def createProject(request):
         form = CreateProjectForm(request.POST)
 
         if form.is_valid():
-            logger.info("Form is valid")
-            project = form.save(commit=False)
-            project.status = False
+            token, created = Token.objects.get_or_create(user=request.user)
+            print(token)
+            print(form.data)
 
-            project.save()
-            try:
-                # Send the application created signal; first parameter is the sender,
-                # second one is a generic parameter, third one is the applications itself.
-              project_metadata_created_signal.send(sender=Application.__class__, test="testString",
-                                                project=DjangoProject.objects.get(app_name=project.name))
-            except Exception as e:
-                print(e)
-
+            resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/create/',
+                                 form.data,
+                                 headers={'Authorization': 'Token '+token.__str__()})
+            print(resp)
+            # logger.info("Form is valid")
+            # project = form.save(commit=False)
+            # project.status = False
+            #
+            # project.save()
+            # try:
+            #     # Send the application created signal; first parameter is the sender,
+            #     # second one is a generic parameter, third one is the applications itself.
+            #   project_metadata_created_signal.send(sender=Application.__class__, test="testString",
+            #                                     project=DjangoProject.objects.get(app_name=project.name))
+            # except Exception as e:
+            #     print(e)
+            #
             return redirect('applicationManager:projects')
-            # return HttpResponse(status=200)
+            # # return HttpResponse(status=200)
         else:
             logger.warning('Form is not valid')
             return HttpResponse(status=400)
