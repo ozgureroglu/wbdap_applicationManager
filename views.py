@@ -9,6 +9,7 @@ from distutils.errors import DistutilsError
 from wsgiref.util import FileWrapper
 
 import requests
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.template import Template, Context
@@ -278,9 +279,21 @@ def createApplication(request):
 
 
 @login_required
-# Creates an application
-def deleteProject(request):
-    pass
+# Deletes an application
+def deleteProject(request, id):
+    token, created = Token.objects.get_or_create(user=request.user)
+
+    resp = requests.delete('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/delete/',
+                         headers={'Authorization': 'Token ' + token.__str__()})
+
+    if resp.status_code == 200 or resp.status_code == 204:
+        print('api returned 200')
+        messages.info(request, "Project deletion returned success")
+    else:
+        print('api returned '+str(resp.status_code))
+        messages.error(request, "Project creation failed with code: "+str(resp.status_code))
+
+    return redirect('applicationManager:projects')
 
 @login_required
 # Creates an application
@@ -312,6 +325,8 @@ def createProject(request):
             # except Exception as e:
             #     print(e)
             #
+            messages.info(request, "Project creation returned success")
+
             return redirect('applicationManager:projects')
             # # return HttpResponse(status=200)
         else:

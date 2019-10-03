@@ -114,7 +114,7 @@ def startProject(request, pk):
     project_started.send(sender=DjangoProject.__class__, test="testString",
                                          project=app)
 
-    return Response({'port':app.port})
+    return Response({'port': app.port})
 
 
 

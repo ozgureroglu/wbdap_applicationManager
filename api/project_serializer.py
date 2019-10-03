@@ -5,7 +5,7 @@ from applicationManager.models import  DjangoProject
 
 # --------- CRUD Serializers -----------------------------
 # https://www.youtube.com/watch?v=dfIB-LthIpE&list=PLEsfXFp6DpzTOcOVdZF-th7BS_GYGguAS&index=9
-
+from applicationManager.tasks import create_django_project
 
 
 class DjangoProjectCreateSerializer(ModelSerializer):
@@ -34,6 +34,8 @@ class DjangoProjectCreateSerializer(ModelSerializer):
             description=validated_data['description'],
 
         )
+        print("\n\n*******************************************************")
+        create_django_project.delay(dproject)
         return dproject
 
 
