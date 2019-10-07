@@ -88,17 +88,17 @@ class DjangoProjectManager:
 
             # run_all_steps creates all other application folders
             try:
-                logger.info('Creating the project {0} ...'.format(self.propject.name))
+                logger.info('Creating the project {0} ...'.format(self.project.name))
 
                 call_command('startproject', self.project.name)
 
             except Exception as e:
-                return False
+                return {'status': e}
             return True
 
         else:
             logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.project.name))
-            return False
+            return {'status':'path exists'}
 
     def runserver(self):
         #call_command ile cagrilamaz.

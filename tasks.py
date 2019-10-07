@@ -22,7 +22,9 @@ def mul(x, y):
 
 
 @shared_task
-def create_django_project(project: DjangoProject):
-    dpm = DjangoProjectManager(project=project)
-    dpm.create()
+def create_django_project(projectid):
+    djp = DjangoProject.objects.get(id=projectid)
+    dpm = DjangoProjectManager(project=djp)
+    status = dpm.create()
+    return {"status": status}
 

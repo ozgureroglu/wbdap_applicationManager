@@ -35,7 +35,7 @@ class DjangoProjectCreateSerializer(ModelSerializer):
 
         )
         print("\n\n*******************************************************")
-        create_django_project.delay(dproject)
+        create_django_project.delay(dproject.id)
         return dproject
 
 
