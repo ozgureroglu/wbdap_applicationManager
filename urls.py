@@ -51,6 +51,8 @@ urlpatterns = [
 
     path('createProject/', createProject, name='createProject'),
     path('projects/', projects, name='projects'),
+    path('project/<int:id>/', project_management_page, name='project-management-page'),
+    path('project/<int:id>/start', startProject, name='start-project'),
     path('project/<int:id>/delete', deleteProject, name='delete-project'),
 
     # --- APPLICATIONS ---------------------------------------------------
@@ -58,7 +60,7 @@ urlpatterns = [
     path('ca2/', ApplicationCreateWizard.as_view(FORMS), name='createApplication2'),
     path('applications/', applications, name='applications'),
     path('application/<int:id>/', application_management_page, name='application-management-page'),
-    path('project/<int:id>/', project_management_page, name='project-management-page'),
+
     path('application/<int:id>/genuuid/', genuuid_app, name='genuuid-app'),
     path('application/<int:id>/delete/', delete_application, name='delete-application'),
     path('application/<int:id>/dumpdata/', dump_app_data, name='dump-app-data'),

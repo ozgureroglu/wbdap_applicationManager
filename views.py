@@ -279,6 +279,25 @@ def createApplication(request):
 
 
 @login_required
+@require_http_methods(["POST"])
+def startProject(request, id):
+    token, created = Token.objects.get_or_create(user=request.user)
+
+    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/start/',
+                         headers={'Authorization': 'Token ' + token.__str__()})
+
+    if resp.status_code == 200 or resp.status_code == 204:
+        print('api returned 200')
+        messages.info(request, "Project started successfully")
+    else:
+        print('api returned '+str(resp.status_code))
+        messages.error(request, "Project start failed with code: "+str(resp.status_code))
+
+    return redirect('applicationManager:projects')
+
+
+
+@login_required
 # Deletes an application
 def deleteProject(request, id):
     token, created = Token.objects.get_or_create(user=request.user)

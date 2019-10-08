@@ -233,4 +233,24 @@
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/jquery.dataTables.min.js" %}"></script>
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/js/demo/datatables-demo.js" %}"></script>
+    <script>
+        $('#startproject').change(function () {
+            if ($(this).prop('checked')) {
+                $.ajax({
+                    type: "POST",
+                    url: '{% url 'applicationManager:start-project' app.id %}',
+                    data: {},
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+            } else {
+                {#alert('ko')#}
+                console.log('passive');
+            }
+            {#$('#console-event').html('Toggle: ' + $(this).prop('checked'))#}
+        });
+    </script>
 {% endblock %}

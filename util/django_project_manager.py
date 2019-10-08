@@ -105,7 +105,10 @@ class DjangoProjectManager:
         wd = os.getcwd()
         os.chdir(self.project.name)
         cwd = os.getcwd()
-        process = subprocess.Popen(['python3', 'manage.py', 'runserver', str(self.project.port)],)
+        python_bin = "/home/ozgur/Code/wbdap_workspace/wbdap/qwe/qwevenv/bin/python3"
+        manage_bin = os.path.join(cwd, 'manage.py')
+        print(manage_bin)
+        process = subprocess.Popen([python_bin, manage_bin, 'runserver', str(self.project.port)],)
         output = process.stdout
         print(process.pid)
         os.chdir(wd)
