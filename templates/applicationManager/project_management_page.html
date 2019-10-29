@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xl-3 col-md-6 mb-4">
                 <input type="checkbox" id="startproject"
-                       {% if app.status %}checked{% else %} {% endif %}data-toggle="toggle" data-on="Active"
+                       {% if app.status %}checked{% else %}{% endif %}data-toggle="toggle" data-on="Active"
                        data-off="Passive" data-onstyle="success" data-offstyle="danger">
             </div>
         </div>
@@ -233,4 +233,28 @@
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/jquery.dataTables.min.js" %}"></script>
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
     <script src="{% static "projectCore/startbootstrap-sb-admin-2-gh-pages/js/demo/datatables-demo.js" %}"></script>
+{#    <script src="{% static "applicationManager/jscript/startProject.js" %}"></script>#}
+
+{#    Asagidaki script toggle button icin #}
+    <script>
+        $(document).ready(function () {
+            $('#startproject').change(function () {
+                if ($(this).prop('checked')) {
+
+                    $.ajax({
+                        type: "POST",
+                        url:'{% url 'applicationManager:start-project' app.id %}',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        // data: data,
+                        // success: success,
+                        dataType: "json"
+                    });
+                } else {
+                    {#alert('unchecked');#}
+                }
+            })
+        })
+    </script>
 {% endblock %}

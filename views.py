@@ -279,7 +279,17 @@ def createApplication(request):
 
 
 @login_required
-# Deletes an application
+@require_http_methods(["POST"])
+def start_project(request, id):
+    token, created = Token.objects.get_or_create(user=request.user)
+
+    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/start/',
+                         headers={'Authorization': 'Token ' + token.__str__()})
+
+    print(resp)
+    return redirect('applicationManager:projects')
+
+@login_required
 def deleteProject(request, id):
     token, created = Token.objects.get_or_create(user=request.user)
 

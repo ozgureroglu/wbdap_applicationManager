@@ -1,4 +1,6 @@
 import subprocess
+import threading
+import urllib
 
 from applicationManager.models import DjangoProject
 from applicationManager.signals.signals import application_creation_failed_signal
@@ -7,8 +9,10 @@ __author__ = 'ozgur'
 
 import mako
 import os
+import sys
 import logging
-import datetime
+import time
+import queue
 from mako import runtime
 from mako.template import Template
 from django.template import loader
@@ -88,29 +92,88 @@ class DjangoProjectManager:
 
             # run_all_steps creates all other application folders
             try:
-                logger.info('Creating the project {0} ...'.format(self.propject.name))
+                logger.info('Creating the project {0} ...'.format(self.project.name))
 
                 call_command('startproject', self.project.name)
 
             except Exception as e:
-                return False
+                return {'Error':e}
             return True
 
         else:
             logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.project.name))
-            return False
+            return {'Error':'Path exists'}
+
+    def output_reader(self, proc):
+        print('output reader thread started')
+        while True:
+            print("reading a line")
+            nextline = proc.stdout.readline()
+            if nextline != '':
+                print('got line from outq: {0}'.format(nextline), end='')
+            # if nextline != '':
+                # outq.put(nextline.decode('utf-8'))
+
+        # for line in iter(proc.stdout.readline, b''):
+        #     outq.put(line.decode('utf-8'))
+
+
 
     def runserver(self):
-        #call_command ile cagrilamaz.
-        wd = os.getcwd()
-        os.chdir(self.project.name)
-        cwd = os.getcwd()
-        process = subprocess.Popen(['python3', 'manage.py', 'runserver', str(self.project.port)],)
-        output = process.stdout
-        print(process.pid)
-        os.chdir(wd)
-        print(output)
-        # call_command('runserver', self.application.port)
+        if settings.DEBUG:
+            #call_command ile cagrilamaz.
+            wd = os.getcwd()
+            os.chdir(self.project.name)
+            cwd = os.getcwd()
+            print(cwd)
+            python3bin = os.path.join(settings.VENV_PATH, "bin/python3")
+            prjman = os.path.join(cwd, 'manage.py')
+            print(python3bin)
+            print(prjman)
+            # Asagidaki popen'a python verildiginde virtual env tanimlanmis oluyor, ancak env bos verilince DJANGO_SETTINGS_MODULE
+            # env var processi calistiran env den alinmamis oluyor.
+            process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={}, universal_newlines=True , bufsize=1 )
+
+            t = threading.Thread(target=self.output_reader, args=(process,))
+            t.start()
+
+            # try:
+            #         try:
+            #             line = outq.get(block=False)
+            #             print('got line from outq: {0}'.format(line), end='')
+            #         except queue.Empty:
+            #             print('could not get line from queue')
+            #         time.sleep(0.1)
+            # finally:
+            #     try:
+            #         process.wait(timeout=0.2)
+            #         print('== subprocess exited with rc =', process.returncode)
+            #     except subprocess.TimeoutExpired:
+            #         print('subprocess still running')
+            # # t.join()
+
+
+            # for line in output.read():
+            #     print(line.strip())
+
+            self.project.pid = process.pid
+            # self.project.status = True
+            # self.project.save()
+
+
+            # call_command('runserver', self.application.port)
+        else:
+            pass
+
+    def stopServer(pid):
+        """ Check For the existence of a unix pid. """
+        try:
+            os.kill(pid, 0)
+        except OSError:
+            return False
+        else:
+            return True
+
 
     # Run all application creation steps
     def run_all_steps(self):

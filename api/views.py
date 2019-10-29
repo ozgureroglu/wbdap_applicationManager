@@ -25,6 +25,8 @@ from .serializers import (
 from projectCore.datatable_viewset import ModifiedViewSet
 import logging
 
+from applicationManager.tasks import start_django_project
+
 logger = logging.getLogger("api.views")
 
 
@@ -109,12 +111,14 @@ class DjangoProjectDeleteAPIView(DestroyAPIView):
 # custom actions
 @api_view(['get', 'post'])
 def startProject(request, pk):
+
+    # start_django_project.delay(pk)
     app = DjangoProject.objects.get(id=pk)
     # try to run app
     project_started.send(sender=DjangoProject.__class__, test="testString",
                                          project=app)
 
-    return Response({'port': app.port})
+    return Response({'port': 'done'})
 
 
 
