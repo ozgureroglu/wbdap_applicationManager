@@ -45,9 +45,6 @@ def project_started(sender, **kwargs):
     dj_app_creator.runserver()
 
 
-
-
-
 # Called when he application is created
 @receiver(soft_application_created_signal)
 def soft_application_created(sender, **kwargs):
