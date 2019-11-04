@@ -107,10 +107,10 @@ class DjangoProjectManager:
     def output_reader(self, proc):
         print('output reader thread started')
         while True:
-            print("reading a line")
+            # print("reading a line")
             nextline = proc.stdout.readline()
             if nextline != '':
-                print('got line from outq: {0}'.format(nextline), end='')
+                print('got line from outq: {0}\n'.format(nextline), end='')
             # if nextline != '':
                 # outq.put(nextline.decode('utf-8'))
 
@@ -123,7 +123,9 @@ class DjangoProjectManager:
         if settings.DEBUG:
             #call_command ile cagrilamaz.
             wd = os.getcwd()
+            print(wd)
             os.chdir(self.project.name)
+
             cwd = os.getcwd()
             print(cwd)
             python3bin = os.path.join(settings.VENV_PATH, "bin/python3")
@@ -132,7 +134,7 @@ class DjangoProjectManager:
             print(prjman)
             # Asagidaki popen'a python verildiginde virtual env tanimlanmis oluyor, ancak env bos verilince DJANGO_SETTINGS_MODULE
             # env var processi calistiran env den alinmamis oluyor.
-            process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={}, universal_newlines=True , bufsize=1 )
+            process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={})
 
             t = threading.Thread(target=self.output_reader, args=(process,))
             t.start()
@@ -160,7 +162,7 @@ class DjangoProjectManager:
             # self.project.status = True
             # self.project.save()
 
-
+            os.chdir(wd)
             # call_command('runserver', self.application.port)
         else:
             pass
