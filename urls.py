@@ -53,6 +53,7 @@ urlpatterns = [
     path('projects/', projects, name='projects'),
     path('project/<int:id>/', project_management_page, name='project-management-page'),
     path('project/<int:id>/start', start_project, name='start-project'),
+    path('project/<int:id>/stop', stop_project, name='stop-project'),
     path('project/<int:id>/delete', deleteProject, name='delete-project'),
 
     # --- APPLICATIONS ---------------------------------------------------

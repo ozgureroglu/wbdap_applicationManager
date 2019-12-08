@@ -23,6 +23,16 @@
                        {% if app.status %}checked{% else %}{% endif %}data-toggle="toggle" data-on="Active"
                        data-off="Passive" data-onstyle="success" data-offstyle="danger">
             </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deploy">
+            Deploy As Micro Service
+        </button>
+
+
+            </div>
+
+
         </div>
 
 
@@ -252,7 +262,16 @@
                         dataType: "json"
                     });
                 } else {
-                    {#alert('unchecked');#}
+                    $.ajax({
+                        type: "POST",
+                        url:'{% url 'applicationManager:stop-project' app.id %}',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        // data: data,
+                        // success: success,
+                        dataType: "json"
+                    });
                 }
             })
         })

@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 
 from applicationManager.models import DjangoProject, Application
-from applicationManager.signals.signals import project_started
+from applicationManager.signals.signals import project_started, project_stopped
 from .serializers import (
     ApplicationCreateSerializer,
     ApplicationListSerializer,
@@ -117,9 +117,16 @@ def startProject(request, pk):
     # try to run app
     project_started.send(sender=DjangoProject.__class__, test="testString",
                                          project=app)
-
     return Response({'port': 'done'})
 
+@api_view(['get', 'post'])
+def stopProject(request, pk):
 
+    # start_django_project.delay(pk)
+    app = DjangoProject.objects.get(id=pk)
+    # try to run app
+    project_stopped.send(sender=DjangoProject.__class__, test="testString",
+                                         project=app)
+    return Response({'port': 'done'})
 
 

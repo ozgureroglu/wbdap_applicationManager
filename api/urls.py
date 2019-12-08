@@ -1,6 +1,6 @@
 from rest_framework_nested import routers
 
-from applicationManager.api.views import startProject
+from applicationManager.api.views import startProject, stopProject
 from .views import (
     ApplicationCreateAPIView,
     ApplicationDeleteAPIView,
@@ -42,6 +42,7 @@ urlpatterns = [
     path('djangoproject/create/', DjangoProjectCreateAPIView.as_view(), name='djangoproject-create'),
     path('djangoproject/<int:pk>/', DjangoProjectDetailAPIView.as_view(), name="djangoproject-detail"),
     path('djangoproject/<int:pk>/start/', startProject, name="djangoproject-start"),
+    path('djangoproject/<int:pk>/stop/', stopProject, name="djangoproject-stop"),
     path('djangoproject/<int:pk>/edit/', DjangoProjectUpdateAPIView.as_view(), name="djangoproject-edit"),
     path('djangoproject/<int:pk>/delete/', DjangoProjectDeleteAPIView.as_view(), name="djangoproject-delete"),
 

@@ -14,3 +14,4 @@ project_metadata_created_signal = django.dispatch.Signal(providing_args=["test",
 project_metadata_removed_signal = django.dispatch.Signal(providing_args=["test", "application"])
 
 project_started = django.dispatch.Signal(providing_args=["application"])
+project_stopped = django.dispatch.Signal(providing_args=["application"])

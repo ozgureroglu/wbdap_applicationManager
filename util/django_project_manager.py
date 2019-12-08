@@ -84,6 +84,11 @@ class DjangoProjectManager:
         except:
             self.site_root = './'
 
+    def deleteProject(self):
+        os.remove(self.project_root_folder)
+
+
+
     # Creates the application and all necessary other folders
     def create(self):
 
@@ -119,7 +124,7 @@ class DjangoProjectManager:
 
 
 
-    def runserver(self):
+    def runServer(self):
         if settings.DEBUG:
             #call_command ile cagrilamaz.
             wd = os.getcwd()
@@ -135,7 +140,11 @@ class DjangoProjectManager:
             # Asagidaki popen'a python verildiginde virtual env tanimlanmis oluyor, ancak env bos verilince DJANGO_SETTINGS_MODULE
             # env var processi calistiran env den alinmamis oluyor.
             process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={})
+            self.project.pid = process.pid
+            self.project.save()
 
+
+            print(process.pid)
             t = threading.Thread(target=self.output_reader, args=(process,))
             t.start()
 
@@ -167,10 +176,10 @@ class DjangoProjectManager:
         else:
             pass
 
-    def stopServer(pid):
+    def stopServer(self):
         """ Check For the existence of a unix pid. """
         try:
-            os.kill(pid, 0)
+            os.kill(self.project.pid, 0)
         except OSError:
             return False
         else:

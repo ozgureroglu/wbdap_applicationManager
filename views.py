@@ -15,7 +15,6 @@ from django.http import JsonResponse
 from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
-from openpyxl.compat import file
 from rest_framework.authtoken.models import Token
 from scrapy.signals import response_received
 
@@ -288,6 +287,20 @@ def start_project(request, id):
 
     print(resp)
     return redirect('applicationManager:projects')
+
+
+@login_required
+@require_http_methods(["POST"])
+def stop_project(request, id):
+    token, created = Token.objects.get_or_create(user=request.user)
+
+    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/stop/',
+                         headers={'Authorization': 'Token ' + token.__str__()})
+
+    print(resp)
+    return redirect('applicationManager:projects')
+
+
 
 @login_required
 def deleteProject(request, id):

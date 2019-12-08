@@ -7,7 +7,7 @@ import logging
 
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \
-    project_metadata_created_signal, project_metadata_removed_signal, project_started
+    project_metadata_created_signal, project_metadata_removed_signal, project_started, project_stopped
 
 from django.dispatch import receiver
 
@@ -42,7 +42,16 @@ def project_started(sender, **kwargs):
     logger.info("project_started signal receieved")
 
     dj_app_creator = DjangoProjectManager(kwargs['project'])
-    dj_app_creator.runserver()
+    dj_app_creator.runServer()
+
+
+# Called when he application is created
+@receiver(project_stopped)
+def project_stopped(sender, **kwargs):
+    logger.info("project_stopped signal receieved")
+
+    dj_app_creator = DjangoProjectManager(kwargs['project'])
+    dj_app_creator.stopServer()
 
 
 # Called when he application is created
