@@ -31,7 +31,7 @@ urlpatterns = [
     path('memcachetest/', memcache_test, name='memcache_test'),
 
     # ---------------------------------------------------
-    # path('dashboard/', dashboard, name='dashboard'),
+    # path('dashboard/', landing_page, name='dashboard'),
     # ---------------------------------------------------
 
     path('generatedata/<int:appid>/', generate_data, name='generate-data'),

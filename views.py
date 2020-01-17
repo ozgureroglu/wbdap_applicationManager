@@ -63,8 +63,8 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 def landing_page(request):
     if (request.user.has_perm('applicationManager.has_access')):
         print('has access')
-        return redirect("applicationManager:dashboard")
-
+        # return redirect("applicationManager:landing")
+        return render(request, 'applicationManager/landing.html', {})
     else:
         return render(request, 'applicationManager/landing.html', {})
 
