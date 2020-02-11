@@ -10,7 +10,7 @@ class SiteRootNotSetException(Exception):
         self.dErrorArguments = error_arguments
 
 
-class ProjectFolderExistsException(Exception):
+class ApplicationFolderExistsException(Exception):
     def __init___(self, error_arguments):
         Exception.__init__(self, "The application folder already exits in the project directory")
         self.dErrorArguments = error_arguments

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from  applicationManager.scaffold import Scaffold
+from applicationManager.scaffold import Scaffold
 
 class Command(BaseCommand):
     help = 'Scaffolding command to manage all of the models of all applications. To details enter ...'

@@ -15,8 +15,8 @@ from django.template import loader
 from io import StringIO
 from django.conf import settings
 
-from applicationManager.util.Exceptions import SiteRootNotSetException, ProjectFolderExistsException, StageException, \
-    ManagePyStartAppException
+from applicationManager.util.Exceptions import SiteRootNotSetException, StageException, \
+    ManagePyStartAppException, ApplicationFolderExistsException
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -86,7 +86,9 @@ class DjangoApplicationCreator:
         """Creates the django application and all necessary extra folders and files"""
         logger.info("Starting the app creation")
         # Check if site_root variable is set ; otherwise raise except
-        if self.site_root:
+        try:
+            self.site_root
+        except Exception as e:
             raise SiteRootNotSetException
 
         if not os.path.exists('{0}'.format(self.site_root)):
@@ -94,7 +96,7 @@ class DjangoApplicationCreator:
 
         if os.path.exists(os.path.join(self.site_root, self.application.app_name)):
             logger.fatal("Application folder exists\t{0}/{1}".format(self.site_root, self.application.app_name))
-            raise ProjectFolderExistsException
+            raise ApplicationFolderExistsException
 
         # run_all_steps creates all other application folders
         try:

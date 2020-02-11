@@ -118,5 +118,8 @@ def dump_all_app_data(sender, **kwargs):
 def test_signal_handler(sender, **kwargs):
     logger.info("test signal received")
     #Call the rq job
-    django_rq.enqueue(func=addrq, x=3 ,y=4)
-    django_rq.enqueue(func=create_app,app=kwargs['application'])
+    django_rq.enqueue(func=addrq, x=3, y=4)
+    try:
+        django_rq.enqueue(func=create_app, app=kwargs['application'])
+    except Exception as e:
+        logger.fatal("Could not create the application")

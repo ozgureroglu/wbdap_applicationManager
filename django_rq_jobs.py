@@ -1,12 +1,28 @@
+from django_rq import job
+import os
+
+
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
 
-def addrq(x,y):
-    # print("The output is: ", x + y)
+@job
+def addrq(x, y):
+    print(os.getcwd())
     return x+y
 
 
+addrq.delay()
+
+
+@job
 def create_app(app):
-    print("The output is: %s"% app.description)
+    print("Create app method starting")
     creator = DjangoApplicationCreator(app)
-    creator.create()
+    try:
+        creator.create()
+    except Exception as e:
+        print(e)
+    return True
+
+
+create_app.delay()
