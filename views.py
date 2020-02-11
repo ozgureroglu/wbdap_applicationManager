@@ -47,7 +47,7 @@ from applicationManager.util.django_application_creator import DjangoApplication
 
 from applicationManager.signals.signals import application_created_signal, application_removed_signal, \
     soft_application_removed_signal, soft_application_created_signal, project_metadata_created_signal, \
-    project_metadata_removed_signal
+    project_metadata_removed_signal, test_signal
 from django.db import transaction
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.views.decorators.cache import cache_page
@@ -1524,7 +1524,6 @@ class ApplicationCreateWizard(SessionWizardView):
             url=basic_info_data['app_name'],
             namedUrl=basic_info_data['app_name'],
             soft_app=True,
-
         )
 
         app.save()
@@ -1533,6 +1532,11 @@ class ApplicationCreateWizard(SessionWizardView):
                                              application=app)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:applications'))
+
+
+def rqtest(request):
+    test_signal.send(sender="view", application=Application.objects.get(app_name='a'))
+    return render(request, "applicationManager/test.html")
 
 
 def test(request):

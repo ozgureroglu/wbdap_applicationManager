@@ -31,7 +31,7 @@ urlpatterns = [
     path('memcachetest/', memcache_test, name='memcache_test'),
 
     # ---------------------------------------------------
-    # path('dashboard/', landing_page, name='dashboard'),
+    path('dashboard/', landing_page, name='dashboard'),
     # ---------------------------------------------------
 
     path('generatedata/<int:appid>/', generate_data, name='generate-data'),
@@ -106,5 +106,6 @@ urlpatterns = [
 
     path('editor/', editors, name='editors'),
     path('test/', test, name='test'),
+    path('rqtest/', rqtest, name='rqtest'),
 
 ]

@@ -1,11 +1,9 @@
+__author__ = 'ozgur'
+
 from shutil import copyfile
-
 from django.core.management import call_command
-
 from applicationManager.models import Application, AppModel
 from applicationManager.signals.signals import application_creation_failed_signal
-
-__author__ = 'ozgur'
 
 import mako
 import os
@@ -16,6 +14,9 @@ from mako.template import Template
 from django.template import loader
 from io import StringIO
 from django.conf import settings
+
+from applicationManager.util.Exceptions import SiteRootNotSetException, ProjectFolderExistsException, StageException, \
+    ManagePyStartAppException
 
 logger = logging.getLogger("wbdap.debug")
 
@@ -67,68 +68,78 @@ class %(model)s(models.Model):
 
 class DjangoApplicationCreator:
     def __init__(self, application):
-        # Application object is coming from the database records whih holds the metadata of the application
+        # Application object is coming from the database records
+        # which holds the metadata of the application
 
         self.application = application
         self.site_root = settings.SITE_ROOT
         self.sub_models = settings.SUB_MODEL_DIR
 
-        try:
+        # check if the settings file has the attribute;
+        # otherwise set the root of the folder as site.root
+        if hasattr(settings, 'SCAFFOLD_APPS_DIR'):
             self.site_root = settings.SCAFFOLD_APPS_DIR
-        except:
+        else:
             self.site_root = './'
 
-    # Creates the application and all necessary other folders
     def create(self):
-        # Check if site_root is set and it exists; otherwise raise ex
-        if self.site_root and not os.path.exists('{0}'.format(self.site_root)):
-            raise Exception(
-                "SCAFFOLD_APPS_DIR {0} does not exists".format(self.site_root))
+        """Creates the django application and all necessary extra folders and files"""
+        logger.info("Starting the app creation")
+        # Check if site_root variable is set ; otherwise raise except
+        if self.site_root:
+            raise SiteRootNotSetException
 
-        # Check if app root folder exists; if not go on to create
-        if not os.path.exists('{0}{1}'.format(self.site_root, self.application.app_name)):
+        if not os.path.exists('{0}'.format(self.site_root)):
+            raise Exception("SCAFFOLD_APPS_DIR {0} does not exists".format(self.site_root))
 
-            # run_all_steps creates all other application folders
-            try:
-                logger.info('Creating the application {0} ...'.format(self.application.app_name))
-                self.run_all_steps()
-            except Exception as e:
-                self.rollback()
-                return False
-            return True
+        if os.path.exists(os.path.join(self.site_root, self.application.app_name)):
+            logger.fatal("Application folder exists\t{0}/{1}".format(self.site_root, self.application.app_name))
+            raise ProjectFolderExistsException
 
-        else:
-            logger.info("app folder exists\t{0}{1}".format(self.site_root, self.application.app_name))
-            return False
+        # run_all_steps creates all other application folders
+        try:
+            logger.info('Creating the application {0} ...'.format(self.application.app_name))
+            self.run_all_steps()
+        except StageException as e:
+            logger.fatal('A fatal stage exception occurred, rolling back all changes ...')
+            self.rollback()
+            raise
+        return True
 
-
-    # Run all application creation steps
     def run_all_steps(self):
+        """
+        Run all app creation steps in order
+        """
+
         # Output received from startapp django shell command
         cmd_output = StringIO()
 
         try:
-            # Asagidaki kisim daha once yanlis bir yaklasimla yapilmisti.Django manage.py icin api sagliyor.Asagidaki buna gore yazildi
-            # # Manage.py ile yeni uygulama uretim islemini burada yapiyorum; ne yazik ki return degeri yok, stdout'dan cikti okunuyor .
-            # # Sadece exception handling ile bakabilinir.
+            # Asagidaki kisim daha once yanlis bir yaklasimla yapilmisti.Django manage.py icin api
+            # sagliyor.Asagidaki buna gore yazildi
+            # # Manage.py ile yeni uygulama uretim islemini burada yapiyorum; ne yazik ki
+            # return degeri yok, stdout'dan cikti okunuyor .
+            # # Sadece exception handling ile bakilabilinir.
             # os.system('python manage.py startapp {0}'.format(self.application.app_name))
 
-            call_command('startapp',self.application.app_name,stdout=cmd_output)
+            call_command('startapp', self.application.app_name, stdout=cmd_output)
             logger.info('=========================================================================================\n'
-                        '\t\tNew Django application \'' + self.application.app_name + '\' has been created via manage.py.')
-        except Exception as e:
+                        'New Django application \'' + \
+                        self.application.app_name + \
+                        '\' has just been created programmatically via manage.py.')
+        except ManagePyStartAppException as e:
             logger.fatal('Exception occured while creating django application: %s', str(e))
-            raise Exception('./manage.py startapp failed : '+str(e))
+            raise
 
         startapp = cmd_output.getvalue()
-        res_flag=True
 
         # eger cmd_output ciktisi bos ise basarili bir sekilde uygulama uretilmistir.
         if startapp is "":
             try:
 
                 logger.info(
-                    "================================= STAGE 1 ==================================\nCreating folders and files for the application using templates\n")
+                    "================================= STAGE 1 ==================================\n"
+                    "Creating folders and files for the application using templates\n")
 
                 self.create_urls_file()
                 self.create_application_folders()
@@ -147,10 +158,9 @@ class DjangoApplicationCreator:
                 #
 
                 logger.info('Stage-1 DONE.')
-            except:
-                logger.error('Stage-1 FAILED, check subtask exception')
-
-
+            except Exception as e:
+                logger.error('Stage-1 FAILED, check subtask exception: %s' % e)
+                raise
 
             try:
 

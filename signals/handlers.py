@@ -1,5 +1,8 @@
+from applicationManager.django_rq_jobs import addrq, create_app
 from applicationManager.util.django_project_manager import DjangoProjectManager
 from applicationManager.util.soft_application_creator import SoftApplicationCreator
+import django_rq
+
 
 __author__ = 'ozgur'
 
@@ -7,12 +10,15 @@ import logging
 
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \
-    project_metadata_created_signal, project_metadata_removed_signal, project_started, project_stopped
+    project_metadata_created_signal, project_metadata_removed_signal, project_started, project_stopped, \
+    application_metadata_created_signal, test_signal
 
 from django.dispatch import receiver
 
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 from applicationManager.util.django_application_remover import DjangoApplicationRemover
+
+from rqManager.util.rqservice import RQService
 
 logger = logging.getLogger(name="wbdap.debug")
 
@@ -26,12 +32,20 @@ def application_created(sender, **kwargs):
     if dj_app_creator.create():
         dj_app_creator.runserver()
 
+# Called when he application is created
+@receiver(application_metadata_created_signal)
+def project_metadata_created(sender, **kwargs):
+    logger.info("application_metadata_created signal receieved")
+
 
 # Called when he application is created
 @receiver(project_metadata_created_signal)
 def project_metadata_created(sender, **kwargs):
     logger.info("project_created signal receieved")
 
+
+    # rqService.get_default_queue
+    # q = RQService.get_default_queue()
     # dj_app_creator = DjangoProjectManager(kwargs['project'])
     # dj_app_creator.create()
 
@@ -95,3 +109,14 @@ def removeApplication(sender, **kwargs):
 @receiver(model_changed_signal)
 def dump_all_app_data(sender, **kwargs):
     logger.info("Dumping all application data")
+
+
+
+
+# Called when he application is created
+@receiver(test_signal)
+def test_signal_handler(sender, **kwargs):
+    logger.info("test signal received")
+    #Call the rq job
+    django_rq.enqueue(func=addrq, x=3 ,y=4)
+    django_rq.enqueue(func=create_app,app=kwargs['application'])
