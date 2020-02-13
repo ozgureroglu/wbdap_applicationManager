@@ -1,7 +1,9 @@
+import django_rq
+
 from applicationManager.django_rq_jobs import addrq, create_app
 from applicationManager.util.django_project_manager import DjangoProjectManager
 from applicationManager.util.soft_application_creator import SoftApplicationCreator
-import django_rq
+
 
 
 __author__ = 'ozgur'

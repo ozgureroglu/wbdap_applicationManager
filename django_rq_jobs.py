@@ -1,11 +1,9 @@
-from django_rq import job
 import os
-
-
+from django_rq import job
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
 
-@job
+@job(func_or_queue='default',failure_ttl=60)
 def addrq(x, y):
     print(os.getcwd())
     return x+y
@@ -14,15 +12,16 @@ def addrq(x, y):
 addrq.delay()
 
 
-@job
+@job(func_or_queue='default',failure_ttl=60)
 def create_app(app):
     print("Create app method starting")
     creator = DjangoApplicationCreator(app)
     try:
         creator.create()
+        return True
     except Exception as e:
-        print(e)
-    return True
+        return e
+
 
 
 create_app.delay()

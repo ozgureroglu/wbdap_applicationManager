@@ -95,8 +95,7 @@ class DjangoApplicationCreator:
             raise Exception("SCAFFOLD_APPS_DIR {0} does not exists".format(self.site_root))
 
         if os.path.exists(os.path.join(self.site_root, self.application.app_name)):
-            logger.fatal("Application folder exists\t{0}/{1}".format(self.site_root, self.application.app_name))
-            raise ApplicationFolderExistsException
+            raise ApplicationFolderExistsException("Application folder exists\t{0}/{1}".format(self.site_root, self.application.app_name))
 
         # run_all_steps creates all other application folders
         try:
