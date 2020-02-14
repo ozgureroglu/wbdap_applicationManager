@@ -3,7 +3,7 @@ from django_rq import job
 from applicationManager.util.django_application_creator import DjangoApplicationCreator
 
 
-@job(func_or_queue='default',failure_ttl=60)
+@job(func_or_queue='default', failure_ttl=20)
 def addrq(x, y):
     print(os.getcwd())
     return x+y
@@ -11,16 +11,18 @@ def addrq(x, y):
 
 addrq.delay()
 
-
-@job(func_or_queue='default',failure_ttl=60)
+# Job nesnesi icin alinabilecek parametreler icin RQ dokumanlarina bak.
+@job(func_or_queue='default', failure_ttl=20)
 def create_app(app):
-    print("Create app method starting")
+    """Method will either return True or False. It will not propagate the exceptions for now """
     creator = DjangoApplicationCreator(app)
     try:
         creator.create()
         return True
     except Exception as e:
-        return e
+        # TODO : Change what you do depending on the exception
+        # I am receving different exceptions here
+        return False
 
 
 

@@ -7,11 +7,11 @@ from {{ applicationName }}.views import *
 from django.contrib import admin
 admin.autodiscover()
 
-app_name ='{{applicationName}}'
+app_name = '{{applicationName}}'
 urlpatterns = [
 
-    #Index page of the application
+    # Index page of the application
     path('welcome/', landing_page, name='landing'),
-    path('', index_page, name='index'),
     path('dashboard/', dashboard, name='dashboard'),
+    path('', index_page, name='index'),
 ]

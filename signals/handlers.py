@@ -13,7 +13,7 @@ import logging
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \
     project_metadata_created_signal, project_metadata_removed_signal, project_started, project_stopped, \
-    application_metadata_created_signal, test_signal
+    application_metadata_created_signal, test_signal, application_files_created_signal
 
 from django.dispatch import receiver
 
@@ -82,10 +82,6 @@ def soft_application_created(sender, **kwargs):
     sac.create_default_urls()
 
 
-
-
-
-
 # Called when he application is created
 @receiver(soft_application_removed_signal)
 def soft_application_removed(sender, **kwargs):
@@ -113,15 +109,15 @@ def dump_all_app_data(sender, **kwargs):
     logger.info("Dumping all application data")
 
 
-
-
 # Called when he application is created
 @receiver(test_signal)
 def test_signal_handler(sender, **kwargs):
     logger.info("test signal received")
     #Call the rq job
     django_rq.enqueue(func=addrq, x=3, y=4)
-    try:
-        django_rq.enqueue(func=create_app, app=kwargs['application'])
-    except Exception as e:
-        logger.fatal("Could not create the application")
+    django_rq.enqueue(func=create_app, app=kwargs['application'])
+
+
+@receiver(application_files_created_signal)
+def application_files_created_signal_handler(sender, **kwargs):
+    pass

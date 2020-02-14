@@ -2,9 +2,9 @@ __author__ = 'ozgur'
 
 import logging
 from django.dispatch import receiver
-from {{applicationName}}.signals import *
+from {{applicationName}}.signals.signals import *
 
-logger= logging.getLogger("wbdap.debug")
+logger = logging.getLogger("wbdap.debug")
 
 
 # Called when he application is created

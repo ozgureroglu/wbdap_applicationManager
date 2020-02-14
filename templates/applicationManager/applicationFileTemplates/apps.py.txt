@@ -8,17 +8,16 @@ from django.db import connection
 logger = logging.getLogger("wbdap.debug")
 
 class {{app_name|capfirst}}AppConfig(AppConfig):
+    # Model fields
     name = '{{app_name}}'
     verbose_name = "{{app_name}} App"
-
     appName = '{{app_name}}'
-    verbose_name ='{{verbose_name}}'
     url = '{{url}}'
     namedUrl = '{{namedUrl}}'
     readmeContent = '{{readmeContent}}'
     active = {{active}}
 
-
+    # Any other vars to be declared
     yvar = "yvar"
 
     def db_table_exists(self, prefix):
