@@ -43,8 +43,8 @@ class CreateAppForm_OLD(ModelForm):
 
 class AddApplicationModelForm(ModelForm):
     class Meta:
-        model= AppModel
-        fields=('name',)
+        model = AppModel
+        fields = ('name',)
 
 
 class CreateApplicationForm(ModelForm):
@@ -72,7 +72,7 @@ class CreateProjectForm(ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Fieldset((''), 'name', 'port','description' ),
+            Fieldset('', 'name', 'port','description'),
             ButtonHolder(
                 Submit('save', ('Submit'), css_class='btn btn-primary '),
                 Reset('reset', ('Cancel'), css_class='btn')
@@ -85,7 +85,6 @@ class CreateProjectForm(ModelForm):
     class Meta:
         model = DjangoProject
         fields = ["name", "port", "description"]
-
 
 
 class CreateModelForm(ModelForm):
@@ -110,7 +109,6 @@ class CreateModelForm(ModelForm):
         fields = ['name', 'owner_app']
 
 
-
 class CreateFieldForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -130,10 +128,7 @@ class CreateFieldForm(ModelForm):
 
     class Meta:
         model = Field
-        fields = ['name', 'field_type','type_parameter','owner_model']
-
-
-
+        fields = ['name', 'field_type', 'type_parameter', 'owner_model']
 
 
 class UpdateFieldForm(ModelForm):
@@ -142,11 +137,11 @@ class UpdateFieldForm(ModelForm):
         # self.helper.form_action = '.'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Fieldset(('Model Parameters'), 'name', 'field_type','type_parameter','owner_model'),
+            Fieldset(('Model Parameters'), 'name', 'field_type', 'type_parameter', 'owner_model'),
             HTML("<hr>"),
             FormActions(
                 Submit('save', ('Submit'), css_class='btn btn-primary '),
-                Button('close', ('Close'), css_class='btn btn-default',data_dismiss='modal')
+                Button('close', ('Close'), css_class='btn btn-default', data_dismiss='modal')
             )
         )
 
@@ -158,29 +153,45 @@ class UpdateFieldForm(ModelForm):
         fields = ['name', "field_type", 'type_parameter', 'owner_model']
 
 
+class ProjectCreateForm1(ModelForm):
+    def __init__(self, *args, **kwargs):
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper()
+        self.helper.attrs = {'novalidate': 'novalidate'}
+        # self.helper.form_class = 'form-horizontal'
+        # self.helper.label_class = 'text-center col-lg-4'
+        # self.helper.field_class = 'col-lg-8'
+
+        super(ProjectCreateForm1, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = DjangoProject
+        exclude = ['pid', 'status', ]
+
+
+class ProjectCreateForm2(ModelForm):
+    class Meta:
+        fields = ['port']
+        model = DjangoProject
+
+
 class ApplicationCreateForm1(ModelForm):
     class Meta:
-        exclude = ['description','url', 'namedUrl','owner','uuid']
+        exclude = ['description', 'url', 'namedUrl', 'owner', 'uuid']
         model = Application
-
-
-
-class ApplicationCreateForm4(ModelForm):
-    class Meta:
-        fields = ['description']
-        model = Application
-
 
 
 class ApplicationCreateForm2(forms.Form):
     BS_VERS=(
-        ('4.1','Bootstrap v4.1'),
+        ('4.1', 'Bootstrap v4.1'),
         ('4.0', 'Bootstrap v4.0.0'),
         ('3.7.1', 'Bootstrap v3.3.7'),
     )
 
     JQUERY_VERS=(
-        ('3.3.1','jQuery Core 3.3.1'),
+        ('3.3.1', 'jQuery Core 3.3.1'),
         ('3.3.0', 'jQuery Core 3.3.0'),
         ('3.2.1', 'jQuery Core 3.2.1'),
         ('3.2.0', 'jQuery Core 3.2.0'),
@@ -196,6 +207,13 @@ class ApplicationCreateForm2(forms.Form):
 
     bootsrap_version = forms.CharField(label='Bootstrap version', widget=forms.Select(choices=BS_VERS))
     jquery_version = forms.CharField(label='JQuery version', widget=forms.Select(choices=JQUERY_VERS))
+
+
+class ApplicationCreateForm4(ModelForm):
+    class Meta:
+        fields = ['description']
+        model = Application
+
 
 
 #

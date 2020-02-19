@@ -49,7 +49,7 @@ urlpatterns = [
 
     # --- PROJECTS ---------------------------------------------------
 
-    path('createProject/', createProject, name='createProject'),
+    path('createProject/', ProjectCreateWizard.as_view(PROJECT_FORMS), name='createProject'),
     path('projects/', projects, name='projects'),
     path('project/<int:id>/', project_management_page, name='project-management-page'),
     path('project/<int:id>/start', start_project, name='start-project'),

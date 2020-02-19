@@ -37,7 +37,7 @@ from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4, \
-    CreateProjectForm
+    CreateProjectForm, ProjectCreateForm1, ProjectCreateForm2
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
     ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate, DjangoProject
 
@@ -47,7 +47,7 @@ from applicationManager.util.django_application_creator import DjangoApplication
 
 from applicationManager.signals.signals import application_created_signal, application_removed_signal, \
     soft_application_removed_signal, soft_application_created_signal, project_metadata_created_signal, \
-    project_metadata_removed_signal, test_signal
+    project_metadata_removed_signal, test_signal, application_metadata_created_signal
 from django.db import transaction
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.views.decorators.cache import cache_page
@@ -318,9 +318,10 @@ def deleteProject(request, id):
 
     return redirect('applicationManager:projects')
 
+
 @login_required
-# Creates an application
-def createProject(request):
+def create_project(request):
+    """Creates a django project using the templates"""
     if request.method == "POST":
 
         # We are creating the bound form
@@ -331,7 +332,7 @@ def createProject(request):
             print(token)
             print(form.data)
 
-            resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/create/',
+            resp = requests.post('http://wbdap:8000/api/v1/applicationManager/djangoproject/create/',
                                  form.data,
                                  headers={'Authorization': 'Token '+token.__str__()})
             print(resp)
@@ -1484,11 +1485,66 @@ FORMS = [("Basic Info", ApplicationCreateForm1),
          ("Default Pages", ApplicationCreateForm3),
          ]
 
+
 TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
              "UI Libs": "applicationManager/forms/formpage.html",
              "Description": "applicationManager/forms/formpage.html",
              "Default Pages": "applicationManager/forms/formpage.html",
              }
+
+# Hangi formun hangi model alanlari veya icerik alanlari hakkinda bilgi
+# alacagi burada belirtilen form siniflari ile belirleniyor.
+PROJECT_FORMS = [("Basic Info", ProjectCreateForm1),
+                 ("UI Libs", ProjectCreateForm2),
+                 ]
+
+# Bu kisim fieldleri belirlenmis olan form siniflarinin visual olarak hangi
+# template ile render edilecegini belirliyor.
+PROJECT_TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
+             "UI Libs": "applicationManager/forms/formpage.html",
+             "Description": "applicationManager/forms/formpage.html",
+             "Default Pages": "applicationManager/forms/formpage.html",
+             }
+
+
+# Wizard sinifi hangi adimlarda hangi form adimlarini belirleyen, submit edilen veri
+# uzerinde ne yapilacagini kontrol eden siniftir. Asagidaki bazi metodlar override
+# edilerek ihtiyaca gore sekillendirilmistir. as_view metodu uzerinden PROJECT_FORMS ile
+# baglanirken get_template_names uzerinden PROJECT_TEMPLATES ile baglidir ve bunlari
+# birbirine form isimleri baglamaktadir; ORN: Basic Info --> ProjectForms1 --> forms/formpage.html
+class ProjectCreateWizard(SessionWizardView):
+
+    def get_template_names(self):
+        logger.info(self.steps.current)
+        return [PROJECT_TEMPLATES[self.steps.current]]
+
+    def get_context_data(self, form, **kwargs):
+        context = super(ProjectCreateWizard, self).get_context_data(form=form, **kwargs)
+        if self.steps.current == 'layout':
+            context.update({'layouts': ApplicationLayout.objects.all()})
+            print(context)
+        return context
+
+    @transaction.atomic
+    def done(self, form_list, form_dict, **kwargs):
+
+        # Tum form adimlari submit edildiginde
+        basic_info_data = form_dict['Basic Info'].cleaned_data
+        ui_libs_data = form_dict['UI Libs'].cleaned_data
+
+        project = DjangoProject(  # Zorunlu alanlar
+            name=basic_info_data['name'],
+            port=basic_info_data['port'],
+            description=basic_info_data['description'],
+            pid=None
+        )
+
+        project.save()
+
+        project_metadata_created_signal.send(sender=DjangoProject.__class__, test="testString",
+                                             project=project)
+        # Following redirection done only after the last commit
+        return HttpResponseRedirect(reverse('applicationManager:projects'))
 
 
 class ApplicationCreateWizard(SessionWizardView):
@@ -1528,7 +1584,7 @@ class ApplicationCreateWizard(SessionWizardView):
 
         app.save()
 
-        project_metadata_created_signal.send(sender=Application.__class__, test="testString",
+        application_metadata_created_signal.send(sender=Application.__class__, test="testString",
                                              application=app)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:applications'))

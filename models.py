@@ -41,7 +41,6 @@ class PageLayoutAdmin(admin.ModelAdmin):
     list_display = ('layout_name','layout_description',)
 
 
-
 class DjangoProject(models.Model):
     name = models.CharField(max_length=25, null=False, blank=False) # app_name parameter for urls.py
     port = models.IntegerField(null=False, blank=False, validators=[MaxValueValidator(10000), MinValueValidator(1000)])
@@ -61,9 +60,10 @@ class DjangoProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'port', 'status', 'pid')
 
 
-
-# Model for applications that have been created by this applicationManager.
 class Application(models.Model):
+    """
+    Model for applications that have been created by this applicationManager.
+    """
     app_name = models.CharField(max_length=25,null=False, blank=False) # app_name parameter for urls.py
     verbose_name = models.CharField(max_length=50, null=False, blank=False) #Human readable form of the name
     url = models.CharField(max_length=30) #relative path to this application
