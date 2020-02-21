@@ -127,12 +127,17 @@ def get_current_view_path(request):
     :param request:
     :return:
     """
-    route = resolve(request.path).route
-    path_nodes = str(route).split("/")
-    # Remove the '' element from the array
-    path_nodes.pop()
+    if resolve(request.path).route == "":
+        return {'view_path': ""}
+    else:
+        route = resolve(request.path).route
+        path_nodes = str(route).split("/")
+        # Remove the '' element from the array
 
-    return {'view_path': path_nodes.pop()}
+        path_nodes.pop()
+        return {'view_path': path_nodes.pop()}
+
+
 
 
 
