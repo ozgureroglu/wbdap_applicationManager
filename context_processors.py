@@ -110,20 +110,29 @@ def get_current_app(request):
         return {'current_app': None}
 
 
-
-
-
 def get_current_view_name(request):
     """
     Returns the name of the requested view of the current app :
     :param request:
     :return:
     """
-    app_name = resolve(request.path)._func_path
-
+    app_name = resolve(request.path).route
     view = (app_name.split("."))[len(app_name.split("."))-1]
-
     return {'view_name': view}
+
+
+def get_current_view_path(request):
+    """
+    Returns the name of the requested view of the current app :
+    :param request:
+    :return:
+    """
+    route = resolve(request.path).route
+    path_nodes = str(route).split("/")
+    # Remove the '' element from the array
+    path_nodes.pop()
+
+    return {'view_path': path_nodes.pop()}
 
 
 

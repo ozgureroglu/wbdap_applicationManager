@@ -8,7 +8,13 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+        <h1 class="h3 mb-4 text-gray-800">
+            {% if view_path == "createProject" %}
+                Create Project
+            {% elif view_path == "createApplication" %}
+                Create Application
+            {% endif %}
+        </h1>
 
 
         <!-- Dropdown Card Example -->
@@ -34,17 +40,16 @@
             </div>
 
             <!-- Card Body -->
-            <form action="" method="post">{% csrf_token %}
+            <form action="" method="post" novalidate="novalidate">{% csrf_token %}
                 <div class="card-body">
-                    Dropdown menus can be placed in the card header in order to extend the functionality of a basic
-                    card. In
-                    this dropdown card example, the Font Awesome vertical ellipsis icon in the card header can be
-                    clicked on
-                    in order to toggle a dropdown menu.
+                    <div>
+                        {{ form.form_desc }}
+                    </div>
 
 
                     <table>
                         {{ wizard.management_form }}
+
                         {% if wizard.form.forms %}
                             {#    {{ wizard.form.management_form }}#}
                             {% crispy wizard.form.management_form %}

@@ -154,6 +154,7 @@ class UpdateFieldForm(ModelForm):
 
 
 class ProjectCreateForm1(ModelForm):
+    form_desc = "Enter basic information about the Project that will be created."
     def __init__(self, *args, **kwargs):
 
         # If you pass FormHelper constructor a form instance
@@ -171,7 +172,9 @@ class ProjectCreateForm1(ModelForm):
         exclude = ['pid', 'status', ]
 
 
+
 class ProjectCreateForm2(ModelForm):
+    form_desc = "test form desc2"
     class Meta:
         fields = ['port']
         model = DjangoProject

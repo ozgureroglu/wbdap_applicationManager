@@ -25,5 +25,4 @@ def create_app(app):
         return False
 
 
-
 create_app.delay()
