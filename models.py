@@ -12,7 +12,6 @@ logger = logging.getLogger('applicationManager_models')
 
 
 
-
 # Sifreler ile ilgili ayarlarin yapilmasi icin kullanilacak olan model.
 class PasswordSetting(models.Model):
     minLength = models.IntegerField()

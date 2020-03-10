@@ -1,8 +1,8 @@
 __author__ = 'ozgur'
 
 import logging
-from {{applicationName}}.models import Example_{{applicationName}}_Model
-from {{applicationName}}.signals import {{applicationName}}_sample_signal
+from {{applicationName}}.models import Example{{applicationName | capfirst}}Model
+from {{applicationName}}.signals.signals import {{applicationName}}_sample_signal
 
 from django.shortcuts import render
 
@@ -22,5 +22,43 @@ def dashboard(request):
 
 
 def signal_test(request):
-    {{applicationName}}_sample_signal.send(sender=Example_{{applicationName}}_Model.__class__, test_message="testString",model=Example_{{applicationName}}_Model.objects.get(name='name'))
+    {{applicationName}}_sample_signal.send(sender=Example{{applicationName|capfirst}}Model.__class__, test_message="testString",model=Example{{applicationName| capfirst}}Model.objects.get(name='name'))
     return render(request, '{{applicationName}}/dashboard.html')
+
+
+
+class Example{{applicationName|capfirst}}ModelListView(ListView):
+    """
+    Lists Example{{applicationName|capfirst}}Model typed objects
+    """
+    model = Example{{applicationName|capfirst}}Model
+    paginate_by = 10
+    context_object_name = 'exampleobjects'
+
+    // Example of overriding get_context_data
+    def get_context_data(self, **kwargs):
+        context = super(Example{{applicationName|capfirst}}ModelListView, self).get_context_data(**kwargs)
+        print("Context :" + str(context['exampleobjects']))
+        stats = []
+        for exobj in context['exampleobjects']:
+            stat = exobj.name
+            stats.append((exobj, stat))
+        context['exampleobjects'] = stats
+        return context
+
+
+class Example{{applicationName|capfirst}}ModelCreateView(CreateView):
+    model = Example{{applicationName|capfirst}}Model
+    fields = '__all__'
+    success_url = reverse_lazy('{{applicationName}}:list-exobj')
+
+
+class Example{{applicationName|capfirst}}ModelDeleteView(DeleteView):
+    model = Example{{applicationName|capfirst}}Model
+    success_url = reverse_lazy('{{applicationName}}:list-exobj')
+
+
+class Example{{applicationName|capfirst}}ModelUpdateView(UpdateView):
+    model = Example{{applicationName|capfirst}}Model
+    fields = '__all__'
+    success_url = reverse_lazy('{{applicationName}}:list-exobj')

@@ -36,9 +36,9 @@ def application_created(sender, **kwargs):
 
 # Called when he application is created
 @receiver(application_metadata_created_signal)
-def project_metadata_created(sender, **kwargs):
+def application_metadata_created_handler(sender, **kwargs):
     logger.info("application_metadata_created signal receieved")
-
+    django_rq.enqueue(func=create_app, app=kwargs['application'])
 
 # Called when he application is created
 @receiver(project_metadata_created_signal)

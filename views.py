@@ -83,7 +83,8 @@ def dashboard(request):
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
-@cache_page(CACHE_TTL)
+# Sayfanin cache uzerinden sunulmasini saglayan dekorator; ayarlari settings icinde yapiliyor.
+# @cache_page(CACHE_TTL)
 @login_required
 def applications(request):
     if request.user.is_superuser:
@@ -1571,6 +1572,7 @@ class ApplicationCreateWizard(SessionWizardView):
         default_pages_data = form_dict['Default Pages'].cleaned_data
         app = Application(  # Zorunlu alanlar
             app_name=basic_info_data['app_name'],
+            description= description_info_data['description'],
             verbose_name=basic_info_data['verbose_name'],
             active=basic_info_data['active'],
             core_app=basic_info_data['core_app'],
@@ -1591,7 +1593,15 @@ class ApplicationCreateWizard(SessionWizardView):
 
 
 def rqtest(request):
-    test_signal.send(sender="view", application=Application.objects.get(app_name='a'))
+    a = Application()
+    a.description = 'a'
+    a.app_name = 'a'
+    a.owner_id = 1
+    a.verbose_name = 'a'
+    a.url = 'a'
+    a.namedUrl = 'a'
+    a.save()
+    test_signal.send(sender="view", application=a)
     return render(request, "applicationManager/test.html")
 
 

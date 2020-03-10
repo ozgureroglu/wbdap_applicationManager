@@ -699,7 +699,7 @@ class DjangoApplicationCreator:
 
         try:
             t = Template(
-                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_index_html_template.txt')
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_dashboard_html_template.txt')
             # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
             buf = StringIO()
             c = mako.runtime.Context(buf, applicationName=app_name)
