@@ -1,6 +1,8 @@
 __author__ = 'ozgur'
 
 import logging
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from {{applicationName}}.models import Example{{applicationName | capfirst}}Model
 from {{applicationName}}.signals.signals import {{applicationName}}_sample_signal
 
@@ -26,6 +28,16 @@ def signal_test(request):
     return render(request, '{{applicationName}}/dashboard.html')
 
 
+def examplepage1(request):
+    return render(request, '{{applicationName}}/dashboard.html')
+
+def examplepage2(request):
+    return render(request, '{{applicationName}}/dashboard.html')
+
+def examplepage3(request):
+    return render(request, '{{applicationName}}/dashboard.html')
+
+
 
 class Example{{applicationName|capfirst}}ModelListView(ListView):
     """
@@ -35,7 +47,7 @@ class Example{{applicationName|capfirst}}ModelListView(ListView):
     paginate_by = 10
     context_object_name = 'exampleobjects'
 
-    // Example of overriding get_context_data
+    # Example of overriding get_context_data
     def get_context_data(self, **kwargs):
         context = super(Example{{applicationName|capfirst}}ModelListView, self).get_context_data(**kwargs)
         print("Context :" + str(context['exampleobjects']))

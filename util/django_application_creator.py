@@ -696,6 +696,76 @@ class DjangoApplicationCreator:
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                     application=Application.objects.get(app_name=app_name))
             raise Exception('creation of new_page_template.html failed: ' + str(e))
+# -------------------------
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_model_list_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/example"+app_name+"model_list.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating dashboard.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of dashboard.html failed: ' + str(e))
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_model_form_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/example"+app_name+"model_form.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating dashboard.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of dashboard.html failed: ' + str(e))
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_model_delete_confirm_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/"+app_name+"_confirm_delete.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating dashboard.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of dashboard.html failed: ' + str(e))
+
+
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_blank_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/blank.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of blank.html failed: ' + str(e))
+
+
+
+#-----------------------------
 
         try:
             t = Template(

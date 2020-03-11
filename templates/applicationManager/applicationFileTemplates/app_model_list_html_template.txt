@@ -2,8 +2,8 @@
 {% load static %}
 
 
-{% block sidebar_brand_name %}
-    {{ applicationName | capfirst }}
+{% block sidebar_brand %}
+    {{ block.super }}
 {% endblock %}
 
 

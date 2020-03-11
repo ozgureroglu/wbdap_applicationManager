@@ -1,4 +1,4 @@
-{% extends '${applicationName}/blank.html' %}
+{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/blank.html' %}
 {% load static %}
 
 

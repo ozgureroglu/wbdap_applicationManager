@@ -14,4 +14,16 @@ urlpatterns = [
     path('welcome/', landing_page, name='landing'),
     path('dashboard/', dashboard, name='dashboard'),
     path('', index_page, name='index'),
+
+    path('ep1/', examplepage1, name='examplepage1'),
+    path('ep2/', examplepage2, name='examplepage2'),
+    path('ep3/', examplepage3, name='examplepage3'),
+
+
+    path('exampleobj/', Example{{applicationName|capfirst}}ModelListView.as_view(), name='list-exampleAModel'),
+    path('createexampleobj/', Example{{applicationName|capfirst}}ModelCreateView.as_view(), name='create-exampleAModel'),
+    path('deleteexampleobj/<pk>/', Example{{applicationName|capfirst}}ModelDeleteView.as_view(), name='delete-exampleAModel'),
+    path('updateexampleobj/<pk>/', Example{{applicationName|capfirst}}ModelUpdateView.as_view(), name='update-exampleAModel'),
+
+
 ]
