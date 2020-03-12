@@ -1,13 +1,3 @@
 {% extends '${applicationName}/blank.html' %}
 {% load static %}
 
-
-{% block sidebar_brand_name %}
-    {{ applicationName | capfirst }}
-{% endblock %}
-
-
-
-{% block sidebar_items %}
-
-{% endblock %}

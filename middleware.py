@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 import logging
 logger = logging.getLogger("wbdap.debug")
 
+
 class SimpleMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -12,7 +13,6 @@ class SimpleMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-
         if request.path.startswith('/applicationManager/'):
             if not request.user.is_superuser:
                 # return redirect_to_login(request.path)
@@ -20,14 +20,12 @@ class SimpleMiddleware:
                 return redirect('login')
             # Continue processing the request as usual:
 
-
-
         # this is the seperation point between req and resp
         response = self.get_response(request)
-
 
         # Code to be executed for each request/response after
         # the view is called.
         print('after view')
 
         return response
+

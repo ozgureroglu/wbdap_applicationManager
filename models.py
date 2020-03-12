@@ -17,6 +17,7 @@ class PasswordSetting(models.Model):
     minLength = models.IntegerField()
     maxLength = models.IntegerField()
 
+
 @admin.register(PasswordSetting)
 class PasswordSettingsAdmin(admin.ModelAdmin):
     pass
@@ -34,6 +35,7 @@ class PageLayout(models.Model):
 
     def __unicode__(self):
         return self.layout_name
+
 
 @admin.register(PageLayout)
 class PageLayoutAdmin(admin.ModelAdmin):
@@ -67,11 +69,8 @@ class Application(models.Model):
     verbose_name = models.CharField(max_length=50, null=False, blank=False) #Human readable form of the name
     url = models.CharField(max_length=30) #relative path to this application
     namedUrl = models.CharField(max_length=30) # name field of the urlconfig entry for reverse resolutions
-
     active = models.BooleanField(default=True, blank=True)
     description = models.TextField(max_length=500) # Description of the application
-
-
     soft_app = models.BooleanField(default=False, null=False,blank=False)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING) # Owner of this application
     core_app = models.BooleanField(default=False, null=False,blank=False)
@@ -88,12 +87,14 @@ class Application(models.Model):
             ("has_access", "Has access to application pages"),
         )
 
+
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     pass
 
+
 class ApplicationDefaultPages(models.Model):
-    app = models.ForeignKey(Application,blank=False,null=False,on_delete=models.CASCADE)
+    app = models.ForeignKey(Application, blank=False, null=False, on_delete=models.CASCADE)
     coming_soon_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
     about_us_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
     contact_us_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
@@ -103,6 +104,7 @@ class ApplicationDefaultPages(models.Model):
 
     def __str__(self):
         return self.app.app_name
+
 
 @admin.register(ApplicationDefaultPages)
 class ApplicationDefaultPagesAdmin(admin.ModelAdmin):
@@ -123,7 +125,6 @@ TEMPLATE_ENGINE=(
     ('mako', 'Mako Template'),
     ('mustache', 'Mustache Template'),
 )
-
 
 
 class ApplicationComponentTemplate(models.Model):
@@ -153,22 +154,34 @@ class ApplicationComponentTemplate(models.Model):
     class Meta:
         unique_together = ('temp_name', 'temp_type')
 
+
 @admin.register(ApplicationComponentTemplate)
 class ApplicationComponentTemplateAdmin(admin.ModelAdmin):
-    list_display = ('temp_name','temp_type','temp_engine','definition')
+    list_display = ('temp_name', 'temp_type', 'temp_engine', 'definition')
 
 
+VIEW_FUNC_TYPE = (
+    ('ordinary','Bare Python Function'),
+    ('class_based', 'Generic Class Based Django View'),
+)
+
+
+RETURN_TYPE = (
+    ('ordinary','Bare Python Function'),
+    ('class_based', 'Generic Class Based Django View'),
+)
 
 
 
 class ApplicationView(models.Model):
     view_name = models.CharField(max_length=50,null=True, blank=True)
-    view_code = models.TextField(max_length=500,null=True, blank=True,default=None)
+    view_type = models.CharField(max_length=50,choices=VIEW_FUNC_TYPE, default='ordinary')
+    view_code = models.TextField(max_length=500, null=True, blank=True, default=None)
     #TODO: it is really important to integrate ace_editor, as thois rich text editor is not very usable.
     # view_code = RichTextField()
     app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.CASCADE, related_name='views')
     template = models.ForeignKey(ApplicationComponentTemplate, null=True, blank=True, on_delete=models.DO_NOTHING)
-
+    return_type = models.CharField(max_length=50, choices=RETURN_TYPE, default='ordinary')
 
     def __str__(self):
         return self.view_name
@@ -176,7 +189,7 @@ class ApplicationView(models.Model):
 
 @admin.register(ApplicationView)
 class ApplicationViewAdmin(admin.ModelAdmin):
-    list_display = ['view_name','template','app']
+    list_display = ['view_name', 'template','app']
 
 
 

@@ -5,6 +5,15 @@ import logging
 
 logger = logging.getLogger('applicationManager.context_processor')
 
+# Context processors sadece context uzerinde degisiklik yapabilirler ancak
+# middleware'ler context uzerinde degisiklik yapabildikleri gibi ayni zamanda
+# request ve response nesneleri uzerinde de degisiklik yapabilirler. Bu acidan
+# middlewareler context processors larin yapabildiklerini zaten yapabilirler.
+# Bu konudaki gorsellerde req ve resp nesnelerinin belirli middleware katmanlarindan
+# gectigi gorulerbilir. Context degisikligi sadece view-middlewarelari response olustururken
+# kullanilmaktadir.
+# https://stackoverflow.com/questions/10004962/context-processors-vs-middleware-in-django
+
 
 def django_app_list_processor(request):
     """
