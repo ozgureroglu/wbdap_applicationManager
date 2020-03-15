@@ -1,0 +1,7 @@
+{% extends '${applicationName}/blank.html' %}
+{% load static %}
+
+{% block page_content %}
+    {% block model_obj_list %}
+    {% endblock %}
+{% endblock %}

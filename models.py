@@ -76,8 +76,7 @@ class Application(models.Model):
     core_app = models.BooleanField(default=False, null=False,blank=False)
     # uuid = models.UUIDField(primary_key=False, editable=True, blank=True,null=True)
     uuid = models.UUIDField(primary_key=False, blank=True,null=True)
-
-
+    published = models.BooleanField(default=False, null=False,blank=False)
 
     def __str__(self):
         return self.app_name

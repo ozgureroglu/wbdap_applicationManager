@@ -1,5 +1,6 @@
 __author__ = 'ozgur'
 
+from django.contrib import admin
 from django.db import models
 from mongoengine import *
 
@@ -22,3 +23,24 @@ class Example{{applicationName| capfirst }}Model2(Document):
     meta = {'collection': 'exactDBName'}
     name = StringField(max_length=255)
     description = StringField(max_length=255)
+
+
+
+{% for model in models %}
+class {{model}}(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        app_label = "{{applicationName}}"
+
+
+@admin.register({{model}})
+class {{model}}Admin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+
+{% endfor %}

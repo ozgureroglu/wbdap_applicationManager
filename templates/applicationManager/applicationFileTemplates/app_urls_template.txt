@@ -20,10 +20,11 @@ urlpatterns = [
     path('ep3/', examplepage3, name='examplepage3'),
 
 
-    path('exampleobj/', Example{{applicationName|capfirst}}ModelListView.as_view(), name='list-exampleAModel'),
-    path('createexampleobj/', Example{{applicationName|capfirst}}ModelCreateView.as_view(), name='create-exampleAModel'),
-    path('deleteexampleobj/<pk>/', Example{{applicationName|capfirst}}ModelDeleteView.as_view(), name='delete-exampleAModel'),
-    path('updateexampleobj/<pk>/', Example{{applicationName|capfirst}}ModelUpdateView.as_view(), name='update-exampleAModel'),
-
+    {% for model in models %}
+    path('{{model}}/', {{model|capfirst}}ListView.as_view(), name='list-{{model}}'),
+    path('create{{model}}/', {{model|capfirst}}CreateView.as_view(), name='create-{{model}}'),
+    path('delete{{model}}/<pk>/', {{model|capfirst}}DeleteView.as_view(), name='delete-{{model}}'),
+    path('update{{model}}/<pk>/', {{model|capfirst}}UpdateView.as_view(), name='update-{{model}}'),
+    {% endfor %}
 
 ]

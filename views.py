@@ -1601,6 +1601,12 @@ def rqtest(request):
     a.url = 'a'
     a.namedUrl = 'a'
     a.save()
+
+    m1 = AppModel(name='ExampleModelA', definition="A simple example model", owner_app=a)
+    m2 = AppModel(name='ExampleModelB', definition="A simple example model", owner_app=a)
+    m1.save()
+    m2.save()
+
     test_signal.send(sender="view", application=a)
     return render(request, "applicationManager/test.html")
 

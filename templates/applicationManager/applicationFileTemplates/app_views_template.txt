@@ -3,10 +3,10 @@ __author__ = 'ozgur'
 import logging
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
-from {{applicationName}}.models import Example{{applicationName | capfirst}}Model
 from {{applicationName}}.signals.signals import {{applicationName}}_sample_signal
-
 from django.shortcuts import render
+{% for model in models %}from {{applicationName}}.models import {{model}}
+{% endfor %}
 
 logger = logging.getLogger('django.request')
 
@@ -23,11 +23,6 @@ def dashboard(request):
     return render(request, '{{applicationName}}/dashboard.html')
 
 
-def signal_test(request):
-    {{applicationName}}_sample_signal.send(sender=Example{{applicationName|capfirst}}Model.__class__, test_message="testString",model=Example{{applicationName| capfirst}}Model.objects.get(name='name'))
-    return render(request, '{{applicationName}}/dashboard.html')
-
-
 def examplepage1(request):
     return render(request, '{{applicationName}}/dashboard.html')
 
@@ -38,39 +33,53 @@ def examplepage3(request):
     return render(request, '{{applicationName}}/dashboard.html')
 
 
+{% for model in models %}
 
-class Example{{applicationName|capfirst}}ModelListView(ListView):
+def signal_test(request):
+    {{applicationName}}_sample_signal.send(sender={{model|capfirst}}.__class__, test_message="testString",model= {{model}}.objects.get(name='name'))
+    return render(request, '{{applicationName}}/dashboard.html')
+
+
+class {{model|capfirst}}ListView(ListView):
     """
-    Lists Example{{applicationName|capfirst}}Model typed objects
+    Lists {{model|capfirst}} typed objects
     """
-    model = Example{{applicationName|capfirst}}Model
+    model = {{model|capfirst}}
     paginate_by = 10
-    context_object_name = 'exampleobjects'
+    context_object_name = 'model_objects'
+    template_name = '{{applicationName}}/crud_list.html'
 
     # Example of overriding get_context_data
     def get_context_data(self, **kwargs):
-        context = super(Example{{applicationName|capfirst}}ModelListView, self).get_context_data(**kwargs)
-        print("Context :" + str(context['exampleobjects']))
+        context = super({{model|capfirst}}ListView, self).get_context_data(**kwargs)
+        print("Context :" + str(context['model_objects']))
         stats = []
-        for exobj in context['exampleobjects']:
-            stat = exobj.name
-            stats.append((exobj, stat))
-        context['exampleobjects'] = stats
+        for mobj in context['model_objects']:
+            stat = mobj.name
+            stats.append((mobj, stat))
+        context['model_objects'] = stats
+        context['model'] = {{model|capfirst}}.__name__
+        #Get model fields to be renderened in the table headers
+        context['model_fields'] = {{model|capfirst}}._meta.get_fields()
         return context
 
 
-class Example{{applicationName|capfirst}}ModelCreateView(CreateView):
-    model = Example{{applicationName|capfirst}}Model
+class {{model|capfirst}}CreateView(CreateView):
+    model = {{model|capfirst}}
     fields = '__all__'
-    success_url = reverse_lazy('{{applicationName}}:list-exobj')
+    success_url = reverse_lazy('{{applicationName}}:list-mobj')
+    template_name = '{{applicationName}}/crud_form.html'
 
+class {{model|capfirst}}DeleteView(DeleteView):
+    model = {{model|capfirst}}
+    success_url = reverse_lazy('{{applicationName}}:list-mobj')
+    template_name = '{{applicationName}}/crud_delete.html'
 
-class Example{{applicationName|capfirst}}ModelDeleteView(DeleteView):
-    model = Example{{applicationName|capfirst}}Model
-    success_url = reverse_lazy('{{applicationName}}:list-exobj')
-
-
-class Example{{applicationName|capfirst}}ModelUpdateView(UpdateView):
-    model = Example{{applicationName|capfirst}}Model
+class {{model|capfirst}}UpdateView(UpdateView):
+    model = {{model|capfirst}}
     fields = '__all__'
-    success_url = reverse_lazy('{{applicationName}}:list-exobj')
+    success_url = reverse_lazy('{{applicationName}}:list-mobj')
+    template_name = '{{applicationName}}/crud_update.html'
+
+{% endfor %}
+

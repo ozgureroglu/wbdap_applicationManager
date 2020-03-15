@@ -67,7 +67,7 @@ class %(model)s(models.Model):
 
 
 class DjangoApplicationCreator:
-    def __init__(self, application):
+    def __init__(self, application: Application):
         # Application object is coming from the database records
         # which holds the metadata of the application
 
@@ -202,7 +202,7 @@ class DjangoApplicationCreator:
             logger.info('Creating urls.py for the new application : ' + self.app.app_name)
             try:
                 t = loader.get_template('applicationManager/applicationFileTemplates/app_urls_template.txt')
-                c = {'applicationName': self.app.app_name, 'url': self.app.namedUrl}
+                c = {'applicationName': self.app.app_name, 'url': self.app.namedUrl, 'models': self.app.models.all()}
                 rendered = t.render(c)
                 open(self.site_root + "/" + self.app.app_name + "/urls.py", "w+").write(rendered)
 
@@ -285,7 +285,7 @@ class DjangoApplicationCreator:
         try:
             t = loader.get_template(
                 'applicationManager/applicationFileTemplates/app_views_template.txt')
-            c = {'applicationName': self.app.app_name}
+            c = {'applicationName': self.app.app_name,'models': self.app.models.all()}
             rendered = t.render(c)
 
             open(self.site_root + "/" + self.app.app_name + "/views.py", "w+").write(rendered)
@@ -398,7 +398,7 @@ class DjangoApplicationCreator:
         try:
             t = loader.get_template(
                 'applicationManager/applicationFileTemplates/app_models_file_template.txt')
-            c = {'applicationName': app_name}
+            c = {'applicationName': app_name,'models':self.app.models.all()}
             rendered = t.render(c)
             open(self.site_root + "/" + app_name + "/models.py", "w+").write(rendered)
         except Exception as e:
@@ -702,7 +702,7 @@ class DjangoApplicationCreator:
                 filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_model_list_html_template.txt')
             # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
             buf = StringIO()
-            c = mako.runtime.Context(buf, applicationName=app_name)
+            c = mako.runtime.Context(buf, applicationName=app_name, models = self.app.models.all())
             t.render_context(c)
 
             open(self.site_root + "/" + app_name + "/templates/" + app_name + "/example"+app_name+"model_list.html", "w+").write(
@@ -762,6 +762,64 @@ class DjangoApplicationCreator:
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                     application=Application.objects.get(app_name=app_name))
             raise Exception('creation of blank.html failed: ' + str(e))
+
+
+
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crudbase_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/crudbase.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of blank.html failed: ' + str(e))
+
+
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crudlist_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/crud_list.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of blank.html failed: ' + str(e))
+
+
+
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crud_form_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/crud_form.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of blank.html failed: ' + str(e))
+
+
 
 
 
