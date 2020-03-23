@@ -93,11 +93,11 @@ class CreateModelForm(ModelForm):
         self.helper.form_action = '.'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Fieldset(('Model Parameters'), 'name', 'owner_app'),
+            Fieldset(('Model Parameters'), 'name', 'owner_app', 'definition'),
             HTML("<hr>"),
             FormActions(
                 Submit('save', ('Submit'), css_class='btn btn-primary '),
-                Button('close', ('Close'), css_class='btn btn-default',data_dismiss='modal')
+                Button('close', ('Close'), css_class='btn btn-default', data_dismiss='modal')
             )
         )
 
@@ -106,7 +106,7 @@ class CreateModelForm(ModelForm):
 
     class Meta:
         model = AppModel
-        fields = ['name', 'owner_app']
+        fields = ['name', 'owner_app','definition']
 
 
 class CreateFieldForm(ModelForm):

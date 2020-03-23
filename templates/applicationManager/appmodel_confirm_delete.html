@@ -1,0 +1,17 @@
+{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/sb_admin2_index_template.html' %}
+
+{% block page_content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Confirm Delete Operation</h1>
+
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <input type="submit" value="Confirm">
+        </form>
+
+    </div>
+    <!-- /.container-fluid -->
+{% endblock %}

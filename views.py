@@ -9,7 +9,11 @@ from distutils.errors import DistutilsError
 from wsgiref.util import FileWrapper
 
 import requests
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.template import Template, Context
@@ -58,7 +62,7 @@ logger = logging.getLogger("wbdap.debug")
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
-@login_required
+# @login_required
 # @permission_required('applicationManager.has_access')
 def landing_page(request):
     if (request.user.has_perm('applicationManager.has_access')):
@@ -69,7 +73,7 @@ def landing_page(request):
         return render(request, 'applicationManager/landing.html', {})
 
 
-@login_required
+# @login_required
 def dashboard(request):
     if request.user.is_superuser:
         applications = Application.objects.all()
@@ -940,45 +944,60 @@ def project_management_page(request, id):
                    })
 
 
-class AppModelListView(ListView):
+class AppModelListView(LoginRequiredMixin, ListView):
     model = AppModel
     http_method_names = ['get']
-
-    # TODO: This is not a suitable way of returning json for listview: because it is redefining the response of view,
-    # instead it should modify the exsiting response
-    # Listview tarafindan json response donmesi icin assagidaki method override ediliyor.
-    def render_to_response(self, context, **response_kwargs):
-        print(self.kwargs)
-        app_conf = apps.get_app_config(Application.objects.get(id=self.kwargs['id']).app_name)
-        models = app_conf.get_models()
-        data = {}
-        model_list = []
-        for model in models:
-            print(model.__name__)
-            model_list.append(model.__name__)
-
-            # fields = model._meta.get_fields()
-            # for f in fields:
-            #     print(f.name)
-            #     print(f.get_internal_type())
-        data['models'] = model_list
-
-        # queryset = self.model.objects.all()
-        # data = list(models)
-        # print(data)
-        # data = serializers.serialize('json', model_list )
-        # data = json.dumps(list(models))
-
-        # returning httpresponse instead of jsonresponse to avoid double encoding
-        # return HttpResponse(json.dumps(data), content_type='application/json')
-        return JsonResponse(data, safe=False)
+    paginate_by = 10
+    context_object_name = 'appmodels'
 
     def get_context_data(self, **kwargs):
         context = super(AppModelListView, self).get_context_data(**kwargs)
-        # If extra contex parameters are required
-        # context['now'] = timezone.now()
+        context['appid'] = self.kwargs['id']
         return context
 
+    def get_queryset(self):
+        # Get the queryset however you usually would.  For example:
+        queryset = AppModel.objects.filter(owner_app=self.kwargs['id'])
+        print(self.kwargs['id'])
+        return queryset
+
+
+class AppModelCreateView(CreateView):
+    model = AppModel
+    fields = '__all__'
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.add_input(Submit('submit', 'Create', css_class='btn-primary'))
+        return form
+
+    def get_success_url(self):
+        success_url = reverse_lazy('applicationManager:model-list', kwargs={'id':self.kwargs['id']})
+        print(success_url)
+        return success_url
+
+
+class AppModelDeleteView(DeleteView):
+    model = AppModel
+    slug_field = "id"
+    slug_url_kwarg = "model_id"
+
+
+    def get_success_url(self):
+        success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
+        return success_url
+
+
+
+class AppModelUpdateView(UpdateView):
+    model = AppModel
+    fields = '__all__'
+
+
+    def get_success_url(self):
+        success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
+        return success_url
 
 class JSONResponseMixin:
     """
@@ -1113,7 +1132,7 @@ class FieldListView(JSONResponseMixin, ListView):
         return context
 
 
-class ModelCreateView(CreateView):
+class ModelCreateView(LoginRequiredMixin, CreateView):
     model = AppModel
     form_class = CreateModelForm
 
@@ -1126,9 +1145,9 @@ class ModelCreateView(CreateView):
     def get_form(self, form_class=form_class):
         form = super(ModelCreateView, self).get_form(form_class)
         # print(form.fields['app'].initial)
-        form.fields['app'].initial = self.kwargs['id']
+        form.fields['owner_app'].initial = self.kwargs['id']
         from django.forms.widgets import HiddenInput
-        form.fields['app'].widget = HiddenInput()
+        form.fields['owner_app'].widget = HiddenInput()
         form.helper.form_action = reverse('applicationManager:model-create', kwargs={'id': self.kwargs['id']})
 
         return form
@@ -1600,6 +1619,7 @@ def rqtest(request):
     a.verbose_name = 'a'
     a.url = 'a'
     a.namedUrl = 'a'
+    a.uuid = uuid.uuid4()
     a.save()
 
     m1 = AppModel(name='ExampleModelA', definition="A simple example model", owner_app=a)

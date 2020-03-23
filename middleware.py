@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger("wbdap.debug")
 
 
-class SimpleMiddleware:
+class CustomLoginRequiredMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
@@ -12,6 +12,7 @@ class SimpleMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
+        assert hasattr(request, 'user'), "The Login Required Middleware"
 
         if request.path.startswith('/applicationManager/'):
             if not request.user.is_superuser:

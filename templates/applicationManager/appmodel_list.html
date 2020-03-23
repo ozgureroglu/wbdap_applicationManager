@@ -1,0 +1,68 @@
+{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/sb_admin2_index_template.html' %}
+
+{% block page_content %}
+
+
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <h2>Model List</h2>
+        <a href="{% url 'applicationManager:model-create' appid %}">
+            <button type="button" class="btn btn-primary  btn-sm"><i class="fas fa-plus"></i> Create model</button>
+        </a>
+
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                {#                {% for mf in appmodels %}#}
+                {#                    <th scope="col">{{ mf.name | capfirst }}</th>#}
+                {#                {% endfor %}#}
+
+                <th scope="col">Models</th>
+                <th scope="col">Operations</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for model in appmodels %}
+
+                <th scope="row">{{ forloop.counter }}</th>
+
+                <td>
+                    {% if stat == True %}
+                        Connected
+                    {% else %}
+                        <a href="{% url 'applicationManager:model-details' appid model.id %}">{{ model.name }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'applicationManager:model-update' appid model.id %}">Edit</a>
+                    <a href="{% url 'applicationManager:model-delete' appid model.id %}">Delete</a>
+                </td>
+
+                </tr>
+            {% empty %}
+                <li>No servers yet.</li>
+            {% endfor %}
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <br>
+
+
+
+
+    {#<ul>#}
+    {#    {% for model in appmodels %}#}
+    {#        <li>{{ model.definition}} </li>#}
+    {#    {% empty %}#}
+    {#        <li>No models yet.</li>#}
+    {#    {% endfor %}#}
+    {#</ul>#}
+
+{% endblock %}

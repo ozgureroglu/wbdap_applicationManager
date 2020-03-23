@@ -1,0 +1,18 @@
+{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/sb_admin2_index_template.html' %}
+{% load crispy_forms_tags %}
+
+{% block page_content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Create New Model</h1>
+
+
+            {% csrf_token %}
+            {% crispy form %}
+{#            <button type="submit" value="Save">Save</button>#}
+
+    </div>
+    <!-- /.container-fluid -->
+{% endblock %}

@@ -721,7 +721,7 @@ class DjangoApplicationCreator:
             c = mako.runtime.Context(buf, applicationName=app_name)
             t.render_context(c)
 
-            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/example"+app_name+"model_form.html", "w+").write(
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/example"+app_name+"appmodel_form.html", "w+").write(
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating dashboard.html file : %s", e)
