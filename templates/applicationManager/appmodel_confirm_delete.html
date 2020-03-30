@@ -1,17 +1,38 @@
-{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/sb_admin2_index_template.html' %}
+{% extends 'applicationManager/application_management_page.html' %}
 
-{% block page_content %}
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
+{% block app_home_content %}
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Confirm Delete Operation</h1>
-
-        <form method="post">{% csrf_token %}
-            <p>Are you sure you want to delete "{{ object }}"?</p>
-            <input type="submit" value="Confirm">
-        </form>
-
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <h2>Confirm Delete Operation</h2>
+        </div>
     </div>
-    <!-- /.container-fluid -->
+
+
+    <!-- Begin Page Content -->
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Delete Model</div>
+                        </div>
+                    </div>
+                    <div>
+                        {% csrf_token %}
+                        <form method="post">{% csrf_token %}
+                            <p>Are you sure you want to delete "{{ object }}"?</p>
+                            <input type="submit" value="Confirm">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}

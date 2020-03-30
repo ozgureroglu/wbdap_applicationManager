@@ -1,6 +1,8 @@
 __author__ = 'ozgur'
 
 import logging
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from {{applicationName}}.signals.signals import {{applicationName}}_sample_signal
@@ -53,11 +55,11 @@ class {{model|capfirst}}ListView(ListView):
     def get_context_data(self, **kwargs):
         context = super({{model|capfirst}}ListView, self).get_context_data(**kwargs)
         print("Context :" + str(context['model_objects']))
-        stats = []
-        for mobj in context['model_objects']:
-            stat = mobj.name
-            stats.append((mobj, stat))
-        context['model_objects'] = stats
+#        stats = []
+#        for mobj in context['model_objects']:
+#            stat = mobj.name
+#            stats.append((mobj, stat))
+#        context['model_objects'] = stats
         context['model'] = {{model|capfirst}}.__name__
         #Get model fields to be renderened in the table headers
         context['model_fields'] = {{model|capfirst}}._meta.get_fields()
@@ -67,19 +69,33 @@ class {{model|capfirst}}ListView(ListView):
 class {{model|capfirst}}CreateView(CreateView):
     model = {{model|capfirst}}
     fields = '__all__'
-    success_url = reverse_lazy('{{applicationName}}:list-mobj')
+    success_url = reverse_lazy('{{applicationName}}:list-{{model}}')
     template_name = '{{applicationName}}/crud_form.html'
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.add_input(Submit('submit', 'Create', css_class='btn-success'))
+        return form
+
 
 class {{model|capfirst}}DeleteView(DeleteView):
     model = {{model|capfirst}}
-    success_url = reverse_lazy('{{applicationName}}:list-mobj')
+    success_url = reverse_lazy('{{applicationName}}:list-{{model}}')
     template_name = '{{applicationName}}/crud_delete.html'
 
 class {{model|capfirst}}UpdateView(UpdateView):
     model = {{model|capfirst}}
     fields = '__all__'
-    success_url = reverse_lazy('{{applicationName}}:list-mobj')
-    template_name = '{{applicationName}}/crud_update.html'
+    success_url = reverse_lazy('{{applicationName}}:list-{{model}}')
+    template_name = '{{applicationName}}/crud_form.html'
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.add_input(Submit('submit', 'Create', css_class='btn-success'))
+        return form
+
 
 {% endfor %}
 

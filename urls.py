@@ -79,7 +79,7 @@ urlpatterns = [
     path('application/<int:id>/models/<int:model_id>/delete/', AppModelDeleteView.as_view(), name='model-delete'),
     path('application/<int:id>/models/<int:model_id>/fields/', FieldListView.as_view(), name='field-list'),
     path('application/<int:id>/models/<int:model_id>/fields/add/', FieldCreateView.as_view(), name='field-create'),
-    path('application/<int:id>/models/<int:model_id>/fields/<int:pk>/', FieldDetailView.as_view(), name='field-details'),
+    path('application/<int:id>/models/<int:model_id>/fields/<int:field_id>/', FieldDetailView.as_view(), name='field-details'),
     path('application/<int:id>/models/<int:model_id>/fields/<int:field_id>/update/', FieldUpdateView.as_view(), name='field-update'),
     # path('application/<app_id>/model/<model_id>/field/<pk>/update/', field_update, name='field-update'),
     path('application/<int:app_id>/models/<int:model_id>/field/<pk>/delete/', FieldDeleteView.as_view(),

@@ -869,7 +869,7 @@ class SoftApplicationCreator:
     #     for app_name in app_nameList:
     #         pass
     #         # Application config ile bu islemin yapilmasi durumu imkansiz: Cunku appconfig kullanmak icin
-    #         # app settings dosyasinda olmali ama bu durumda uygulama yeniden basladigi icin tum uygulama akisi
+    #         # app custom_settings dosyasinda olmali ama bu durumda uygulama yeniden basladigi icin tum uygulama akisi
     #         # resetlenmektedir.
     #         # # confName = app_name+'AppConfig'
     #         # print(app_name)
@@ -885,27 +885,27 @@ class SoftApplicationCreator:
     #     # c = mako.runtime.Context(buf, applist=appConfigs)
     #     # t.render_context(c)
     #
-    #     open(self.site_root + "/" + settings.APPLICATION_NAME + "/urls.py", "w+").write(rendered)
+    #     open(self.site_root + "/" + custom_settings.APPLICATION_NAME + "/urls.py", "w+").write(rendered)
 
-    # Updates only the settings file
+    # Updates only the custom_settings file
     def updateProjectSettingsPy(self):
         try:
-            copyfile(self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py",
-                     self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py." + str(
+            copyfile(self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py",
+                     self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py." + str(
                          datetime.datetime.now().isoformat()))
             appList = Application.objects.all()
-            print("List of applications to be added to the settings file :" + str(appList))
+            print("List of applications to be added to the custom_settings file :" + str(appList))
 
             t = loader.get_template('applicationManager/applicationFileTemplates/project_settings_py.txt')
             c = {'appList': appList}
             rendered = t.render(c)
-            open(self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py", "w+").write(rendered)
+            open(self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py", "w+").write(rendered)
         except  Exception as e:
 
-            logger.fatal("Exception occurred while updating project settings file : %s", e)
+            logger.fatal("Exception occurred while updating project custom_settings file : %s", e)
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                              application=Application.objects.get(app_name=self.application.app_name))
-            raise Exception('creation of project settings.py failed: ' + str(e))
+            raise Exception('creation of project custom_settings.py failed: ' + str(e))
 
     def rollback(self):
         logger.error("Rolling back the installation")

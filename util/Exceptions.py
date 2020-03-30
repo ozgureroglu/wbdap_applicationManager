@@ -12,7 +12,7 @@ class UrlPyCreationException(StageException):
 
 class SiteRootNotSetException(Exception):
     def __init___(self, error_arguments):
-        Exception.__init__(self, "Either settings.SCAFFOLDS_APPS_DIR or site_root not set")
+        Exception.__init__(self, "Either custom_settings.SCAFFOLDS_APPS_DIR or site_root not set")
         self.dErrorArguments = error_arguments
 
 

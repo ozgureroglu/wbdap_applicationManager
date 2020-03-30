@@ -51,10 +51,6 @@
     <hr class="sidebar-divider">
 
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMP"
@@ -66,9 +62,8 @@
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Model CRUD pages</h6>
-                {% for model in models %}
-                    <a class="collapse-item" href="{% url '${applicationName}:examplepage1' %}">Model </a>
-                {% endfor %}
+                    <a class="collapse-item" href="{% url 'a:list-ExampleModelA' %}">Model A</a>
+                    <a class="collapse-item" href="{% url 'a:list-ExampleModelB' %}">Model B</a>
             </div>
         </div>
     </li>

@@ -9,20 +9,17 @@ from distutils.errors import DistutilsError
 from wsgiref.util import FileWrapper
 
 import requests
-
+from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms import HiddenInput
 from django.http import JsonResponse
 from django.template import Template, Context
 from django.views.decorators.http import require_http_methods, require_POST
 from formtools.wizard.views import SessionWizardView
 from rest_framework.authtoken.models import Token
-from scrapy.signals import response_received
-
-from applicationManager.util.api_utils import create_api
 from wbdap import settings
 from django.conf import settings
 from .util.util_functions import *
@@ -54,7 +51,6 @@ from applicationManager.signals.signals import application_created_signal, appli
     project_metadata_removed_signal, test_signal, application_metadata_created_signal
 from django.db import transaction
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.views.decorators.cache import cache_page
 
 
 logger = logging.getLogger("wbdap.debug")
@@ -87,7 +83,7 @@ def dashboard(request):
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
-# Sayfanin cache uzerinden sunulmasini saglayan dekorator; ayarlari settings icinde yapiliyor.
+# Sayfanin cache uzerinden sunulmasini saglayan dekorator; ayarlari custom_settings icinde yapiliyor.
 # @cache_page(CACHE_TTL)
 @login_required
 def applications(request):
@@ -109,14 +105,13 @@ def projects(request):
     if request.user.is_superuser:
         djangoProjects = DjangoProject.objects.all()
 
-
     return render(request,
                   'applicationManager/projects.html', {'user': request.user, 'all_projects': djangoProjects}
                   )
 
 @login_required
 def memcache_test(request):
-    # from django.conf import settings
+    # from django.conf import custom_settings
     # get caches confs
     from django.core.cache import caches, cache
     conf = settings.CACHES.get('memcached', None)
@@ -185,7 +180,7 @@ def dyn_view_loader(request, uuid, url_path=None):
     # exec(dyn_view_code)
     # app = Application.objects.get(uuid=uuid)
     # app_name = app.app_name
-    # reload(sys.modules[settings.ROOT_URLCONF])
+    # reload(sys.modules[custom_settings.ROOT_URLCONF])
     # return redirect('applicationManager:dashboard')
     # for x in sys.modules:
     #     if 'asd' in x:
@@ -523,7 +518,7 @@ def dump_app_data(request, id):
 #         c = mako.runtime.Context(buf, newURL=newURL)
 #         t.render_context(c)
 #         print(buf.getvalue())
-#         open(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/urls.py", "w+").write(buf.getvalue())
+#         open(custom_settings.SITE_ROOT + "/" + custom_settings.APPLICATION_NAME + "/urls.py", "w+").write(buf.getvalue())
 #
 #     except Exception as e:
 #         print(e)
@@ -598,7 +593,7 @@ def install_app(app):
             urlpatterns.append(url(r'^%s/' % app.app_name, include('%s.urls' % app.app_name)))
             # print(urlpatterns)
 
-            # app_dir = os.path.join(settings.SITE_ROOT+'/'+app.app_name)
+            # app_dir = os.path.join(custom_settings.SITE_ROOT+'/'+app.app_name)
 
             reload_urlconf()
             # print(sys.modules)
@@ -608,19 +603,19 @@ def install_app(app):
                 print(x.path)
                 print("\n")
 
-            # Burada 1. ve kaba yontem dogrudan settings.TEMPLATES altina eklemektir, ikinci yontem ise
+            # Burada 1. ve kaba yontem dogrudan custom_settings.TEMPLATES altina eklemektir, ikinci yontem ise
             # bir loader kullanarak yapmaktir.
 
-            # print(settings.TEMPLATES[0].__class__)
-            # print(settings.TEMPLATES[0])
+            # print(custom_settings.TEMPLATES[0].__class__)
+            # print(custom_settings.TEMPLATES[0])
             #
-            # app_dir = os.path.join(settings.SITE_ROOT + '/' + app.app_name)
+            # app_dir = os.path.join(custom_settings.SITE_ROOT + '/' + app.app_name)
             # app_conf = apps.get_app_config(app.app_name)
-            # DIRS = settings.TEMPLATES[0]['DIRS']
+            # DIRS = custom_settings.TEMPLATES[0]['DIRS']
             # if app_conf.path not in DIRS:
             #     DIRS.append(app_conf.path)
             #
-            # settings.TEMPLATES[0]['DIRS'] = DIRS
+            # custom_settings.TEMPLATES[0]['DIRS'] = DIRS
 
             from django.template.loaders.app_directories import Loader
             from django.template import Engine
@@ -630,16 +625,16 @@ def install_app(app):
             # print(Loader(Engine.get_default()).get_template())
 
             #
-    # if app.app_name in settings.INSTALLED_APPS:
+    # if app.app_name in custom_settings.INSTALLED_APPS:
     #     logger.info("Not installing app")
     #     pass
     # else:
     #     logger.info("installing app")
-    #     settings.INSTALLED_APPS += (app.app_name,)
-    #     print(settings.INSTALLED_APPS)
+    #     custom_settings.INSTALLED_APPS += (app.app_name,)
+    #     print(custom_settings.INSTALLED_APPS)
     #     apps.app_configs = OrderedDict()
     #     apps.ready = False
-    #     apps.populate(settings.INSTALLED_APPS)
+    #     apps.populate(custom_settings.INSTALLED_APPS)
     #
     #
     #     # now I can generate the migrations for the new app
@@ -664,7 +659,7 @@ def install_app(app):
     #         urlpatterns.append(url(r'^%s/' % app.app_name, include('%s.urls' % app)))
     #         print(urlpatterns.__class__)
     #
-    #         app_dir = os.path.join(settings.SITE_ROOT+'/'+app.app_name)
+    #         app_dir = os.path.join(custom_settings.SITE_ROOT+'/'+app.app_name)
     #
     #         reload_urlconf()
     #         print(app_dir)
@@ -681,7 +676,7 @@ def install_app(app):
     #     # show_urls()
     #
     #     #
-    #     # for application in settings.INSTALLED_APPS:
+    #     # for application in custom_settings.INSTALLED_APPS:
     #     #
     #     #     try:
     #     #         mod = import_module('%s.urls' % app)
@@ -952,23 +947,34 @@ class AppModelListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AppModelListView, self).get_context_data(**kwargs)
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
         context['appid'] = self.kwargs['id']
         return context
 
     def get_queryset(self):
         # Get the queryset however you usually would.  For example:
         queryset = AppModel.objects.filter(owner_app=self.kwargs['id'])
-        print(self.kwargs['id'])
+
         return queryset
 
 
-class AppModelCreateView(CreateView):
+class AppModelCreateView(LoginRequiredMixin, CreateView):
     model = AppModel
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super(AppModelCreateView, self).get_context_data(**kwargs)
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        context['appid'] = self.kwargs['id']
+        return context
+
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.helper = FormHelper()
+        form.fields['definition'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 25})
+        form.fields['owner_app'].widget = HiddenInput()
+        form.initial['owner_app'] = self.kwargs['id']
         form.helper.add_input(Submit('submit', 'Create', css_class='btn-primary'))
         return form
 
@@ -978,8 +984,9 @@ class AppModelCreateView(CreateView):
         return success_url
 
 
-class AppModelDeleteView(DeleteView):
+class AppModelDeleteView(LoginRequiredMixin, DeleteView):
     model = AppModel
+    # urls.py icinde ilgili url satiri icindeki hangi alanlara gore nesne silme islemi yapilacagini belirler.
     slug_field = "id"
     slug_url_kwarg = "model_id"
 
@@ -988,16 +995,39 @@ class AppModelDeleteView(DeleteView):
         success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
         return success_url
 
+    def get_context_data(self, **kwargs):
+        context = super(AppModelDeleteView, self).get_context_data(**kwargs)
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        return context
 
 
-class AppModelUpdateView(UpdateView):
+class AppModelUpdateView(LoginRequiredMixin, UpdateView):
     model = AppModel
+    slug_field = "id"
+    slug_url_kwarg = "model_id"
     fields = '__all__'
 
 
     def get_success_url(self):
         success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
         return success_url
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AppModelUpdateView, self).get_context_data(**kwargs)
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        return context
+
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        form.fields['definition'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 25})
+        form.fields['owner_app'].widget = HiddenInput()
+
+        form.helper.add_input(Submit('submit', 'Update', css_class='btn-primary'))
+        return form
+
 
 class JSONResponseMixin:
     """
@@ -1026,7 +1056,7 @@ class JSONResponseMixin:
         return context
 
 
-class AppModelDetailView(JSONResponseMixin, DetailView):
+class AppModelDetailView(LoginRequiredMixin, DetailView):
     model = AppModel
     http_method_names = ['get']
 
@@ -1068,13 +1098,13 @@ class ApplicationUpdate(UpdateView):
     #                  'readmeContent': form['readmeContent'].value()}
     #     rendered = t.render(c)
     #     print(rendered)
-    #     open(settings.SITE_ROOT + "/" + form['appName'].value() + "/apps.py", "w+").write(rendered)
+    #     open(custom_settings.SITE_ROOT + "/" + form['appName'].value() + "/apps.py", "w+").write(rendered)
     #
     #     self.object = form.save()
     #     return super(ModelFormMixin, self).form_valid(form)
 
     # def post(self, request, *args, **kwargs):
-    #     logger.info('Will serialize the settings into the apps.py')
+    #     logger.info('Will serialize the custom_settings into the apps.py')
     #
     #     self.object = self.get_object()
     #     return super(BaseUpdateView, self).post(request, *args, **kwargs)
@@ -1105,31 +1135,9 @@ class ApplicationUpdate(UpdateView):
 #     pass
 
 
-class FieldListView(JSONResponseMixin, ListView):
-    model = Field
-    http_method_names = ['get']
 
-    def render_to_response(self, context, **response_kwargs):
-        queryset = self.model.objects.all()
-        data = serializers.serialize('json', queryset)
-        return HttpResponse(data, content_type='application/json')
 
-    # Bu metodu override etme sebebi donecek olan object listesini degistirmek ve
-    # sadece modele ait olanlari donmek
-    def get_queryset(self):
-        queryset = super(FieldListView, self).get_queryset()
-        # batchelors degrees only
-        queryset = queryset.filter(owner_model_id=self.kwargs['model_id'])
-        # filter by state
-        # queryset = queryset.filter(school__city__state__slug=self.kwargs['state_slug'])
-        return queryset
 
-    # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
-    def get_context_data(self, **kwargs):
-        context = super(FieldListView, self).get_context_data(**kwargs)
-        model = AppModel.objects.get(id=self.kwargs['model_id'])
-        context['model'] = model
-        return context
 
 
 class ModelCreateView(LoginRequiredMixin, CreateView):
@@ -1164,51 +1172,69 @@ class ModelCreateView(LoginRequiredMixin, CreateView):
         context['model_form'] = self.get_form()
         return context
 
-
-class FieldCreateView(CreateView):
+class FieldListView(LoginRequiredMixin, ListView):
     model = Field
-    form_class = CreateFieldForm
+    http_method_names = ['get']
+    context_object_name = 'fields'
+
+    # Bu metodu override etme sebebi donecek olan object listesini degistirmek ve
+    # sadece modele ait olanlari donmek
+    def get_queryset(self):
+        queryset = Field.objects.filter(owner_model=self.kwargs['model_id'])
+        return queryset
+
+    # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
+    def get_context_data(self, **kwargs):
+        context = super(FieldListView, self).get_context_data(**kwargs)
+        context['appmodels'] = AppModel.objects.all()
+        context['model'] = AppModel.objects.get(id=self.kwargs['model_id'])
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        return context
+
+
+class FieldCreateView(LoginRequiredMixin, CreateView):
+    model = Field
+    fields = '__all__'
+    context_object_name = 'fields'
+
+    # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
+    def get_context_data(self, **kwargs):
+        context = super(FieldCreateView, self).get_context_data(**kwargs)
+        context['appmodels'] = AppModel.objects.all()
+        context['model'] = AppModel.objects.get(id=self.kwargs['model_id'])
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        return context
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-management-page',
-                                   kwargs={'id': self.kwargs['app_id']})
-        print(self.success_url)
-        return super(FieldCreateView, self).get_success_url()
+        success_url = reverse_lazy('applicationManager:field-list',
+                                   kwargs={'id': self.kwargs['id'], 'model_id': self.kwargs['model_id']})
+        return success_url
 
-    def get_form(self, form_class=CreateFieldForm):
-        form = super(FieldCreateView, self).get_form(form_class)
-        print(form.helper.form_action)
-
-        # form.helper.form_action = "new_Action"
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
         form.helper.form_action = reverse('applicationManager:field-create',
-                                          kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
-
+                                          kwargs={'id': self.kwargs['id'], 'model_id': self.kwargs['model_id']})
+        form.fields['definition'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 25})
+        form.fields['type_parameter'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 25})
+        form.fields['owner_model'].widget = HiddenInput()
+        form.initial['owner_model'] = self.kwargs['model_id']
+        form.helper.add_input(Submit('submit', 'Create', css_class='btn-primary'))
         return form
 
-    # def get_success_url(self):
-    #     # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-    #     self.success_url = reverse('applicationManager:application-management-page',kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
-    #     print('success url '+self.success_url)
-    #     # print(self.success_url)
-    #     return super(FieldCreateView, self).get_success_url()
 
-    def get_context_data(self, **kwargs):
-        print('a')
-        # Call the base implementation first to get a context
-        context = super(FieldCreateView, self).get_context_data(**kwargs)
-        # Burada yeni bir form uretim contextte onu dondugumuz icin yukarida overrride edilen formu gormuyoruz. dolayaisi
-        # ile eger degistirilmis formu kullanamak istiyorsak, ya burada onu donmenin bir yolunu bulacagiz ya da burada donen
-        # formu modifiye edecegiz ya da mevcut formun template icinde field_form ismi ile erisilebilmesini saglayacagiz.
-        # context['field_form'] = CreateFieldForm
-        if 'field_form' not in context:
-            context['field_form'] = self.get_form()
-        return context
+
+
+
+
 
 
 class FieldDetailView(JSONResponseMixin, DetailView):
     model = Field
     http_method_names = ['get']
+    slug_field = "id"
+    slug_url_kwarg = "field_id"
 
     def render_to_response(self, context, **response_kwargs):
         return self.render_to_json_response(context, **response_kwargs)
@@ -1220,23 +1246,11 @@ class FieldDetailView(JSONResponseMixin, DetailView):
         return context
 
 
-class ModelUpdate(UpdateView):
-    model = AppModel
-    fields = ['name']
-    template_name_suffix = '_update_form'
-
-    def get_success_url(self):
-        # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
-        return super(ModelUpdate, self).get_success_url()
-
-
 class FieldUpdateView(UpdateView):
     model = Field
-    form_class = UpdateFieldForm
-
-    # fields = ['name', 'type', 'type_parameter']
-    # template_name_suffix = '_update_form'
+    slug_field = "id"
+    slug_url_kwarg = "field_id"
+    fields = '__all__'
 
     def get_success_url(self):
         # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
@@ -1244,17 +1258,18 @@ class FieldUpdateView(UpdateView):
                                    kwargs={'id': self.kwargs['app_id']})
         return super(FieldUpdateView, self).get_success_url()
 
+    # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
     def get_context_data(self, **kwargs):
-        print('a')
-        # Call the base implementation first to get a context
         context = super(FieldUpdateView, self).get_context_data(**kwargs)
-        # Burada yeni bir form uretim contextte onu dondugumuz icin yukarida overrride edilen formu gormuyoruz. dolayaisi
-        # ile eger degistirilmis formu kullanamak istiyorsak, ya burada onu donmenin bir yolunu bulacagiz ya da burada donen
-        # formu modifiye edecegiz ya da mevcut formun template icinde field_form ismi ile erisilebilmesini saglayacagiz.
-        # context['field_form'] = CreateFieldForm
-        if 'field_form' not in context:
-            context['field_form'] = self.get_form()
+        context['appmodels'] = AppModel.objects.all()
+        context['model'] = AppModel.objects.get(id=self.kwargs['model_id'])
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
         return context
+
+
+
+
+
 
 
 class ModelDelete(DeleteView):
@@ -1454,8 +1469,8 @@ def package_app(request, id):
         #
         # tar = tarfile.open(fileobj=response, mode="w:gz")
         # tar.add(os.path.join(cwd,"dist/"+"django-"+app.app_name+"-"+version+".tar.gz"))
-        # # tar.add(os.path.join(settings.SITE_ROOT, app.app_name),
-        # #         arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
+        # # tar.add(os.path.join(custom_settings.SITE_ROOT, app.app_name),
+        # #         arcname=os.path.basename(os.path.join(custom_settings.SITE_ROOT, app.app_name)))
         # tar.close()
         return response
 
@@ -1542,7 +1557,6 @@ class ProjectCreateWizard(SessionWizardView):
         context = super(ProjectCreateWizard, self).get_context_data(form=form, **kwargs)
         if self.steps.current == 'layout':
             context.update({'layouts': ApplicationLayout.objects.all()})
-            print(context)
         return context
 
     @transaction.atomic

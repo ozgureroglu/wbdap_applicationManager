@@ -65,18 +65,18 @@ class Application(models.Model):
     """
     Model for applications that have been created by this applicationManager.
     """
-    app_name = models.CharField(max_length=25,null=False, blank=False) # app_name parameter for urls.py
+    app_name = models.CharField(max_length=25, null=False, blank=False) # app_name parameter for urls.py
     verbose_name = models.CharField(max_length=50, null=False, blank=False) #Human readable form of the name
     url = models.CharField(max_length=30) #relative path to this application
     namedUrl = models.CharField(max_length=30) # name field of the urlconfig entry for reverse resolutions
     active = models.BooleanField(default=True, blank=True)
-    description = models.TextField(max_length=500) # Description of the application
-    soft_app = models.BooleanField(default=False, null=False,blank=False)
+    description = models.TextField(max_length=500, default="A brief explanation of this application.") # Description of the application
+    soft_app = models.BooleanField(default=False, null=False, blank=False)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING) # Owner of this application
-    core_app = models.BooleanField(default=False, null=False,blank=False)
+    core_app = models.BooleanField(default=False, null=False, blank=False)
     # uuid = models.UUIDField(primary_key=False, editable=True, blank=True,null=True)
-    uuid = models.UUIDField(primary_key=False, blank=True,null=True)
-    published = models.BooleanField(default=False, null=False,blank=False)
+    uuid = models.UUIDField(primary_key=False, blank=True, null=True)
+    published = models.BooleanField(default=False, null=False, blank=False)
 
     def __str__(self):
         return self.app_name
@@ -307,13 +307,13 @@ class ApplicationSettingsAdmin(admin.ModelAdmin):
 #         print(ttype)
 #         print(getattr(self, ttype))
 #         try:
-#             val = getattr(self, ttype)
+#val = getattr(self, ttype)
 #
-#             setattr(self, ttype, not val)
-#             self.save()
+#setattr(self, ttype, not val)
+#self.save()
 #
 #         except AttributeError as e:
-#             logger.fatal(e)
+#logger.fatal(e)
 #
 #
 #     def __unicode__(self):
@@ -360,9 +360,31 @@ class Field(models.Model):
 
     name = models.CharField(max_length=30)
     field_type = models.CharField(max_length=30, choices=tuple(flist))
-    type_parameter = models.TextField(max_length=150,blank=True,null=True)
-    definition = models.TextField(max_length=250,blank=True,null=False)
-    owner_model = models.ForeignKey(AppModel,on_delete=models.CASCADE,related_name='fields')
+    type_parameter = models.TextField(max_length=150, blank=True, null=True)
+    definition = models.TextField(max_length=250, blank=True, null=False)
+    owner_model = models.ForeignKey(AppModel, on_delete=models.CASCADE, related_name='fields')
+
+    verbose_name = models.CharField(max_length=40,default='vname')
+    primary_key = models.BooleanField(default=False)
+    max_length = models.IntegerField(default=50)
+    unique = models.BooleanField(default=False)
+    blank = models.BooleanField(default=False)
+    null = models.BooleanField(default=False)
+    db_index = models.BooleanField(default=False)
+    rel = models.CharField(max_length=50, default=None)
+    default = models.CharField(max_length=50)
+    editable = models.BooleanField(default=True)
+    serialize = models.BooleanField(default=True)
+    # unique_for_date = None,
+    # unique_for_month = None,
+    # unique_for_year = None,
+    # choices = None,
+    # help_text = '',
+    # db_column = None,
+    # db_tablespace = None,
+    auto_created = models.BooleanField(default=False)
+    validators = (),
+    # error_messages =
 
     def __str__(self):
         return self.name

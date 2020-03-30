@@ -75,7 +75,7 @@ class DjangoApplicationCreator:
         self.site_root = settings.SITE_ROOT
         self.sub_models = settings.SUB_MODEL_DIR
 
-        # check if the settings file has the attribute;
+        # check if the custom_settings file has the attribute;
         # otherwise set the root of the folder as site.root
         if hasattr(settings, 'SCAFFOLD_APPS_DIR'):
             self.site_root = settings.SCAFFOLD_APPS_DIR
@@ -768,7 +768,7 @@ class DjangoApplicationCreator:
 
         try:
             t = Template(
-                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crudbase_html_template.txt')
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crud_base_html_template.txt')
             # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
             buf = StringIO()
             c = mako.runtime.Context(buf, applicationName=app_name)
@@ -786,7 +786,7 @@ class DjangoApplicationCreator:
 
         try:
             t = Template(
-                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crudlist_html_template.txt')
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crud_list_html_template.txt')
             # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
             buf = StringIO()
             c = mako.runtime.Context(buf, applicationName=app_name)
@@ -812,6 +812,24 @@ class DjangoApplicationCreator:
             t.render_context(c)
 
             open(self.site_root + "/" + app_name + "/templates/" + app_name + "/crud_form.html", "w+").write(
+                buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=app_name))
+            raise Exception('creation of blank.html failed: ' + str(e))
+
+
+
+        try:
+            t = Template(
+                filename='applicationManager/templates/applicationManager/applicationFileTemplates/app_crud_delete_html_template.txt')
+            # t = loader.get_template('projectCore/applicationFileTemplates/app_index_html_template.txt')
+            buf = StringIO()
+            c = mako.runtime.Context(buf, applicationName=app_name)
+            t.render_context(c)
+
+            open(self.site_root + "/" + app_name + "/templates/" + app_name + "/crud_delete.html", "w+").write(
                 buf.getvalue())
         except Exception as e:
             logger.fatal("Exception occurred while creating blank.html file : %s", e)
@@ -887,7 +905,7 @@ class DjangoApplicationCreator:
     #     for app_name in app_nameList:
     #         pass
     #         # Application config ile bu islemin yapilmasi durumu imkansiz: Cunku appconfig kullanmak icin
-    #         # app settings dosyasinda olmali ama bu durumda uygulama yeniden basladigi icin tum uygulama akisi
+    #         # app custom_settings dosyasinda olmali ama bu durumda uygulama yeniden basladigi icin tum uygulama akisi
     #         # resetlenmektedir.
     #         # # confName = app_name+'AppConfig'
     #         # print(app_name)
@@ -903,28 +921,28 @@ class DjangoApplicationCreator:
     #     # c = mako.runtime.Context(buf, applist=appConfigs)
     #     # t.render_context(c)
     #
-    #     open(self.site_root + "/" + settings.APPLICATION_NAME + "/urls.py", "w+").write(rendered)
+    #     open(self.site_root + "/" + custom_settings.APPLICATION_NAME + "/urls.py", "w+").write(rendered)
 
-    # Updates only the settings file
+    # Updates only the custom_settings file
     def updateProjectSettingsPy(self):
         try:
-            copyfile(self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py",
-                     self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py." + str(
+            copyfile(self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py",
+                     self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py." + str(
                          datetime.datetime.now().isoformat()))
             appList = Application.objects.all()
-            print("List of applications to be added to the settings file :" + str(appList))
+            print("List of applications to be added to the custom_settings file :" + str(appList))
 
             t = loader.get_template('applicationManager/applicationFileTemplates/project_settings_py.txt')
             c = {'appList': appList}
             rendered = t.render(c)
-            open(self.site_root + "/" + settings.APPLICATION_NAME + "/settings.py", "w+").write(rendered)
+            open(self.site_root + "/" + settings.APPLICATION_NAME + "/custom_settings.py", "w+").write(rendered)
         except  Exception as e:
 
-            logger.fatal("Exception occurred while updating project settings file : %s", e)
+            logger.fatal("Exception occurred while updating project custom_settings file : %s", e)
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                     application=Application.objects.get(
                                                         app_name=self.app.app_name))
-            raise Exception('creation of project settings.py failed: ' + str(e))
+            raise Exception('creation of project custom_settings.py failed: ' + str(e))
 
     def rollback(self):
         logger.error("Rolling back the installation")

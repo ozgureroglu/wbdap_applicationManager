@@ -1,7 +1,7 @@
 import django_rq
 
-from applicationManager.django_rq_jobs import addrq, create_app
-from applicationManager.util.django_project_manager import DjangoProjectManager
+from applicationManager.django_rq_jobs import addrq, create_app, create_project
+from applicationManager.util.django_project_generator import DjangoProjectGenerator
 from applicationManager.util.soft_application_creator import SoftApplicationCreator
 
 
@@ -12,7 +12,7 @@ import logging
 
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \
-    project_metadata_created_signal, project_metadata_removed_signal, project_started, project_stopped, \
+    project_metadata_created_signal,  project_started, project_stopped, \
     application_metadata_created_signal, test_signal, application_files_created_signal
 
 from django.dispatch import receiver
@@ -42,9 +42,9 @@ def application_metadata_created_handler(sender, **kwargs):
 
 # Called when he application is created
 @receiver(project_metadata_created_signal)
-def project_metadata_created(sender, **kwargs):
-    logger.info("project_created signal receieved")
-
+def project_metadata_created_handler(sender, **kwargs):
+    logger.info("project_metadata_created signal receieved")
+    django_rq.enqueue(func=create_project, project=kwargs['project'])
 
     # rqService.get_default_queue
     # q = RQService.get_default_queue()
@@ -57,7 +57,7 @@ def project_metadata_created(sender, **kwargs):
 def project_started(sender, **kwargs):
     logger.info("project_started signal receieved")
 
-    dj_app_creator = DjangoProjectManager(kwargs['project'])
+    dj_app_creator = DjangoProjectGenerator(kwargs['project'])
     dj_app_creator.runServer()
 
 
@@ -66,7 +66,7 @@ def project_started(sender, **kwargs):
 def project_stopped(sender, **kwargs):
     logger.info("project_stopped signal receieved")
 
-    dj_app_creator = DjangoProjectManager(kwargs['project'])
+    dj_app_creator = DjangoProjectGenerator(kwargs['project'])
     dj_app_creator.stopServer()
 
 

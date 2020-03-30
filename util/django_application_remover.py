@@ -81,16 +81,16 @@ class DjangoApplicationRemover:
 
     def updateSettingsFile(self,app_name):
         try:
-            copyfile(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/settings.py", settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/settings.py."+str(datetime.datetime.now().isoformat()))
+            copyfile(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/custom_settings.py", settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/custom_settings.py."+str(datetime.datetime.now().isoformat()))
             appList = Application.objects.all()
-            print("List of applications to be added to the settings file :" + str(appList))
+            print("List of applications to be added to the custom_settings file :" + str(appList))
 
             t = loader.get_template('applicationManager/applicationFileTemplates/project_settings_py.txt')
             c = {'appList': appList}
             rendered = t.render(c)
-            open(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/settings.py", "w+").write(rendered)
+            open(settings.SITE_ROOT + "/" + settings.APPLICATION_NAME + "/custom_settings.py", "w+").write(rendered)
         except  Exception as e:
-            logger.fatal("Exception occurred while updating project settings file : %s", e)
+            logger.fatal("Exception occurred while updating project custom_settings file : %s", e)
             application_creation_failed_signal.send(sender=Application.__class__, test="testString", application=Application.objects.get(app_name=self.application.app_name))
             print(sys.exc_info()[0])
             return False

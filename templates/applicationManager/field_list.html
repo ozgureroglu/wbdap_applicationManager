@@ -1,0 +1,70 @@
+{% extends 'applicationManager/appmodel_list.html' %}
+
+{% block field_list %}
+
+    <!-- Begin Page Content -->
+    <div class="row">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <h4>Fields of {{ model.name | capfirst}}</h4>
+            <a href="{% url 'applicationManager:field-create' app.id model.id%}">
+                <button type="button" class="btn btn-primary  btn-sm"><i class="fas fa-plus"></i> Create Field</button>
+            </a>
+        </div>
+
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-12 col-md-12 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Fields</div>
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters align-items-center">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Field</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Operations</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for field in fields %}
+
+                                <th scope="row">{{ forloop.counter }}</th>
+
+                                <td>
+                                    <a href="{% url 'applicationManager:model-details' app.id model.id %}">{{ field.name }}</a>
+                                </td>
+
+                                <td>
+                                    {{ field.field_type }}
+                                </td>
+                                <td>
+{#                                    <a href="{% url 'applicationManager:field-list' app.id field.id %}">Fields</a>#}
+                                    <a href="{% url 'applicationManager:field-update' app.id model.id field.id%}">Edit</a>
+                                    <a href="{% url 'applicationManager:field-delete' app.id model.id field.id%}">Delete</a>
+                                </td>
+
+                                </tr>
+                            {% empty %}
+                                <li>No fields yet.</li>
+                            {% endfor %}
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <br>
+{% endblock %}

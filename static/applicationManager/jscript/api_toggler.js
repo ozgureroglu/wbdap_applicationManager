@@ -77,8 +77,8 @@ $(document).ready(function () {
 //                    //Kullanici OK verdigi icin soruyu silmek uzere bir ajax post yapalim
 //                    // Lets first setup the ajax request
 //                    $.ajaxSetup({
-//                        beforeSend: function (xhr, settings) {
-//                            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+//                        beforeSend: function (xhr, custom_settings) {
+//                            if (!csrfSafeMethod(custom_settings.type) && sameOrigin(custom_settings.url)) {
 //                                // Send the token to same-origin, relative URLs only.
 //                                // Send the token only if the method warrants CSRF protection
 //                                // Using the CSRFToken value acquired earlier

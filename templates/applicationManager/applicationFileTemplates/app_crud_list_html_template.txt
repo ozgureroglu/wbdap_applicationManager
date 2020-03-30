@@ -1,0 +1,93 @@
+{% extends '${applicationName}/crudbase.html' %}
+{% load static %}
+
+{% block model_obj_list %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ model }} List</h1>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                {% with 'a:create-'|add:model as nurl %}
+                    <a href="{% url nurl %}">
+                        <button type="button" class="btn btn-primary  btn-sm"><i class="fas fa-plus"></i>
+                            Create {{ model }}
+                        </button>
+                    </a>
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12 col-md-12 mb-">
+                {% if model_objects %}
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            {% for mf in model_fields %}
+                                <th scope="col">{{ mf.name | capfirst }}</th>
+                            {% endfor %}
+
+                            <th scope="col">Operations</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for objectdata in model_objects %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ objectdata.id }}</td>
+                                    <td>
+                                        {% with 'a:list-'|add:model as nurl %}
+                                            <a href="{% url nurl %}">{{ objectdata.name }}</a>
+                                         {% endwith %}
+                                    </td>
+                                    <td>
+                                         {% with 'a:list-'|add:model as nurl %}
+                                            <a href="{% url nurl %}">{{ objectdata.description }}</a>
+                                         {% endwith %}
+                                    </td>
+                                    <td>
+                                         {% with 'a:list-'|add:model as nurl %}
+                                            <a href="{% url nurl %}">{{ objectdata.created_at }}</a>
+                                         {% endwith %}
+
+                                    </td>
+                                    <td>
+                                         {% with 'a:update-'|add:model as nurl %}
+                                            <a href="{% url nurl objectdata.id %}">Update</a>
+                                         {% endwith %}
+                                    </td>
+                                    <td>
+                                         {% with 'a:delete-'|add:model as nurl %}
+                                            <a href="{% url nurl objectdata.id %}">Delete</a>
+                                         {% endwith %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    No {{model}} exist.
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    <br>
+
+
+    {% block details %}
+    {% endblock %}
+
+
+    <!-- /.container-fluid -->
+{% endblock %}

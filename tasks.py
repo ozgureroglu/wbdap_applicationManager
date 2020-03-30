@@ -3,7 +3,7 @@ from celery import shared_task
 from django.core import serializers
 
 from applicationManager.models import Application, DjangoProject
-from applicationManager.util.django_project_manager import DjangoProjectManager
+from applicationManager.util.django_project_generator import DjangoProjectGenerator
 from wbdap.celery import app
 
 
@@ -24,21 +24,21 @@ def mul(x, y):
 @shared_task
 def create_django_project(projId):
     djp = DjangoProject.objects.get(id=projId)
-    dpm = DjangoProjectManager(project=djp)
+    dpm = DjangoProjectGenerator(project=djp)
     result = dpm.create()
     return {'result': 'Result of task '+ str(result)}
 
 @shared_task
 def delete_django_project(projId):
     djp = DjangoProject.objects.get(id=projId)
-    dpm = DjangoProjectManager(project=djp)
+    dpm = DjangoProjectGenerator(project=djp)
     result = dpm.create()
     return {'result': 'Result of task '+ str(result)}
 
 @shared_task
 def start_django_project(projId):
     djp = DjangoProject.objects.get(id=projId)
-    dpm = DjangoProjectManager(project=djp)
+    dpm = DjangoProjectGenerator(project=djp)
     result = dpm.runserver()
     return {'result': 'Result of task '+ str(result)}
 

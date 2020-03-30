@@ -1,68 +1,77 @@
-{% extends 'projectCore/startbootstrap-sb-admin-2-gh-pages/sb_admin2_index_template.html' %}
+{% extends 'applicationManager/application_management_page.html' %}
 
-{% block page_content %}
-
-
-
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-        <h2>Model List</h2>
-        <a href="{% url 'applicationManager:model-create' appid %}">
-            <button type="button" class="btn btn-primary  btn-sm"><i class="fas fa-plus"></i> Create model</button>
-        </a>
+{% block app_home_content %}
 
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                {#                {% for mf in appmodels %}#}
-                {#                    <th scope="col">{{ mf.name | capfirst }}</th>#}
-                {#                {% endfor %}#}
-
-                <th scope="col">Models</th>
-                <th scope="col">Operations</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {% for model in appmodels %}
-
-                <th scope="row">{{ forloop.counter }}</th>
-
-                <td>
-                    {% if stat == True %}
-                        Connected
-                    {% else %}
-                        <a href="{% url 'applicationManager:model-details' appid model.id %}">{{ model.name }}</a>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'applicationManager:model-update' appid model.id %}">Edit</a>
-                    <a href="{% url 'applicationManager:model-delete' appid model.id %}">Delete</a>
-                </td>
-
-                </tr>
-            {% empty %}
-                <li>No servers yet.</li>
-            {% endfor %}
-
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-    <br>
+    {% block model_list %}
+        <!-- Begin Page Content -->
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <h2>Model List</h2>
+                <a href="{% url 'applicationManager:model-create' app.id %}">
+                    <button type="button" class="btn btn-primary  btn-sm"><i class="fas fa-plus"></i> Create model
+                    </button>
+                </a>
+            </div>
 
 
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-12 col-md-12 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Models</div>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters align-items-center">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Model</th>
+                                    <th scope="col">Definition</th>
+                                    <th scope="col">Operations</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for model in appmodels %}
+
+                                    <th scope="row">{{ forloop.counter }}</th>
+
+                                    <td>
+                                        <a href="{% url 'applicationManager:model-details' app.id model.id %}">{{ model.name }}</a>
+                                    </td>
+
+                                    <td>
+                                        {{ model.definition }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'applicationManager:field-list' app.id model.id %}">Fields</a>
+                                        <a href="{% url 'applicationManager:model-update' app.id model.id %}">Edit</a>
+                                        <a href="{% url 'applicationManager:model-delete' app.id model.id %}">Delete</a>
+                                    </td>
+
+                                    </tr>
+                                {% empty %}
+                                    <li>No servers yet.</li>
+                                {% endfor %}
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-    {#<ul>#}
-    {#    {% for model in appmodels %}#}
-    {#        <li>{{ model.definition}} </li>#}
-    {#    {% empty %}#}
-    {#        <li>No models yet.</li>#}
-    {#    {% endfor %}#}
-    {#</ul>#}
+        </div>
+    {% endblock %}
+
+    {% block field_list %}
+    {% endblock %}
 
 {% endblock %}
