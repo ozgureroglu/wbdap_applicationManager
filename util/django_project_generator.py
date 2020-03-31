@@ -4,6 +4,7 @@ import subprocess
 import threading
 import os
 import logging
+import psutil
 
 import mako
 from mako.template import Template
@@ -63,7 +64,11 @@ class %(model)s(models.Model):
 #end_%(model)s"""
 
 
+
+allow_read=True
+
 class DjangoProjectGenerator:
+
     def __init__(self, project: DjangoProject):
         # Project object is coming from the database records which holds the metadata of the project
 
@@ -74,6 +79,8 @@ class DjangoProjectGenerator:
         self.sub_models = settings.SUB_MODEL_DIR
         self.project_root_folder = os.path.join(self.site_root, self.project.name)
         self.app_name = "ms"
+
+
 
 
 
@@ -128,27 +135,26 @@ class DjangoProjectGenerator:
             logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.project.name))
             return {'Error': 'Path exists'}
 
+
     def output_reader(self, proc):
+        """
+        Called from the thread started in run server and reads and prints the output for
+        this threaded django instance.
+        """
         print('output reader thread started')
-        while True:
-            # print("reading a line")
+        global allow_read
+        while allow_read:
+
             nextline = proc.stdout.readline()
-            if nextline != '':
-                print('got line from outq: {0}\n'.format(nextline), end='')
-            # if nextline != '':
-                # outq.put(nextline.decode('utf-8'))
-
-        # for line in iter(proc.stdout.readline, b''):
-        #     outq.put(line.decode('utf-8'))
-
+            if nextline != '' and nextline != b'':
+                print('got line from output: {0}\n'.format(nextline), end='')
 
 
     def runServer(self):
         if settings.DEBUG:
             # call_command ile cagrilamaz.
             wd = os.getcwd()
-            print(wd)
-            os.chdir(self.project.name)
+            os.chdir(os.path.join(settings.SCAFFOLD_DPRJ_DIR, self.project.name))
 
             cwd = os.getcwd()
             print(cwd)
@@ -160,36 +166,22 @@ class DjangoProjectGenerator:
             # ancak env bos verilince DJANGO_SETTINGS_MODULE
             # env var processi calistiran env den alinmamis oluyor.
             process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={})
-            self.project.pid = process.pid
+
+            comm = "pgrep -f {}".format(self.project.name)
+            bpids = subprocess.check_output(comm, shell=True)
+
+            pids = bpids.decode("utf-8").rstrip("\n").split("\n")
+
+            ipids = [int(i) for i in pids]
+
+            self.project.pids = ipids
             self.project.save()
 
+            global allow_read
+            allow_read = True
 
-            print(process.pid)
             t = threading.Thread(target=self.output_reader, args=(process,))
             t.start()
-
-            # try:
-            #         try:
-            #             line = outq.get(block=False)
-            #             print('got line from outq: {0}'.format(line), end='')
-            #         except queue.Empty:
-            #             print('could not get line from queue')
-            #         time.sleep(0.1)
-            # finally:
-            #     try:
-            #         process.wait(timeout=0.2)
-            #         print('== subprocess exited with rc =', process.returncode)
-            #     except subprocess.TimeoutExpired:
-            #         print('subprocess still running')
-            # # t.join()
-
-
-            # for line in output.read():
-            #     print(line.strip())
-
-            self.project.pid = process.pid
-            # self.project.status = True
-            # self.project.save()
 
             os.chdir(wd)
             # call_command('runserver', self.application.port)
@@ -199,7 +191,15 @@ class DjangoProjectGenerator:
     def stopServer(self):
         """ Check For the existence of a unix pid. """
         try:
-            os.kill(self.project.pid, 0)
+            global allow_read
+            allow_read = False
+            for i in self.project.pids.strip('][').split(', '):
+
+                cmd = "pkill -P {}".format(int(i))
+                print(subprocess.check_output(cmd, shell=True))
+            self.project.pids=[]
+            self.project.save()
+
         except OSError:
             return False
         else:

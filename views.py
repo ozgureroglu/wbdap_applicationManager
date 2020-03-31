@@ -38,7 +38,7 @@ from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
 from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
     UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4, \
-    CreateProjectForm, ProjectCreateForm1, ProjectCreateForm2
+    CreateProjectForm, ProjectCreateForm1, ProjectCreateForm2, ProjectCreateForm3
 from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
     ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate, DjangoProject
 
@@ -310,10 +310,8 @@ def deleteProject(request, id):
                          headers={'Authorization': 'Token ' + token.__str__()})
 
     if resp.status_code == 200 or resp.status_code == 204:
-        print('api returned 200')
         messages.info(request, "Project deletion returned success")
     else:
-        print('api returned '+str(resp.status_code))
         messages.error(request, "Project creation failed with code: "+str(resp.status_code))
 
     return redirect('applicationManager:projects')
@@ -1530,14 +1528,15 @@ TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
 # Hangi formun hangi model alanlari veya icerik alanlari hakkinda bilgi
 # alacagi burada belirtilen form siniflari ile belirleniyor.
 PROJECT_FORMS = [("Basic Info", ProjectCreateForm1),
-                 ("UI Libs", ProjectCreateForm2),
+                 ("Sample Application", ProjectCreateForm2),
+                 ("Sample Application Details", ProjectCreateForm3),
                  ]
 
 # Bu kisim fieldleri belirlenmis olan form siniflarinin visual olarak hangi
 # template ile render edilecegini belirliyor.
 PROJECT_TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
-             "UI Libs": "applicationManager/forms/formpage.html",
-             "Description": "applicationManager/forms/formpage.html",
+             "Sample Application": "applicationManager/forms/formpage.html",
+             "Sample Application Details": "applicationManager/forms/formpage.html",
              "Default Pages": "applicationManager/forms/formpage.html",
              }
 
@@ -1564,7 +1563,8 @@ class ProjectCreateWizard(SessionWizardView):
 
         # Tum form adimlari submit edildiginde
         basic_info_data = form_dict['Basic Info'].cleaned_data
-        ui_libs_data = form_dict['UI Libs'].cleaned_data
+        sample_app_data = form_dict['Sample Application'].cleaned_data
+        sample_app_details_data = form_dict['Sample Application Details'].cleaned_data
 
         project = DjangoProject(  # Zorunlu alanlar
             name=basic_info_data['name'],
@@ -1575,8 +1575,12 @@ class ProjectCreateWizard(SessionWizardView):
 
         project.save()
 
+        data={}
+        data['sample_app_data'] =sample_app_data
+        data['sample_app_details_data'] = sample_app_details_data
+
         project_metadata_created_signal.send(sender=DjangoProject.__class__, test="testString",
-                                             project=project)
+                                             project=project, data=data)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:projects'))
 

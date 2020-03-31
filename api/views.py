@@ -1,4 +1,8 @@
 # Create your views here.
+import os
+import shutil
+
+from django.conf import settings
 from rest_framework import filters, viewsets, status
 from rest_framework.generics import (
     CreateAPIView,
@@ -26,6 +30,7 @@ from projectCore.datatable_viewset import ModifiedViewSet
 import logging
 
 from applicationManager.tasks import start_django_project
+
 
 logger = logging.getLogger("api.views")
 
@@ -101,6 +106,12 @@ class DjangoProjectUpdateAPIView(RetrieveUpdateAPIView):
 class DjangoProjectDeleteAPIView(DestroyAPIView):
     queryset = DjangoProject.objects.all()
     serializer_class = DjangoProjectDetailSerializer
+
+    def delete(self, request, *args, **kwargs):
+        name = DjangoProject.objects.get(id=self.kwargs['pk']).name
+        shutil.rmtree(os.path.join(settings.SCAFFOLD_DPRJ_DIR, name))
+        return super().delete(request, *args, **kwargs)
+
     # Asagidakileri degistirince urls icinde de abc pattern ile search yapilmasi gerekir
     # lookup_field = 'slug'
     # lookup_url_kwarg = 'abc'

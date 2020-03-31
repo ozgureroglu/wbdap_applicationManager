@@ -1,3 +1,5 @@
+import random
+
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Reset, Button, HTML
@@ -165,19 +167,34 @@ class ProjectCreateForm1(ModelForm):
         # self.helper.label_class = 'text-center col-lg-4'
         # self.helper.field_class = 'col-lg-8'
 
+        # set initial value to a modelform field
+        initial = kwargs.pop('initial', {})
+
+        initial['port'] = random.randint(1000, 10000)
+        kwargs['initial'] = initial
+
         super(ProjectCreateForm1, self).__init__(*args, **kwargs)
 
     class Meta:
         model = DjangoProject
-        exclude = ['pid', 'status', ]
+        fields = ['name', 'port', 'description']
+        # exclude = ['pid', 'status', ]
 
 
 
 class ProjectCreateForm2(ModelForm):
-    form_desc = "test form desc2"
+    form_desc = "Enable a sample application"
     class Meta:
-        fields = ['port']
+        fields = ['sample_app']
         model = DjangoProject
+
+
+class ProjectCreateForm3(ModelForm):
+    form_desc = "Enter the details for the sample application"
+    class Meta:
+        fields = ['enable_drf_api','enable_messages']
+        model = DjangoProject
+
 
 
 class ApplicationCreateForm1(ModelForm):

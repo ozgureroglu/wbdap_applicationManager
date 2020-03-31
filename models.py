@@ -3,8 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
 from ckeditor.fields import RichTextField
-from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.core.validators import MaxValueValidator, MinValueValidator, validate_comma_separated_integer_list
 
 import logging
 
@@ -47,7 +46,11 @@ class DjangoProject(models.Model):
     port = models.IntegerField(null=False, blank=False, validators=[MaxValueValidator(10000), MinValueValidator(1000)])
     status = models.BooleanField(default=False, null=False, blank=False)
     description = models.TextField(max_length=400)
-    pid = models.IntegerField(null=True, blank=False)
+    pids = models.CharField(null=True, blank=False, max_length=50, validators=[validate_comma_separated_integer_list])
+    sample_app = models.BooleanField(blank=False,null=False, default=True,  verbose_name="Create Sample Application")
+    enable_messages = models.BooleanField(blank=False, null=False, default=True, verbose_name="Enable Messages Framework for Application")
+    enable_drf_api = models.BooleanField(blank=False, null=False, default=True,
+                                          verbose_name="Enable DRF for Application")
 
     def __str__(self):
         return self.name
@@ -58,7 +61,7 @@ class DjangoProject(models.Model):
 
 @admin.register(DjangoProject)
 class DjangoProjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'port', 'status', 'pid')
+    list_display = ('name', 'port', 'status', 'pids')
 
 
 class Application(models.Model):

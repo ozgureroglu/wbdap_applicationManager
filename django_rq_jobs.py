@@ -29,14 +29,18 @@ def create_app(app):
 create_app.delay()
 
 
-
 # Job nesnesi icin alinabilecek parametreler icin RQ dokumanlarina bak.
 @job(func_or_queue='default', failure_ttl=20)
-def create_project(project):
+def create_project(project, data):
     """Method will either return True or False. It will not propagate the exceptions for now """
+
     generator = DjangoProjectGenerator(project)
     try:
         generator.create()
+        print(data.__class__)
+        print(data)
+
+        print(data.get('sample_app_details_data'))
         return True
     except Exception as e:
         # TODO : Change what you do depending on the exception

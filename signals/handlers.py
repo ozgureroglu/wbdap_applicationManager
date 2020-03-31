@@ -44,7 +44,7 @@ def application_metadata_created_handler(sender, **kwargs):
 @receiver(project_metadata_created_signal)
 def project_metadata_created_handler(sender, **kwargs):
     logger.info("project_metadata_created signal receieved")
-    django_rq.enqueue(func=create_project, project=kwargs['project'])
+    django_rq.enqueue(func=create_project, kwargs={'project': kwargs['project'], 'data': kwargs['data']})
 
     # rqService.get_default_queue
     # q = RQService.get_default_queue()
