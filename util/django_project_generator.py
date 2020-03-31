@@ -165,6 +165,7 @@ class DjangoProjectGenerator:
             # Asagidaki popen'a python verildiginde virtual env tanimlanmis oluyor,
             # ancak env bos verilince DJANGO_SETTINGS_MODULE
             # env var processi calistiran env den alinmamis oluyor.
+            logger.info("Starting project ...")
             process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={})
 
             comm = "pgrep -f {}".format(self.project.name)
@@ -175,6 +176,7 @@ class DjangoProjectGenerator:
             ipids = [int(i) for i in pids]
 
             self.project.pids = ipids
+            self.project.status = 1
             self.project.save()
 
             global allow_read
@@ -190,14 +192,18 @@ class DjangoProjectGenerator:
 
     def stopServer(self):
         """ Check For the existence of a unix pid. """
+        logger.info("Stopping project ...")
         try:
             global allow_read
             allow_read = False
             for i in self.project.pids.strip('][').split(', '):
 
-                cmd = "pkill -P {}".format(int(i))
-                print(subprocess.check_output(cmd, shell=True))
-            self.project.pids=[]
+                if psutil.pid_exists(int(i)):
+                    cmd = "pkill -P {}".format(int(i))
+                    print(subprocess.check_output(cmd, shell=True))
+
+            self.project.pids=None
+            self.project.status = 0
             self.project.save()
 
         except OSError:

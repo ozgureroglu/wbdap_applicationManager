@@ -56,7 +56,7 @@
                         {% for django_project in all_projects %}
                             <tr>
                                 <td>
-                                    <a href="">
+                                    <a href="http://localhost:{{ django_project.port }}">
                                         {{ django_project.name |capfirst }}
                                     </a>
                                 </td>
