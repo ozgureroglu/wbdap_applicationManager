@@ -26,6 +26,11 @@
                         </div>
 
                         <div class="row no-gutters align-items-center">
+
+                        {% if not appmodels %}
+                            No models
+                        {% else %}
+
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -55,13 +60,13 @@
                                     </td>
 
                                     </tr>
-                                {% empty %}
-                                    <li>No servers yet.</li>
                                 {% endfor %}
 
                                 </tr>
                                 </tbody>
                             </table>
+                        {% endif %}
+
                         </div>
                     </div>
                 </div>

@@ -36,10 +36,12 @@ from django.urls.resolvers import RegexPattern, get_resolver, URLPattern
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
 from django.views.generic.edit import DeleteView
 from django.conf.urls import include, url
-from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, CreateFieldForm, \
-    UpdateFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm3, ApplicationCreateForm4, \
-    CreateProjectForm, ProjectCreateForm1, ProjectCreateForm2, ProjectCreateForm3
-from applicationManager.models import Application, AppModel, Field, ApplicationLayout, \
+from applicationManager.forms import AddApplicationModelForm, CreateApplicationForm, CreateModelForm, \
+    CreateAppModelFieldForm, ModelFormSet, FieldFormSet, \
+    UpdateAppModelFieldForm, ApplicationCreateForm1, ApplicationCreateForm2, ApplicationCreateForm2, \
+    ApplicationCreateForm4, \
+    CreateProjectForm, ProjectCreateForm1, ProjectCreateForm2, ProjectCreateForm3, ApplicationCreateForm3
+from applicationManager.models import Application, AppModel, AppModelField, ApplicationLayout, \
     ApplicationPage, ApplicationUrl, ApplicationSettings, ApplicationView, ApplicationComponentTemplate, DjangoProject
 
 from applicationManager.util.data_dump import dump_selected_application_data, dump_application_data, \
@@ -51,7 +53,6 @@ from applicationManager.signals.signals import application_created_signal, appli
     project_metadata_removed_signal, test_signal, application_metadata_created_signal
 from django.db import transaction
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-
 
 logger = logging.getLogger("wbdap.debug")
 # cache ttl for redis
@@ -83,6 +84,7 @@ def dashboard(request):
                   'applicationManager/dashboard.html', {'user': request.user, 'all_apps': applications}
                   )
 
+
 # Sayfanin cache uzerinden sunulmasini saglayan dekorator; ayarlari custom_settings icinde yapiliyor.
 # @cache_page(CACHE_TTL)
 @login_required
@@ -109,6 +111,7 @@ def projects(request):
                   'applicationManager/projects.html', {'user': request.user, 'all_projects': djangoProjects}
                   )
 
+
 @login_required
 def memcache_test(request):
     # from django.conf import custom_settings
@@ -118,9 +121,9 @@ def memcache_test(request):
     print(caches.__getitem__('memcached'))
     memcached = caches.__getitem__('memcached')
 
-    cache_key = 'my_unique_key' # needs to be unique
-    cache_time = 86400 # time in seconds for cache to be valid
-    data = memcached.get(cache_key) # returns None if no key-value pair
+    cache_key = 'my_unique_key'  # needs to be unique
+    cache_time = 86400  # time in seconds for cache to be valid
+    data = memcached.get(cache_key)  # returns None if no key-value pair
 
     if not data:
         # my_service = Service()
@@ -129,8 +132,8 @@ def memcache_test(request):
 
     memcached.set(cache_key, data, cache_time)
     return render(request,
-                      'applicationManager/dashboard.html',
-                      )
+                  'applicationManager/dashboard.html',
+                  )
 
 
 @login_required
@@ -276,13 +279,12 @@ def createApplication(request):
         )
 
 
-
 @login_required
 @require_http_methods(["POST"])
 def start_project(request, id):
     token, created = Token.objects.get_or_create(user=request.user)
 
-    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/start/',
+    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/' + str(id) + '/start/',
                          headers={'Authorization': 'Token ' + token.__str__()})
 
     print(resp)
@@ -294,25 +296,24 @@ def start_project(request, id):
 def stop_project(request, id):
     token, created = Token.objects.get_or_create(user=request.user)
 
-    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/stop/',
+    resp = requests.post('http://localhost:8000/api/v1/applicationManager/djangoproject/' + str(id) + '/stop/',
                          headers={'Authorization': 'Token ' + token.__str__()})
 
     print(resp)
     return redirect('applicationManager:projects')
 
 
-
 @login_required
 def deleteProject(request, id):
     token, created = Token.objects.get_or_create(user=request.user)
 
-    resp = requests.delete('http://localhost:8000/api/v1/applicationManager/djangoproject/'+str(id)+'/delete/',
-                         headers={'Authorization': 'Token ' + token.__str__()})
+    resp = requests.delete('http://localhost:8000/api/v1/applicationManager/djangoproject/' + str(id) + '/delete/',
+                           headers={'Authorization': 'Token ' + token.__str__()})
 
     if resp.status_code == 200 or resp.status_code == 204:
         messages.info(request, "Project deletion returned success")
     else:
-        messages.error(request, "Project creation failed with code: "+str(resp.status_code))
+        messages.error(request, "Project creation failed with code: " + str(resp.status_code))
 
     return redirect('applicationManager:projects')
 
@@ -332,7 +333,7 @@ def create_project(request):
 
             resp = requests.post('http://wbdap:8000/api/v1/applicationManager/djangoproject/create/',
                                  form.data,
-                                 headers={'Authorization': 'Token '+token.__str__()})
+                                 headers={'Authorization': 'Token ' + token.__str__()})
             print(resp)
             # logger.info("Form is valid")
             # project = form.save(commit=False)
@@ -364,7 +365,6 @@ def create_project(request):
             'applicationManager/createProject.html',
             variables
         )
-
 
 
 @login_required
@@ -448,7 +448,7 @@ def application_details(request, appid):
 @login_required
 def generate_data(request, appid):
     pass
-    return redirect('applicationManager:applications')
+    return redirect('applicationManager:application-data', id=appid)
 
 
 @login_required
@@ -477,7 +477,7 @@ def load_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Load of application data (" + app.app_name + ") has failed.")
-    return redirect('applicationManager:applications')
+    return redirect('applicationManager:application-data', id=id)
 
 
 @login_required
@@ -495,7 +495,7 @@ def dump_app_data(request, id):
     else:
         messages.add_message(request, messages.WARNING,
                              "Dumping of application data(" + app.app_name + ") has been failed")
-    return redirect('applicationManager:applications')
+    return redirect('applicationManager:application-data', id=id)
 
 
 #
@@ -529,6 +529,22 @@ def dump_app_data(request, id):
 def create_file(request, id):
     return render(request,
                   'applicationManager/create_file.html'
+                  )
+
+@login_required
+def application_danger_zone(request, id):
+    app = Application.objects.get(id=id)
+    return render(request,
+                  'applicationManager/application_danger_zone.html',
+                  {'app':app}
+                  )
+
+@login_required
+def application_data(request, id):
+    app = Application.objects.get(id=id)
+    return render(request,
+                  'applicationManager/application_data.html',
+                  {'app': app}
                   )
 
 
@@ -763,7 +779,9 @@ def reload_urlconf(urlconf=None):
 
 
 def getAppNameListByAppsPy():
-    # def test(request):
+    """
+    Get application name list from the folders of the applications
+    """
     appNameList = []
     for file in os.listdir():
         if os.path.isdir(file):
@@ -771,7 +789,7 @@ def getAppNameListByAppsPy():
                 if os.path.exists(file + '/apps.py'):
                     appNameList.append(file)
 
-    return HttpResponse(status='200')
+    return appNameList
 
 
 # Serialize all apllication data to a json file for using as DBbackup
@@ -845,23 +863,34 @@ def updateAppsDBWoAppConfig():
 
 
 def updateAppsDB(request):
+    context = {}
     appNameList = getAppNameListByAppsPy()
 
     appsDbData = Application.objects.all()
     appsDbData.delete()
 
+    done=[]
     for appName in appNameList:
-        appConf = apps.get_app_config(appName)
-        app = Application()
-        app.appName = appConf.appName
-        app.verbose_name = appConf.verbose_name
-        app.namedUrl = appConf.namedUrl
-        app.description = appConf.readmeContent
-        app.url = appConf.url
-        app.active = appConf.active
-        app.owner_id = 1
-        app.core_app = 1
-        app.save()
+        print(appName)
+        try:
+            appConf = apps.get_app_config(appName)
+            app = Application()
+            app.app_name = appConf.appName
+            app.verbose_name = appConf.verbose_name
+            app.namedUrl = appConf.namedUrl
+            app.description = appConf.readmeContent
+            app.url = appConf.url
+            app.active = appConf.active
+            app.owner_id = 1
+            app.core_app = 1
+            app.uuid = uuid.uuid4()
+            app.save()
+            done.append(app)
+        except LookupError:
+            logger.warning("Lookuperror")
+
+    context['appconfs']=done
+    return render(request, 'applicationManager/updateAppsDB.html', context=context)
 
 
 @require_POST
@@ -909,14 +938,12 @@ def application_management_page(request, id):
                    })
 
 
-
 @login_required
 def project_management_page(request, id):
     if request.POST:
         logger.info('received post')
 
     prj = DjangoProject.objects.get(id=id)
-
 
     # models = app_config.get_models()
     # pages = ApplicationPage.objects.filter(app_id=id)
@@ -929,6 +956,30 @@ def project_management_page(request, id):
     # model_form.helper.form_action = reverse("applicationManager:model-create", kwargs={'id': id})
 
     return render(request, 'applicationManager/project_management_page.html',
+                  {'app_form': CreateApplicationForm,
+                   'app': prj,
+                   # 'models': models,
+                   # 'pages': pages,
+                   # 'appsettings': ApplicationSettings.objects.filter(app_id=id)
+                   })
+
+
+@login_required
+def project_danger_zone(request, id):
+    prj = DjangoProject.objects.get(id=id)
+    return render(request, 'applicationManager/project_danger_zone.html',
+                  {'app_form': CreateApplicationForm,
+                   'app': prj,
+                   # 'models': models,
+                   # 'pages': pages,
+                   # 'appsettings': ApplicationSettings.objects.filter(app_id=id)
+                   })
+
+
+@login_required
+def sample_app_tab(request, id):
+    prj = DjangoProject.objects.get(id=id)
+    return render(request, 'applicationManager/sample_app_tab.html',
                   {'app_form': CreateApplicationForm,
                    'app': prj,
                    # 'models': models,
@@ -966,7 +1017,6 @@ class AppModelCreateView(LoginRequiredMixin, CreateView):
         context['appid'] = self.kwargs['id']
         return context
 
-
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.helper = FormHelper()
@@ -977,7 +1027,7 @@ class AppModelCreateView(LoginRequiredMixin, CreateView):
         return form
 
     def get_success_url(self):
-        success_url = reverse_lazy('applicationManager:model-list', kwargs={'id':self.kwargs['id']})
+        success_url = reverse_lazy('applicationManager:model-list', kwargs={'id': self.kwargs['id']})
         print(success_url)
         return success_url
 
@@ -988,9 +1038,8 @@ class AppModelDeleteView(LoginRequiredMixin, DeleteView):
     slug_field = "id"
     slug_url_kwarg = "model_id"
 
-
     def get_success_url(self):
-        success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
+        success_url = reverse_lazy('applicationManager:model-list', kwargs={'id': self.kwargs['id']})
         return success_url
 
     def get_context_data(self, **kwargs):
@@ -1005,17 +1054,14 @@ class AppModelUpdateView(LoginRequiredMixin, UpdateView):
     slug_url_kwarg = "model_id"
     fields = '__all__'
 
-
     def get_success_url(self):
-        success_url = reverse_lazy('applicationManager:model-list',  kwargs={'id':self.kwargs['id']})
+        success_url = reverse_lazy('applicationManager:model-list', kwargs={'id': self.kwargs['id']})
         return success_url
-
 
     def get_context_data(self, **kwargs):
         context = super(AppModelUpdateView, self).get_context_data(**kwargs)
         context['app'] = Application.objects.get(id=self.kwargs['id'])
         return context
-
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -1133,11 +1179,6 @@ class ApplicationUpdate(UpdateView):
 #     pass
 
 
-
-
-
-
-
 class ModelCreateView(LoginRequiredMixin, CreateView):
     model = AppModel
     form_class = CreateModelForm
@@ -1170,15 +1211,16 @@ class ModelCreateView(LoginRequiredMixin, CreateView):
         context['model_form'] = self.get_form()
         return context
 
+
 class FieldListView(LoginRequiredMixin, ListView):
-    model = Field
+    model = AppModelField
     http_method_names = ['get']
     context_object_name = 'fields'
 
     # Bu metodu override etme sebebi donecek olan object listesini degistirmek ve
     # sadece modele ait olanlari donmek
     def get_queryset(self):
-        queryset = Field.objects.filter(owner_model=self.kwargs['model_id'])
+        queryset = AppModelField.objects.filter(owner_model=self.kwargs['model_id'])
         return queryset
 
     # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
@@ -1191,7 +1233,7 @@ class FieldListView(LoginRequiredMixin, ListView):
 
 
 class FieldCreateView(LoginRequiredMixin, CreateView):
-    model = Field
+    model = AppModelField
     fields = '__all__'
     context_object_name = 'fields'
 
@@ -1222,14 +1264,8 @@ class FieldCreateView(LoginRequiredMixin, CreateView):
         return form
 
 
-
-
-
-
-
-
 class FieldDetailView(JSONResponseMixin, DetailView):
-    model = Field
+    model = AppModelField
     http_method_names = ['get']
     slug_field = "id"
     slug_url_kwarg = "field_id"
@@ -1245,7 +1281,7 @@ class FieldDetailView(JSONResponseMixin, DetailView):
 
 
 class FieldUpdateView(UpdateView):
-    model = Field
+    model = AppModelField
     slug_field = "id"
     slug_url_kwarg = "field_id"
     fields = '__all__'
@@ -1265,37 +1301,41 @@ class FieldUpdateView(UpdateView):
         return context
 
 
-
-
-
-
-
-class ModelDelete(DeleteView):
-    model = AppModel
-
-    # success_url = reverse_lazy('applicationManager:model-list')
-
-    def get_success_url(self):
-        print(self.kwargs['id'])
-        # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
-        print(self.success_url)
-        return super(ModelDelete, self).get_success_url()
-
-
 class FieldDeleteView(DeleteView):
     '''Delete the given field'''
-    model = Field
+    model = AppModelField
+    slug_field = "id"
+    slug_url_kwarg = "field_id"
 
     def get_success_url(self):
-        # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
-        # self.success_url = reverse('applicationManager:field-list',
-        #                            kwargs={'app_id': self.kwargs['app_id'], 'model_id': self.kwargs['model_id']})
+        success_url = reverse_lazy('applicationManager:field-list', kwargs={'id': self.kwargs['id'], 'model_id':self.kwargs['model_id']})
+        return success_url
 
-        self.success_url = reverse('applicationManager:application-management-page',
-                                   kwargs={'id': self.kwargs['app_id']})
-        print(self.success_url)
-        return super(FieldDeleteView, self).get_success_url()
+    # Asagidaki metodu override etme sebebi template icinde gerekli olan bazi parameterelleri contexte eklemek
+    def get_context_data(self, **kwargs):
+        context = super(FieldDeleteView, self).get_context_data(**kwargs)
+        context['appmodels'] = AppModel.objects.all()
+        context['model'] = AppModel.objects.get(id=self.kwargs['model_id'])
+        context['app'] = Application.objects.get(id=self.kwargs['id'])
+        return context
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def add_application_model(request, pk):
@@ -1326,6 +1366,19 @@ def download_app(request, id):
             arcname=os.path.basename(os.path.join(settings.SITE_ROOT, app.app_name)))
     tar.close()
     return response
+
+
+class ModelDelete(DeleteView):
+    model = AppModel
+
+    # success_url = reverse_lazy('applicationManager:model-list')
+
+    def get_success_url(self):
+        print(self.kwargs['id'])
+        # Asagidaki bize path donmeli ve bu path icinde id yerine self.kwargs degerini kullaniyor olmali
+        self.success_url = reverse('applicationManager:application-management-page', kwargs={'id': self.kwargs['id']})
+        print(self.success_url)
+        return super(ModelDelete, self).get_success_url()
 
 
 @login_required
@@ -1512,17 +1565,14 @@ def editors(request):
     return render(request, 'applicationManager/draganddropedit.html')
 
 
-FORMS = [("Basic Info", ApplicationCreateForm1),
-         ("Description", ApplicationCreateForm4),
-         ("UI Libs", ApplicationCreateForm2),
-         ("Default Pages", ApplicationCreateForm3),
+FORMS = [("step1", ApplicationCreateForm1),
+         ("step2", ApplicationCreateForm2),
+         ("step3", ApplicationCreateForm3),
          ]
 
-
-TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
-             "UI Libs": "applicationManager/forms/formpage.html",
-             "Description": "applicationManager/forms/formpage.html",
-             "Default Pages": "applicationManager/forms/formpage.html",
+TEMPLATES = {"step1": "applicationManager/forms/formpage.html",
+             "step2": "applicationManager/forms/formpage.html",
+             "step3": "applicationManager/forms/formpage.html",
              }
 
 # Hangi formun hangi model alanlari veya icerik alanlari hakkinda bilgi
@@ -1535,10 +1585,10 @@ PROJECT_FORMS = [("Basic Info", ProjectCreateForm1),
 # Bu kisim fieldleri belirlenmis olan form siniflarinin visual olarak hangi
 # template ile render edilecegini belirliyor.
 PROJECT_TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
-             "Sample Application": "applicationManager/forms/formpage.html",
-             "Sample Application Details": "applicationManager/forms/formpage.html",
-             "Default Pages": "applicationManager/forms/formpage.html",
-             }
+                     "Sample Application": "applicationManager/forms/formpage.html",
+                     "Sample Application Details": "applicationManager/forms/formpage.html",
+                     "Default Pages": "applicationManager/forms/formpage.html",
+                     }
 
 
 # Wizard sinifi hangi adimlarda hangi form adimlarini belirleyen, submit edilen veri
@@ -1560,7 +1610,6 @@ class ProjectCreateWizard(SessionWizardView):
 
     @transaction.atomic
     def done(self, form_list, form_dict, **kwargs):
-
         # Tum form adimlari submit edildiginde
         basic_info_data = form_dict['Basic Info'].cleaned_data
         sample_app_data = form_dict['Sample Application'].cleaned_data
@@ -1570,13 +1619,13 @@ class ProjectCreateWizard(SessionWizardView):
             name=basic_info_data['name'],
             port=basic_info_data['port'],
             description=basic_info_data['description'],
-            pid=None
+            pids=None
         )
 
         project.save()
 
-        data={}
-        data['sample_app_data'] =sample_app_data
+        data = {}
+        data['sample_app_data'] = sample_app_data
         data['sample_app_details_data'] = sample_app_details_data
 
         project_metadata_created_signal.send(sender=DjangoProject.__class__, test="testString",
@@ -1593,23 +1642,42 @@ class ApplicationCreateWizard(SessionWizardView):
 
     def get_context_data(self, form, **kwargs):
         context = super(ApplicationCreateWizard, self).get_context_data(form=form, **kwargs)
-        if self.steps.current == 'layout':
-            context.update({'layouts': ApplicationLayout.objects.all()})
+        if self.steps.current == 'step2':
+            context.update({'step2': ApplicationLayout.objects.all()})
             print(context)
         return context
+
+    def get_form(self, step=None, data=None, files=None):
+        form = super().get_form(step, data, files)
+
+        if step is "step2":
+            print(form)
+        return form
+
+    # def get_form_instance(self, step):
+    #     """
+    #     This method will be called only if a ModelForm is used as the form for step step.
+    #     Returns an Model object which will be passed as the instance argument
+    #     when instantiating the ModelForm for step step.
+    #     """
+    #     if step == u'step2':
+    #         # form = formset(queryset)
+    #         return AppModel.objects.none()
+    #     return super().get_form_instance(step)
 
     @transaction.atomic
     def done(self, form_list, form_dict, **kwargs):
         # form_data= [form.cleaned_data for form in form_list]
         # print(form_data)
         # print(form_data[0])
-        basic_info_data = form_dict['Basic Info'].cleaned_data
-        ui_libs_data = form_dict['UI Libs'].cleaned_data
-        description_info_data = form_dict['Description'].cleaned_data
-        default_pages_data = form_dict['Default Pages'].cleaned_data
+        basic_info_data = form_dict['step1'].cleaned_data
+        default_pages = form_dict['step2'].cleaned_data
+        default_libs = form_dict['step3'].cleaned_data
+
+        
         app = Application(  # Zorunlu alanlar
             app_name=basic_info_data['app_name'],
-            description= description_info_data['description'],
+            description=basic_info_data['description'],
             verbose_name=basic_info_data['verbose_name'],
             active=basic_info_data['active'],
             core_app=basic_info_data['core_app'],
@@ -1624,7 +1692,7 @@ class ApplicationCreateWizard(SessionWizardView):
         app.save()
 
         application_metadata_created_signal.send(sender=Application.__class__, test="testString",
-                                             application=app)
+                                                 application=app)
         # Following redirection done only after the last commit
         return HttpResponseRedirect(reverse('applicationManager:applications'))
 

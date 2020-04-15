@@ -35,8 +35,24 @@ def create_project(project, data):
     """Method will either return True or False. It will not propagate the exceptions for now """
 
     generator = DjangoProjectGenerator(project)
+    sample_app_data = data.get('sample_app_data')
+    sample_app_details_data = data.get('sample_app_details_data')
+
+
     try:
         generator.create()
+
+        print(sample_app_data.get('sample_app'))
+        print(sample_app_data.get('sample_app').__class__)
+
+        if sample_app_data.get('sample_app'):
+            generator.run_all_steps()
+
+
+
+        if sample_app_details_data.get('enable_drf_api'):
+            print("I will generate api")
+
         print(data.__class__)
         print(data)
 

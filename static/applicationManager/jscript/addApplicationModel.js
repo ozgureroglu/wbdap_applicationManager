@@ -58,7 +58,7 @@ $(document).ready(function () {
         remove.appendChild(span);
 
         // Add some text to the new cells:
-        cell1.innerHTML = "Field: ";
+        cell1.innerHTML = "AppModelField: ";
         // cell2.innerHTML = row;
         cell2.appendChild(input);
         cell3.appendChild(select);

@@ -13,6 +13,7 @@
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
+
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">{{ app.verbose_name | upper }}</h1>
@@ -29,8 +30,8 @@
                     Home</a>
                 <a class="nav-link active" href="{% url 'applicationManager:model-list' app.id %}">Models</a>
                 <a class="nav-link" href="#">Views</a>
-                <a class="nav-link" href="#">Link</a>
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link" href="{% url 'applicationManager:application-data' app.id %}">Data</a>
+                <a class="nav-link" href="{% url 'applicationManager:application-danger-zone'  app.id %}">Danger Zone</a>
             </nav>
         </div>
         <hr>
@@ -42,10 +43,7 @@
                     <input type="checkbox" checked data-toggle="toggle" data-on="Stop" data-off="Start"
                            data-onstyle="success" data-offstyle="danger">
                 </div>
-
             </div>
-
-
 
             <div class="row" id="app_info_and_controls">
 

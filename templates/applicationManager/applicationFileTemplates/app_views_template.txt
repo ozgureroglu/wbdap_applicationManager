@@ -37,7 +37,7 @@ def examplepage3(request):
 
 {% for model in models %}
 
-def signal_test(request):
+def signal_test_{{model|capfirst}}(request):
     {{applicationName}}_sample_signal.send(sender={{model|capfirst}}.__class__, test_message="testString",model= {{model}}.objects.get(name='name'))
     return render(request, '{{applicationName}}/dashboard.html')
 

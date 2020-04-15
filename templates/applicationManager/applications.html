@@ -33,9 +33,9 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Name</th>
-                            <th>Core App</th>
                             <th>Owner</th>
+                            <th>Core App</th>
+                            <th>Published</th>
                             <th>Active</th>
                             <th>Operations</th>
                         </tr>
@@ -43,9 +43,9 @@
                         <tfoot>
                         <tr>
                             <th>Name</th>
-                            <th>Name</th>
-                            <th>Core App</th>
                             <th>Owner</th>
+                            <th>Core App</th>
+                            <th>Published</th>
                             <th>Active</th>
                             <th>Operations</th>
                         </tr>
@@ -58,14 +58,20 @@
                                     {{ app.app_name |capfirst }}
                                         </a>
                                 </td>
-                                <td>System Architect</td>
+                                <td>{{app.owner}}</td>
                                 <td>
                                     {% if app.core_app == False %}
                                         External
                                     {% else %}
                                         Core
                                     {% endif %}</td>
-                                <td>{{ app.owner | capfirst }}</td>
+                                <td>
+                                    {% if app.published is True %}
+                                        Published
+                                    {% else %}
+                                        Not Published
+                                    {% endif %}
+                                </td>
 
                                 <td>
                                     {% if app.core_app == False %}

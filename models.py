@@ -72,12 +72,11 @@ class Application(models.Model):
     verbose_name = models.CharField(max_length=50, null=False, blank=False) #Human readable form of the name
     url = models.CharField(max_length=30) #relative path to this application
     namedUrl = models.CharField(max_length=30) # name field of the urlconfig entry for reverse resolutions
-    active = models.BooleanField(default=True, blank=True)
-    description = models.TextField(max_length=500, default="A brief explanation of this application.") # Description of the application
-    soft_app = models.BooleanField(default=False, null=False, blank=False)
+    description = models.TextField(max_length=500)  # Description of the application
+    # soft_app = models.BooleanField(default=False, null=False, blank=False)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING) # Owner of this application
+    active = models.BooleanField(default=True, blank=True)
     core_app = models.BooleanField(default=False, null=False, blank=False)
-    # uuid = models.UUIDField(primary_key=False, editable=True, blank=True,null=True)
     uuid = models.UUIDField(primary_key=False, blank=True, null=True)
     published = models.BooleanField(default=False, null=False, blank=False)
 
@@ -174,7 +173,6 @@ RETURN_TYPE = (
 )
 
 
-
 class ApplicationView(models.Model):
     view_name = models.CharField(max_length=50,null=True, blank=True)
     view_type = models.CharField(max_length=50,choices=VIEW_FUNC_TYPE, default='ordinary')
@@ -194,8 +192,6 @@ class ApplicationViewAdmin(admin.ModelAdmin):
     list_display = ['view_name', 'template','app']
 
 
-
-
 class ApplicationUrl(models.Model):
     url_pattern = models.CharField(max_length=50,null=True, blank=True)
     view_method = models.ForeignKey(ApplicationView, on_delete=models.CASCADE, related_name='mapped_view')
@@ -205,33 +201,34 @@ class ApplicationUrl(models.Model):
     def __str__(self):
         return self.url_name
 
+
 @admin.register(ApplicationUrl)
 class ApplicationUrlPathAdmin(admin.ModelAdmin):
-    list_display = ['url_name','view_method','app']
+    list_display = ['url_name', 'view_method', 'app']
 
 
-
-PAGE_TYPES =   (
-    ('predefined','Predefined Template'),
-    ('empty','Empty Page'),
+PAGE_TYPES = (
+    ('predefined', 'Predefined Template'),
+    ('empty', 'Empty Page'),
     ('landing', 'Landing Page'),
     ('index', 'Application Index Page'),
     ('about', 'About Page'),
     ('contact', 'Contact Page'),
 )
+
+
 class ApplicationPage(models.Model):
     app = models.OneToOneField(Application, null=False, blank=False, on_delete=models.CASCADE, related_name='pages')
     page_type = models.CharField(max_length=25,choices=PAGE_TYPES, default='predefined')
     page_name = models.CharField(max_length=25, blank=False, null=False)
     page_layout = models.ForeignKey(PageLayout, blank=False, null=False,on_delete=models.DO_NOTHING)
 
-
     def __str__(self):
         return self.page_name
 
-
     def __unicode__(self):
         return self.page_name
+
 
 @admin.register(ApplicationPage)
 class ApplicationPageAdmin(admin.ModelAdmin):
@@ -239,8 +236,8 @@ class ApplicationPageAdmin(admin.ModelAdmin):
 
 
 SETTING_TYPES = (
-    ('boolean','Boolean Type'),
-    ('text','Text Input Type'),
+    ('boolean', 'Boolean Type'),
+    ('text', 'Text Input Type'),
 )
 
 
@@ -254,26 +251,25 @@ class SettingDefinition(models.Model):
     def __str__(self):
         return self.name
 
-
     def __unicode__(self):
         return self.name
+
 
 @admin.register(SettingDefinition)
 class SettingDefinitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'definition')
 
+
 class ApplicationSettings(models.Model):
-    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.CASCADE,related_name='settings_list')
+    app = models.ForeignKey(Application, null=False, blank=False, on_delete=models.CASCADE, related_name='settings_list')
     setting = models.ForeignKey(SettingDefinition, null=False, blank=False, on_delete=models.DO_NOTHING)
     value = models.BooleanField(default=False)
 
     def __str__(self):
         return self.app.app_name+'_settings'
 
-
     def __unicode__(self):
         return self.app.app_name + '_settings'
-
 
     def toogle_setting(self):
 
@@ -351,7 +347,7 @@ class AppModelAdmin(admin.ModelAdmin):
     pass
 
 
-class Field(models.Model):
+class AppModelField(models.Model):
     fields = models.fields_all
     flist=[]
     for field in fields:
@@ -393,8 +389,8 @@ class Field(models.Model):
         return self.name
 
 
-@admin.register(Field)
-class ModelFieldAdmin(admin.ModelAdmin):
+@admin.register(AppModelField)
+class AppModelFieldAdmin(admin.ModelAdmin):
     pass
 
 

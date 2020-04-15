@@ -7,7 +7,9 @@ from {{applicationName}}.signals.signals import *
 logger = logging.getLogger("wbdap.debug")
 
 
-# Called when he application is created
+# Called when the sample signal given below is dispatched and catched by the my_callback handler function.
 @receiver({{applicationName}}_sample_signal)
 def my_callback(sender, **kwargs):
-    logger.info("Sample signal receieved")
+    logger.info("Sample signal receieved from {}".format(sender))
+    logger.info("Sample signal receieved has a message {} about an object {}".format(kwargs['test_message'],kwargs['model']))
+

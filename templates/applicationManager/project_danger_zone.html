@@ -1,0 +1,16 @@
+{% extends 'applicationManager/project_management_page.html' %}
+
+{% block app_home_content %}
+
+    <div class="alert alert-danger" role="alert">
+        Here, you can delete this project completely. All data will be lost.
+            Any changes you had made on the
+        project will also irreversably be lost!
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#exampleModal">
+        Delete Project
+    </button>
+
+{% endblock %}

@@ -1,519 +1,482 @@
 [
 {
-  "model": "applicationManager.pagelayout",
-  "pk": 1,
-  "fields": {
-    "layout_name": "3col",
-    "layout_description": "Three Column Layout",
-    "layout_icon_name": null,
-    "layout_template_code": "<pre>\r\n{% extends &quot;projectCore/template_level_40_datatables_resources.html&quot; %}\r\n{% load staticfiles %}\r\n\r\n{% block body_layout %}\r\n\r\n    {% block full_screen_background %}&lt;!-- add a full screen background to page --&gt;{% endblock %}\r\n    {% block menu_navbar_toggler_buttons %}&lt;!-- add a navbar to place menu toggler buttons --&gt;{% endblock %}\r\n\r\n    {% block wrapper %}\r\n        &lt;div id=&quot;wrapper&quot;&gt;\r\n\r\n            {% block offcanvas-app-navs %}\r\n                {% block offcanvas-app-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-admin-nav-wrapper %}{% endblock %}\r\n                {% block offcanvas-tmp-nav-wrapper %}{% endblock %}\r\n            {% endblock %}\r\n\r\n            {% block page-content-wrapper %}\r\n                &lt;div id=&quot;page-content-wrapper&quot;&gt;\r\n                    {% block content_layout %}\r\n                        {# Project_Base_Template : Body icinde olmasi gereken hersey bu block degistirilerek olusturulmalidir.&lt;br&gt;#}\r\n                    {% endblock %}\r\n                &lt;/div&gt;\r\n            {% endblock %}\r\n        &lt;/div&gt;\r\n    {% endblock %}\r\n\r\n{% endblock %}</pre>"
-  }
-},
-{
-  "model": "applicationManager.pagelayout",
-  "pk": 2,
-  "fields": {
-    "layout_name": "2col",
-    "layout_description": "Two column layout",
-    "layout_icon_name": null,
-    "layout_template_code": "<p>{% extends &quot;projectCore/template_level_40_datatables_resources.html&quot; %} {% load staticfiles %} {% block body_layout %} {% block full_screen_background %}<!-- add a full screen background to page -->{% endblock %} {% block menu_navbar_toggler_buttons %}<!-- add a navbar to place menu toggler buttons -->{% endblock %} {% block wrapper %}</p>\r\n\r\n<div id=\"wrapper\">{% block offcanvas-app-navs %} {% block offcanvas-app-nav-wrapper %}{% endblock %} {% block offcanvas-admin-nav-wrapper %}{% endblock %} {% block offcanvas-tmp-nav-wrapper %}{% endblock %} {% endblock %} {% block page-content-wrapper %}\r\n<div id=\"page-content-wrapper\">{% block content_layout %} {# Project_Base_Template : Body icinde olmasi gereken hersey bu block degistirilerek olusturulmalidir.<br />\r\n#} {% endblock %}</div>\r\n{% endblock %}</div>\r\n\r\n<p>{% endblock %} {% endblock %}</p>"
-  }
-},
-{
-  "model": "applicationManager.pagelayout",
-  "pk": 3,
-  "fields": {
-    "layout_name": "1headrow2col",
-    "layout_description": "One single head row and",
-    "layout_icon_name": "columns.png",
-    "layout_template_code": "<p>asdf</p>"
-  }
-},
-{
   "model": "applicationManager.application",
-  "pk": 616,
-  "fields": {
-    "app_name": "examApp",
-    "verbose_name": "examApp",
-    "url": "examApp",
-    "namedUrl": "examApp",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "2b7d63cb-5575-4351-9fbb-e0114e689a52"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 617,
-  "fields": {
-    "app_name": "projectCore",
-    "verbose_name": "projectCore",
-    "url": "projectCore",
-    "namedUrl": "projectCore",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": true,
-    "uuid": "abe0a943-9f06-407f-98ff-83b5c889f205"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 618,
-  "fields": {
-    "app_name": "blog",
-    "verbose_name": "blog",
-    "url": "blog",
-    "namedUrl": "blog",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "46aa8dec-4074-4650-bf4a-ba2e479a5f84"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 620,
-  "fields": {
-    "app_name": "realEstateRecommender",
-    "verbose_name": "realEstateRecommender",
-    "url": "realEstateRecommender",
-    "namedUrl": "realEstateRecommender",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "e4d01c3a-37f1-4e54-936e-8342dd6ba8d1"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 621,
-  "fields": {
-    "app_name": "dataExtractor",
-    "verbose_name": "Data Extractor",
-    "url": "dataExtractor",
-    "namedUrl": "dataExtractor",
-    "active": false,
-    "description": "Generic data scraper with storage capability.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "18e1fa62-d9e8-49e1-ada7-e473f2eef860"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 622,
-  "fields": {
-    "app_name": "applicationManager",
-    "verbose_name": "applicationManager",
-    "url": "applicationManager",
-    "namedUrl": "applicationManager",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": true,
-    "uuid": "c6b4af68-da35-4a73-8231-d41ed16fc5ae"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 624,
-  "fields": {
-    "app_name": "authenticationApp",
-    "verbose_name": "authenticationApp",
-    "url": "authenticationApp",
-    "namedUrl": "authenticationApp",
-    "active": false,
-    "description": "Readme This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": true,
-    "uuid": "ad9be11a-631f-4492-a98f-a506cd32db45"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 625,
-  "fields": {
-    "app_name": "businessDB",
-    "verbose_name": "businessdb",
-    "url": "businessdb",
-    "namedUrl": "businessdb",
-    "active": false,
-    "description": "A database of businesses which can be investigated and used for starting an startup.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "1935b6ae-ea2d-409d-a7cf-38d80fc19ffa"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 626,
-  "fields": {
-    "app_name": "identityManager",
-    "verbose_name": "identityManager",
-    "url": "identityManager",
-    "namedUrl": "identityManager",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": true,
-    "uuid": "a39546fe-c528-40a6-88e9-d4fa220e85ce"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 627,
-  "fields": {
-    "app_name": "sciDB",
-    "verbose_name": "sciDB",
-    "url": "sciDB",
-    "namedUrl": "sciDB",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "92b2d551-9c33-4612-a627-ffffa351e3dd"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 727,
-  "fields": {
-    "app_name": "projectManager",
-    "verbose_name": "projectManager",
-    "url": "projectManager",
-    "namedUrl": "projectManager",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "de1167cc-360e-4799-b729-b2af23f0ef63"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 748,
-  "fields": {
-    "app_name": "webcoding",
-    "verbose_name": "webcoding",
-    "url": "webcoding",
-    "namedUrl": "webcoding",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "3c94f17c-9a82-4c8a-be85-2796701c5ab8"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 749,
+  "pk": 329,
   "fields": {
     "app_name": "filemanager",
     "verbose_name": "filemanager",
     "url": "filemanager",
     "namedUrl": "filemanager",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
+    "description": "filemanager",
     "owner": 1,
+    "active": false,
     "core_app": true,
-    "uuid": "e50e1e91-b1c0-4b57-a9b8-502266e97ed8"
+    "uuid": "b45cebf5-7f03-4615-af05-5d276147d25c",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 750,
+  "pk": 331,
   "fields": {
-    "app_name": "docker_manager",
-    "verbose_name": "docker_manager",
-    "url": "docker_manager",
-    "namedUrl": "docker_manager",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
+    "app_name": "sciDB",
+    "verbose_name": "sciDB",
+    "url": "sciDB",
+    "namedUrl": "sciDB",
+    "description": "A site to collect science experiments for kids.",
     "owner": 1,
-    "core_app": false,
-    "uuid": "2c40e692-310c-4c15-be22-912efa453d7a"
+    "active": false,
+    "core_app": true,
+    "uuid": "3f28fcfa-3580-4e38-94c4-1079b82a83a8",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 753,
+  "pk": 332,
+  "fields": {
+    "app_name": "sciDB",
+    "verbose_name": "sciDB",
+    "url": "sciDB",
+    "namedUrl": "sciDB",
+    "description": "A site to collect science experiments for kids.",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "4b0d51a7-eb87-4a0d-9c9e-0903f2beee80",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 333,
+  "fields": {
+    "app_name": "rqManager",
+    "verbose_name": "RQManager App",
+    "url": "rqManager",
+    "namedUrl": "rqManager",
+    "description": "rqManager",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "9bb2562e-8c2e-4e9e-8a94-08b668ad7929",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 334,
   "fields": {
     "app_name": "mentor",
     "verbose_name": "mentor",
     "url": "mentor",
     "namedUrl": "mentor",
+    "description": "mentor",
+    "owner": 1,
     "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "5995c608-a5fd-4ad7-a066-c6aaccf12cb5"
+    "core_app": true,
+    "uuid": "08a0d3f5-bb2e-43d7-9e0b-7fb938474535",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 771,
-  "fields": {
-    "app_name": "mailapp",
-    "verbose_name": "mailapp",
-    "url": "mailapp",
-    "namedUrl": "mailapp",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "80799d1b-f588-4edc-a895-8f6a167141d6"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 772,
-  "fields": {
-    "app_name": "rulemall",
-    "verbose_name": "rulemall",
-    "url": "rulemall",
-    "namedUrl": "rulemall",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "80799d1b-f578-4edc-a895-8f6a167141d6"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 773,
-  "fields": {
-    "app_name": "gameapp",
-    "verbose_name": "gameapp",
-    "url": "gameapp",
-    "namedUrl": "gameapp",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "80799d1b-f578-4edc-a895-3f6a167141d6"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 774,
-  "fields": {
-    "app_name": "scraper",
-    "verbose_name": "scraper",
-    "url": "scraper",
-    "namedUrl": "scraper",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b6913c2"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 775,
-  "fields": {
-    "app_name": "testapp",
-    "verbose_name": "testapp",
-    "url": "testapp",
-    "namedUrl": "testapp",
-    "active": false,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "236ba6ab-271c-4da6-8d4c-2f05fa87c7ff"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 777,
-  "fields": {
-    "app_name": "activityStream",
-    "verbose_name": "Activity Stream",
-    "url": "activityStream",
-    "namedUrl": "activityStream",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
-    "owner": 1,
-    "core_app": false,
-    "uuid": "236ba6aa-271c-4da6-8d4c-2f05fa87c7ff"
-  }
-},
-{
-  "model": "applicationManager.application",
-  "pk": 778,
+  "pk": 335,
   "fields": {
     "app_name": "flashcards",
     "verbose_name": "flashcards",
     "url": "flashcards",
     "namedUrl": "flashcards",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
+    "description": "A site for flashcards.",
     "owner": 1,
-    "core_app": false,
-    "uuid": "236bb6aa-271c-4da6-8d4c-2f05fa87c7ff"
+    "active": false,
+    "core_app": true,
+    "uuid": "6f650c70-6c38-4cc1-8fdd-37ce73fa01fb",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 779,
+  "pk": 336,
+  "fields": {
+    "app_name": "rulemall",
+    "verbose_name": "rulemall",
+    "url": "rulemall",
+    "namedUrl": "rulemall",
+    "description": "rulemall",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "2d475bda-d36f-4a5a-ae1a-e24eeb71d7f3",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 337,
+  "fields": {
+    "app_name": "identityManager",
+    "verbose_name": "identityManager",
+    "url": "identityManager",
+    "namedUrl": "identityManager",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "29ca4f68-c97e-45aa-8b66-ed07d60fa816",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 338,
+  "fields": {
+    "app_name": "celeryApp",
+    "verbose_name": "celeryApp",
+    "url": "celeryApp",
+    "namedUrl": "celeryApp",
+    "description": "A site for celeryApp.",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "71573d99-bf73-4842-8dea-c49572c11182",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 339,
+  "fields": {
+    "app_name": "webcoding",
+    "verbose_name": "webcoding",
+    "url": "webcoding",
+    "namedUrl": "webcoding",
+    "description": "webcoding",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "2d46ccc5-e95d-4e9a-8702-c927a0dfd506",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 340,
+  "fields": {
+    "app_name": "activityStream",
+    "verbose_name": "activityStream",
+    "url": "activityStream",
+    "namedUrl": "activityStream",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "df548e5a-9c2c-4387-a7a7-574cde10143a",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 341,
+  "fields": {
+    "app_name": "projectCore",
+    "verbose_name": "projectCore",
+    "url": "projectCore",
+    "namedUrl": "projectCore",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "41b56356-7842-4487-a3b0-57fd10f0b64a",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 342,
   "fields": {
     "app_name": "elasticsearchapp",
     "verbose_name": "elasticsearchapp",
     "url": "elasticsearchapp",
     "namedUrl": "elasticsearchapp",
-    "active": true,
-    "description": "This is a django app which has been created as a component of the WBDAP project.",
-    "soft_app": false,
+    "description": "Readme file",
     "owner": 1,
-    "core_app": false,
-    "uuid": "c6af9c3b-a1d0-4e85-8c15-a8859b69a3c2"
+    "active": true,
+    "core_app": true,
+    "uuid": "b9f52410-141f-4b03-b81f-66eb137a99a0",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 818,
+  "pk": 343,
   "fields": {
-    "app_name": "rqManager",
-    "verbose_name": "RQ Manager",
-    "url": "rqManager",
-    "namedUrl": "rqManager",
-    "active": true,
-    "description": "",
-    "soft_app": false,
+    "app_name": "blog",
+    "verbose_name": "Blog Application",
+    "url": "blog",
+    "namedUrl": "blog",
+    "description": "Readme file",
     "owner": 1,
-    "core_app": false,
-    "uuid": "07fc6b59-87ea-4e5e-847c-0a138ce75f88"
+    "active": true,
+    "core_app": true,
+    "uuid": "f8eb0801-bbec-4164-8db0-5a7ea633802b",
+    "published": false
   }
 },
 {
   "model": "applicationManager.application",
-  "pk": 819,
+  "pk": 344,
+  "fields": {
+    "app_name": "a",
+    "verbose_name": "a App",
+    "url": "a",
+    "namedUrl": "a",
+    "description": "",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "62b6acba-3afc-43bb-a85b-beaa9ec74678",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 345,
+  "fields": {
+    "app_name": "testapp",
+    "verbose_name": "testapp",
+    "url": "testapp",
+    "namedUrl": "testapp",
+    "description": "",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "c81c3b5d-e882-4839-8beb-8d969c871df6",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 346,
+  "fields": {
+    "app_name": "realEstateRecommender",
+    "verbose_name": "realEstateRecommender",
+    "url": "realEstateRecommender",
+    "namedUrl": "realEstateRecommender",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "23f5744a-d02b-4fe0-8a0e-9af2bab71f46",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 347,
+  "fields": {
+    "app_name": "dataExtractor",
+    "verbose_name": "dataExtractor",
+    "url": "dataExtractor",
+    "namedUrl": "dataExtractor",
+    "description": "Generic data scraper with storage capability.",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "4a50ca23-c6f5-4867-adfe-692a2bdff148",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 348,
+  "fields": {
+    "app_name": "applicationManager",
+    "verbose_name": "applicationManager",
+    "url": "applicationManager",
+    "namedUrl": "applicationManager",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "42796f1a-ab67-44c0-b6cb-fb94737f495b",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 349,
+  "fields": {
+    "app_name": "examApp",
+    "verbose_name": "examApp",
+    "url": "examApp",
+    "namedUrl": "examApp",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "35af5369-576f-4f34-9a68-d8e6da442ba7",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 350,
+  "fields": {
+    "app_name": "scraper",
+    "verbose_name": "scraper",
+    "url": "scraper",
+    "namedUrl": "scraper",
+    "description": "scraper",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "d9e50bfd-08cb-4454-a452-3f012c54cb85",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 351,
+  "fields": {
+    "app_name": "authenticationApp",
+    "verbose_name": "authenticationApp",
+    "url": "authenticationApp",
+    "namedUrl": "authenticationApp",
+    "description": "Readme file",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "7c3a0e01-8a76-45d8-9595-bf6253808bf7",
+    "published": false
+  }
+},
+{
+  "model": "applicationManager.application",
+  "pk": 352,
   "fields": {
     "app_name": "requirementsManager",
-    "verbose_name": "requirementsManager",
+    "verbose_name": "requirementsManager App",
     "url": "requirementsManager",
     "namedUrl": "requirementsManager",
-    "active": true,
-    "description": "requirementsManager",
-    "soft_app": false,
+    "description": "",
     "owner": 1,
-    "core_app": false,
-    "uuid": "07fc6b59-87ea-4e5e-747c-0a138ce75f88"
+    "active": false,
+    "core_app": true,
+    "uuid": "5b9512fa-1cc2-4a02-8fab-8d5816167a15",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 1,
+  "model": "applicationManager.application",
+  "pk": 353,
   "fields": {
-    "temp_name": "landing_page",
-    "temp_type": "view",
-    "temp_content": "return render(request,'{{applicationName}}/landing.html')",
-    "temp_engine": "django",
-    "definition": "landing page template"
+    "app_name": "businessdb",
+    "verbose_name": "Business Database",
+    "url": "businessdb",
+    "namedUrl": "businessdb",
+    "description": "A database of businesses which can be investigated and used for starting an startup.",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "9e45cb9f-3342-40ec-aa6c-44192508e5ba",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 2,
+  "model": "applicationManager.application",
+  "pk": 355,
   "fields": {
-    "temp_name": "index_page",
-    "temp_type": "view",
-    "temp_content": "return render(request,'{{applicationName}}/landing.html' )",
-    "temp_engine": "django",
-    "definition": "index page template"
+    "app_name": "gameapp",
+    "verbose_name": "gameapp",
+    "url": "gameapp",
+    "namedUrl": "gameapp",
+    "description": "gameapp",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "2862ff41-2b5a-4940-9461-13ff72b73ba8",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 3,
+  "model": "applicationManager.application",
+  "pk": 356,
   "fields": {
-    "temp_name": "dashboard_page",
-    "temp_type": "view",
-    "temp_content": "return render(request,'{{applicationName}}/dashboard.html')",
-    "temp_engine": "django",
-    "definition": "dashboard view icin execute edilecek kod blogudur. File template degildir."
+    "app_name": "chat",
+    "verbose_name": "chat",
+    "url": "chat",
+    "namedUrl": "chat",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "99a71a93-7260-4be5-94d3-a59928642c3a",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 4,
+  "model": "applicationManager.application",
+  "pk": 357,
   "fields": {
-    "temp_name": "urls.py",
-    "temp_type": "file",
-    "temp_content": "__author__ = 'ozgur'\r\n\r\nfrom django.urls import path\r\nfrom {{ applicationName }}.views import *\r\n\r\n# Uncomment the next two lines to enable the admin:\r\nfrom django.contrib import admin\r\nadmin.autodiscover()\r\n\r\napp_name ='{{applicationName}}'\r\nurlpatterns = [\r\n\r\n    #Index page of the application\r\n    path('welcome/', landing_page, name='landing'),\r\n    path('', index_page, name='index'),\r\n    path('dashboard/', dashboard, name='dashboard'),\r\n]",
-    "temp_engine": "django",
-    "definition": "urls.py dosyaisinin uretilmesi icin kullanilacak olan dosya sablonudur."
+    "app_name": "docker_manager",
+    "verbose_name": "docker_manager",
+    "url": "docker_manager",
+    "namedUrl": "docker_manager",
+    "description": "docker_manager",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "edf32d87-a1d2-4c5f-b7d7-f40ac36a6579",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 5,
+  "model": "applicationManager.application",
+  "pk": 359,
   "fields": {
-    "temp_name": "setuptools_setup.py",
-    "temp_type": "python",
-    "temp_content": "# coding=utf-8\r\n#!/Users/ozgur/.virtualenvs/wbdap/bin/python\r\n\r\nimport os\r\nfrom setuptools import find_packages, setup\r\n\r\nwith open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:\r\n    README = readme.read()\r\n\r\n# allow setup.py to be run from any path\r\nos.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))\r\n\r\nsetup(\r\n    name='django-{{applicationName}}',\r\n    version='{{version}}',\r\n    packages=find_packages(),\r\n    include_package_data=True,\r\n    license='BSD License'",
-    "temp_engine": "django",
-    "definition": "A standart setup file template"
+    "app_name": "mailapp",
+    "verbose_name": "mailapp",
+    "url": "mailapp",
+    "namedUrl": "mailapp",
+    "description": "mailapp",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "b4bac746-d68c-4dc6-a06c-c5619ba56616",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 6,
+  "model": "applicationManager.application",
+  "pk": 360,
   "fields": {
-    "temp_name": "setuptools_README.rst",
-    "temp_type": "file",
-    "temp_content": "=====\r\n{{applicationName}}\r\n=====\r\n\r\n{{applicationDescription}} It is a simple Django app to ... .\r\n\r\nDetailed documentation is in the \"docs\" directory.\r\n\r\nQuick start\r\n-----------\r\n\r\n1. Add \"{{applicationName}}\" to your INSTALLED_APPS setting like this::\r\n\r\n    INSTALLED_APPS = [\r\n        ...\r\n        '{{applicationName}}',\r\n    ]\r\n\r\n2. Include the {{applicationName}} URLconf in your project urls.py like this::\r\n\r\n    path('{{applicationName}}/', include('{{applicationName}}.urls')),\r\n\r\n3. Run `python manage.py migrate` to create the {{applicationName}} models.\r\n\r\n4. Start the development server and visit http://127.0.0.1:8000/admin/\r\n   to create {{applicationName}} model instances(you'll need the Admin app enabled).\r\n\r\n5. Visit http://127.0.0.1:8000/{{applicationName}}/ to access the application.",
-    "temp_engine": "django",
-    "definition": "A generic README.rst template for setuptools package"
+    "app_name": "reactionApp",
+    "verbose_name": "reactionApp",
+    "url": "reactionApp",
+    "namedUrl": "reactionApp",
+    "description": "Readme file",
+    "owner": 1,
+    "active": true,
+    "core_app": true,
+    "uuid": "4f80f524-50e4-4325-b146-0e5042335337",
+    "published": false
   }
 },
 {
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 7,
+  "model": "applicationManager.application",
+  "pk": 361,
   "fields": {
-    "temp_name": "setuptools_LICENSE_BSD",
-    "temp_type": "file",
-    "temp_content": "Copyright (c) {{year}}, {{copyright_holder}}\r\nAll rights reserved.\r\n\r\nRedistribution and use in source and binary forms, with or without\r\nmodification, are permitted provided that the following conditions are met:\r\n1. Redistributions of source code must retain the above copyright\r\n   notice, this list of conditions and the following disclaimer.\r\n2. Redistributions in binary form must reproduce the above copyright\r\n   notice, this list of conditions and the following disclaimer in the\r\n   documentation and/or other materials provided with the distribution.\r\n3. All advertising materials mentioning features or use of this software\r\n   must display the following acknowledgement:\r\n   This product includes software developed by the <organization>.\r\n4. Neither the name of the <organization> nor the\r\n   names of its contributors may be used to endorse or promote products\r\n   derived from this software without specific prior written permission.\r\n\r\nTHIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ''AS IS'' AND ANY\r\nEXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\nDISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY\r\nDIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\nON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
-    "temp_engine": "django",
-    "definition": "BSD License"
-  }
-},
-{
-  "model": "applicationManager.applicationcomponenttemplate",
-  "pk": 8,
-  "fields": {
-    "temp_name": "setuptools_MANIFEST.in",
-    "temp_type": "file",
-    "temp_content": "include LICENSE\r\ninclude README.rst\r\nrecursive-include static *\r\nrecursive-include templates *\r\nrecursive-include fixtures *\r\nrecursive-include migrations *",
-    "temp_engine": "django",
-    "definition": "manifest.in template for django setuptools"
+    "app_name": "projectManager",
+    "verbose_name": "projectManager",
+    "url": "projectManager",
+    "namedUrl": "projectManager",
+    "description": "An application to manage projects.",
+    "owner": 1,
+    "active": false,
+    "core_app": true,
+    "uuid": "3ec82fff-a6d8-4e46-8504-042fec337e26",
+    "published": false
   }
 }
+]

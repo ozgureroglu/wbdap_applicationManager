@@ -122,12 +122,12 @@ class DjangoProjectGenerator:
                 call_command('startproject', self.project.name)
             except Exception as e:
                 return {'Error': e}
-
-            # Then create a fully functional app in the project
-            try:
-                self.run_all_steps()
-            except Exception as e:
-                return
+            #
+            # # Then create a fully functional app in the project
+            # try:
+            #     self.run_all_steps()
+            # except Exception as e:
+            #     return
 
             return True
 

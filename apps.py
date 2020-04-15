@@ -20,7 +20,7 @@ class ApplicationManagerAppConfig(AppConfig):
     url = 'applicationManager'
     namedUrl = 'applicationManager'
     active = True
-    description = "Readme file"
+    readmeContent = "Readme file"
 
 
     ready_run = False

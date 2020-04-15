@@ -30,6 +30,7 @@ from projectCore.datatable_viewset import ModifiedViewSet
 import logging
 
 from applicationManager.tasks import start_django_project
+from pathlib import Path
 
 
 logger = logging.getLogger("api.views")
@@ -109,7 +110,9 @@ class DjangoProjectDeleteAPIView(DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         name = DjangoProject.objects.get(id=self.kwargs['pk']).name
-        shutil.rmtree(os.path.join(settings.SCAFFOLD_DPRJ_DIR, name))
+        dirpath = Path(settings.SCAFFOLD_DPRJ_DIR,name)
+        if dirpath.exists() and dirpath.is_dir():
+            shutil.rmtree(os.path.join(settings.SCAFFOLD_DPRJ_DIR, name))
         return super().delete(request, *args, **kwargs)
 
     # Asagidakileri degistirince urls icinde de abc pattern ile search yapilmasi gerekir

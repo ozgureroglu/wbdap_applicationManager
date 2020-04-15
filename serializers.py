@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from applicationManager.models import Application,AppModel,Field
+from applicationManager.models import Application,AppModel,AppModelField
 
 
 class FieldSerializer(serializers.ModelSerializer):
@@ -8,7 +8,7 @@ class FieldSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = Field
+        model = AppModelField
         fields = ('id','name','field_type','definition','owner_model','type_parameter')
 
 

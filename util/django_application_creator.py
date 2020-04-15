@@ -1,5 +1,6 @@
 __author__ = 'ozgur'
 
+import inspect
 from shutil import copyfile
 from django.core.management import call_command
 from applicationManager.models import Application, AppModel
@@ -15,8 +16,8 @@ from django.template import loader
 from io import StringIO
 from django.conf import settings
 
-from applicationManager.util.Exceptions import SiteRootNotSetException, StageException, \
-    ManagePyStartAppException, ApplicationFolderExistsException, UrlPyCreationException
+from applicationManager.util.Exceptions import SiteRootNotSetException,  \
+    ManagePyStartAppException, ApplicationFolderExistsException, UrlPyCreationException, StageStepException
 
 logger = logging.getLogger("wbdap.debug")
 slogger = logging.getLogger("wbdap.sdebug")
@@ -74,53 +75,57 @@ class DjangoApplicationCreator:
         self.app = application
         self.site_root = settings.SITE_ROOT
         self.sub_models = settings.SUB_MODEL_DIR
+        self.models = application.models
 
-        # check if the custom_settings file has the attribute;
-        # otherwise set the root of the folder as site.root
         if hasattr(settings, 'SCAFFOLD_APPS_DIR'):
             self.site_root = settings.SCAFFOLD_APPS_DIR
         else:
             self.site_root = './'
+            logger.fatal("Site root not set exception")
+            raise SiteRootNotSetException
+
+        self.app_path = os.path.join(self.site_root, self.app.app_name)
+
+
 
     def create(self):
         """Creates the django application and all necessary extra folders and files"""
         logger.info("Starting the app creation")
 
-        # Check if site_root variable is set ; otherwise raise except
-        try:
-            self.site_root
-        except Exception as e:
-            logger.fatal("Site root not set exception")
-            raise SiteRootNotSetException
-
-        # Check if set siteroot exists, otherwise raise exception
+        # Check if set siteroot exists, otherwise raise an exception
         if not os.path.exists('{0}'.format(self.site_root)):
-            logger.fatal("SCAFFOLD_APPS_DIR {0} does not exists".format(self.site_root))
-            raise Exception("SCAFFOLD_APPS_DIR {0} does not exists".format(self.site_root))
+            logger.fatal("SCAFFOLD_APPS_DIR  {0} is set but does not exists".format(self.site_root))
+            raise Exception("SCAFFOLD_APPS_DIR {0} is set but does not exists".format(self.site_root))
 
-        # Check if app folder exists, if it is raise exception
-        if os.path.exists(os.path.join(self.site_root, self.app.app_name)):
-            logger.fatal("Application folder exists\t{0}/{1}".format(self.site_root, self.app.app_name))
+        # Check if the app folder exists, if it is, again raise exception
+        if os.path.exists(self.app_path):
+            logger.fatal("Application folder exists\t{0}".format(self.app_path))
             raise ApplicationFolderExistsException(
-                "Application folder exists\t{0}/{1}".format(self.site_root, self.app.app_name))
+                "Application folder exists\t{0}".format(self.app_path))
 
-        # If all of the above requirements are ok, call run_all_steps which creates all other application files and folders
+        # If all of the above requirements are ok, then you call run_all_steps
+        # which creates all other application files and folders
         try:
             logger.info('Creating the application {0} ...'.format(self.app.app_name))
-            self.run_all_steps()
+            if self.run_manage_py():
+                self.run_all_steps()
         except Exception as e:
             logger.fatal('A fatal stage exception occurred, rolling back all changes ...')
             self.rollback()
-            raise StageException
+            raise StageStepException
         except ManagePyStartAppException as e:
             self.rollback()
-            raise StageException
+            raise StageStepException
         return True
 
     def run_manage_py(self):
         """Create the application using the django manage.py command"""
         # Output received from startapp django shell command
         cmd_output = StringIO()
+        
+        
+        
+        
 
         try:
             # Asagidaki kisim daha once yanlis bir yaklasimla yapilmisti.Django manage.py icin api
@@ -153,29 +158,28 @@ class DjangoApplicationCreator:
         Run all app creation steps in order
         """
         try:
-            if self.run_manage_py():
-                logger.info(
-                    "================================= STAGE 1 ==================================\n"
-                    "Creating folders and files for the application using templates\n")
+            logger.info(
+                "================================= STAGE 1 ==================================\n"
+                "Creating folders and files for the application using templates\n")
 
-                self.create_urls_file()
-                self.create_application_folders()
-                self.create_views_file()
-                self.create_signals_file()
-                self.create_forms_file()
-                self.create_apps_file()
-                self.create_models_file()
-                self.create_template_files()
-                self.send_create_signal()
+            self.create_application_folders()
+            self.create_urls_file()
+            self.create_views_file()
+            self.create_signals_file()
+            self.create_forms_file()
+            self.create_apps_file()
+            self.create_models_file()
+            self.create_template_files()
+            self.send_create_signal()
 
-                # self.updateAppsDBWoAppConfig()
+            # self.updateAppsDBWoAppConfig()
 
-                # Following is not a good method
-                # updateProjectUrlsFile(request)
-                #
+            # Following is not a good method
+            # updateProjectUrlsFile(request)
+            #
 
-                logger.info('Stage-1 DONE.')
-                return True
+            logger.info('Stage-1 DONE.')
+
         except ManagePyStartAppException:
             raise
         except Exception as e:
@@ -195,25 +199,8 @@ class DjangoApplicationCreator:
             logger.error(
                 "Stage-2 FAILED, check subtask exception")
 
-    def create_urls_file(self):
-        """"Creates the urls.py file of the project using a template file"""
-        # If aplication was already created run: we are rechecking this as this method can be called independently later
-        if os.path.exists('{0}/{1}'.format(self.site_root, self.app.app_name)):
-            logger.info('Creating urls.py for the new application : ' + self.app.app_name)
-            try:
-                t = loader.get_template('applicationManager/applicationFileTemplates/app_urls_template.txt')
-                c = {'applicationName': self.app.app_name, 'url': self.app.namedUrl, 'models': self.app.models.all()}
-                rendered = t.render(c)
-                open(self.site_root + "/" + self.app.app_name + "/urls.py", "w+").write(rendered)
 
-            except Exception as e:
-                logger.fatal('Exception occured while creating Urls.py : %s', e)
-                # Send the necessary signals to rollback
-                application_creation_failed_signal.send(sender=Application.__class__, test="testString",
-                                                        application=Application.objects.get(app_name=self.app.app_name))
-                raise UrlPyCreationException('create_urls_file failed: '+str(e))
-        else:
-            logger.fatal("no such application: {0}".format(self.app.app_name))
+
 
     def create_application_folders(self):
         """Create template, signals, handlers and static file folders"""
@@ -278,6 +265,56 @@ class DjangoApplicationCreator:
 
         else:
             logger.fatal("no such application: {0}".format(self.app.app_name))
+
+
+
+
+    def create_file_from_template(self,template_file, context, loc):
+        """
+            Creates an application from the supplied template file and context at the given loc
+        """
+        try:
+            t = Template(filename=template_file)
+            buf = StringIO()
+            c = mako.runtime.Context(buf, data=context)
+            t.render_context(c)
+
+            open(loc, "w+").write(buf.getvalue())
+        except Exception as e:
+            logger.fatal("Exception occurred while running {} file : {}".format(inspect.stack()[1].function, e))
+            application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+                                                    application=Application.objects.get(app_name=self.app_name))
+            raise StageStepException('A stage step failed check logs: ' + str(e))
+
+
+    def create_urls_file(self):
+        template_file = "applicationManager/templates/applicationManager/applicationFileTemplates/app_urls_template.txt"
+        context = {'applicationName': self.app_name, 'url': self.app_name, 'models': self.app.models.all()}
+        loc = self.dprjDir + "/" + self.app_name + "/urls.py"
+
+        self.create_file_from_template(template_file, context, loc)
+
+    #
+    # def create_urls_file(self):
+    #     """"Creates the urls.py file of the project using a template file"""
+    #     # If aplication was already created run: we are rechecking this as this method can be called independently later
+    #     if os.path.exists('{0}/{1}'.format(self.site_root, self.app.app_name)):
+    #         logger.info('Creating urls.py for the new application : ' + self.app.app_name)
+    #         try:
+    #             t = loader.get_template('applicationManager/applicationFileTemplates/app_urls_template.txt')
+    #             c = {'applicationName': self.app.app_name, 'url': self.app.namedUrl, 'models': self.app.models.all()}
+    #             rendered = t.render(c)
+    #             open(self.site_root + "/" + self.app.app_name + "/urls.py", "w+").write(rendered)
+    #
+    #         except Exception as e:
+    #             logger.fatal('Exception occured while creating Urls.py : %s', e)
+    #             # Send the necessary signals to rollback
+    #             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
+    #                                                     application=Application.objects.get(app_name=self.app.app_name))
+    #             raise UrlPyCreationException('create_urls_file failed: '+str(e))
+    #     else:
+    #         logger.fatal("no such application: {0}".format(self.app.app_name))
+
 
     def create_views_file(self):
         """Create default views for the application"""

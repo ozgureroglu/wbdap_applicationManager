@@ -53,9 +53,11 @@ urlpatterns = [
     path('createProject/', ProjectCreateWizard.as_view(PROJECT_FORMS), name='createProject'),
     path('projects/', projects, name='projects'),
     path('project/<int:id>/', project_management_page, name='project-management-page'),
-    path('project/<int:id>/start', start_project, name='start-project'),
-    path('project/<int:id>/stop', stop_project, name='stop-project'),
-    path('project/<int:id>/delete', deleteProject, name='delete-project'),
+    path('project/<int:id>/start/', start_project, name='start-project'),
+    path('project/<int:id>/stop/', stop_project, name='stop-project'),
+    path('project/<int:id>/delete/', deleteProject, name='delete-project'),
+    path('project/<int:id>/dzone/', project_danger_zone, name='project-danger-zone'),
+    path('project/<int:id>/sapp/', sample_app_tab, name='sample-app-tab'),
 
     # --- APPLICATIONS ---------------------------------------------------
     path('createApplication/', ApplicationCreateWizard.as_view(FORMS), name='createApplication'),
@@ -71,6 +73,8 @@ urlpatterns = [
     path('application/<int:id>/newfile/', create_file, name='create-file'),
     path('application/<int:id>/trigger/', trigger, name='trigger'),
     path('application/<int:id>/activate/', application_activate, name='application-activate'),
+    path('application/<int:id>/dzone/', application_danger_zone, name='application-danger-zone'),
+    path('application/<int:id>/data/', application_data, name='application-data'),
     path('application/<int:id>/models/', AppModelListView.as_view(), name='model-list'),
     path('application/<int:id>/models/add/', AppModelCreateView.as_view(), name='model-create'),
     path('application/<int:id>/models/<int:pk>/', AppModelDetailView.as_view(), name='model-details'),
@@ -82,7 +86,7 @@ urlpatterns = [
     path('application/<int:id>/models/<int:model_id>/fields/<int:field_id>/', FieldDetailView.as_view(), name='field-details'),
     path('application/<int:id>/models/<int:model_id>/fields/<int:field_id>/update/', FieldUpdateView.as_view(), name='field-update'),
     # path('application/<app_id>/model/<model_id>/field/<pk>/update/', field_update, name='field-update'),
-    path('application/<int:app_id>/models/<int:model_id>/field/<pk>/delete/', FieldDeleteView.as_view(),
+    path('application/<int:id>/models/<int:model_id>/field/<int:field_id>/delete/', FieldDeleteView.as_view(),
         name='field-delete'),
 
     # path('addApplicationModel/<int:pk>/', add_application_model, name='addApplicationModel'),

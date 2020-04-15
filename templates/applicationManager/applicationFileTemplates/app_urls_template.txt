@@ -21,6 +21,10 @@ urlpatterns = [
 
 
     {% for model in models %}
+
+    path('signaltest{{model}}/', signal_test_{{model}}, name='signal-test-{{model}}'),
+
+
     path('{{model}}/', {{model|capfirst}}ListView.as_view(), name='list-{{model}}'),
     path('create{{model}}/', {{model|capfirst}}CreateView.as_view(), name='create-{{model}}'),
     path('delete{{model}}/<pk>/', {{model|capfirst}}DeleteView.as_view(), name='delete-{{model}}'),

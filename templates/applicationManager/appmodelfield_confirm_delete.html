@@ -1,3 +1,38 @@
+{#<form id="confirmation_form" action="{{ request.path }}" method="post">{% csrf_token %}#}
+{#    <p>Are you sure you want to delete "{{ object }}"?</p>#}
+{#    <input type="button" data-delete-target="{{ request.path }}" class="field_delete_confirm" value="Confirm"/>#}
+{#</form>#}
+{##}
+{##}
+{#<script>#}
+{#    //Get field list#}
+{#    $(".field_delete_confirm").on("click", function () {#}
+{##}
+{#        var field_delete_url = this.getAttribute('data-delete-target');#}
+{#        var csrftoken = $("[name*='csrfmiddlewaretoken']").val();#}
+{#        alert(field_delete_url);#}
+{#        alert(csrftoken);#}
+{##}
+{##}
+{#        $("#confirmation_form").submit();#}
+{##}
+{#        $("#confirmation_form").submit(function (data) {#}
+{#            $(".add_field_modal_content").html(data);#}
+{#        })#}
+{##}
+{##}
+{#        $.post(field_delete_url, function (data) {#}
+{#            $(".add_field_modal_content").html(data);#}
+{#        });#}
+{##}
+{##}
+{#    });#}
+{#</script>#}
+{##}
+
+
+
+
 {% extends 'applicationManager/application_management_page.html' %}
 
 {% block app_home_content %}
@@ -18,7 +53,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Delete Model</div>
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Delete Field</div>
                         </div>
                     </div>
                     <div>

@@ -1,0 +1,88 @@
+{% extends 'applicationManager/application_management_page.html' %}
+
+{% block app_home_content %}
+
+    <div class="alert alert-info" role="alert">
+        Here, you can generate and/or backup your application data. All backed up data will be written into fixtures.
+        You will not be able to restore
+        fixture data, if you change the models after backup operation.
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Generate Dummy Application Data</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can generate dummy data to fill your application.
+                    </div>
+                    <a href="{% url 'applicationManager:generate-data' app.id %}">
+                        <button type="button" class="btn btn-success">Generate Dummy Data</button>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Load Fixture Data</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can try to load the last fixture you have created.
+                    </div>
+                    <a href="{% url 'applicationManager:load-data' app.id %}">
+                        <button type="button" class="btn btn-success">Load Fixture Data</button>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Dump Application Data</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can dump all of the generated data to fixture files.
+                    </div>
+                    <a href="{% url 'applicationManager:dump-app-data' app.id %}">
+                        <button type="button" class="btn btn-success">Dump Application Data</button>
+                    </a>
+
+
+                </div>
+            </div>
+
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Download Application Code</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can download all application code in tar.gz file.
+                    </div>
+                    <a href="{% url 'applicationManager:download-app' app.id %}">
+                        <button type="button" class="btn btn-success">Download Code</button>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+{% endblock %}

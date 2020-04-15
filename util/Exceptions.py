@@ -1,9 +1,9 @@
-class StageException(Exception):
+class StageStepException(Exception):
     def __init___(self, error_arguments):
         Exception.__init__(self, "An exception occured in the stage with arguments {0}".format(error_arguments))
         self.dErrorArguments = error_arguments
 
-class UrlPyCreationException(StageException):
+class UrlPyCreationException(StageStepException):
     def __init___(self, error_arguments):
         Exception.__init__(self, "Url.py file creating failed with arguments {0}".format(error_arguments))
         self.dErrorArguments = error_arguments

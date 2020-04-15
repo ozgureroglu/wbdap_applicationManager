@@ -1,0 +1,30 @@
+344	a	a App	a	a	""	0	1	62b6acba3afc43bba85bbeaa9ec74678	0	1
+340	activityStream	activityStream	activityStream	activityStream	Readme file	1	1	df548e5a9c2c4387a7a7574cde10143a	0	1
+348	applicationManager	applicationManager	applicationManager	applicationManager	Readme file	1	1	42796f1aab6744c0b6cbfb94737f495b	0	1
+351	authenticationApp	authenticationApp	authenticationApp	authenticationApp	Readme file	0	1	7c3a0e018a7645d89595bf6253808bf7	0	1
+343	blog	Blog Application	blog	blog	Readme file	1	1	f8eb0801bbec41648db05a7ea633802b	0	1
+353	businessdb	Business Database	businessdb	businessdb	A database of businesses which can be investigated and used for starting an startup.	1	1	9e45cb9f334240ecaa6c44192508e5ba	0	1
+338	celeryApp	celeryApp	celeryApp	celeryApp	A site for celeryApp.	0	1	71573d99bf7348428deac49572c11182	0	1
+356	chat	chat	chat	chat	Readme file	1	1	99a71a9372604be594d3a59928642c3a	0	1
+347	dataExtractor	dataExtractor	dataExtractor	dataExtractor	Generic data scraper with storage capability.	1	1	4a50ca23c6f54867adfe692a2bdff148	0	1
+357	docker_manager	docker_manager	docker_manager	docker_manager	docker_manager	0	1	edf32d87a1d24c5fb7d7f40ac36a6579	0	1
+342	elasticsearchapp	elasticsearchapp	elasticsearchapp	elasticsearchapp	Readme file	1	1	b9f52410141f4b03b81f66eb137a99a0	0	1
+349	examApp	examApp	examApp	examApp	Readme file	1	1	35af5369576f4f349a68d8e6da442ba7	0	1
+329	filemanager	filemanager	filemanager	filemanager	filemanager	0	1	b45cebf57f034615af055d276147d25c	0	1
+335	flashcards	flashcards	flashcards	flashcards	A site for flashcards.	0	1	6f650c706c384cc18fdd37ce73fa01fb	0	1
+355	gameapp	gameapp	gameapp	gameapp	gameapp	0	1	2862ff412b5a4940946113ff72b73ba8	0	1
+337	identityManager	identityManager	identityManager	identityManager	Readme file	1	1	29ca4f68c97e45aa8b66ed07d60fa816	0	1
+359	mailapp	mailapp	mailapp	mailapp	mailapp	0	1	b4bac746d68c4dc6a06cc5619ba56616	0	1
+334	mentor	mentor	mentor	mentor	mentor	0	1	08a0d3f5bb2e43d79e0b7fb938474535	0	1
+341	projectCore	projectCore	projectCore	projectCore	Readme file	1	1	41b5635678424487a3b057fd10f0b64a	0	1
+361	projectManager	projectManager	projectManager	projectManager	An application to manage projects.	0	1	3ec82fffa6d84e468504042fec337e26	0	1
+360	reactionApp	reactionApp	reactionApp	reactionApp	Readme file	1	1	4f80f52450e44325b1460e5042335337	0	1
+346	realEstateRecommender	realEstateRecommender	realEstateRecommender	realEstateRecommender	Readme file	1	1	23f5744ad02b4fe08a0e9af2bab71f46	0	1
+352	requirementsManager	requirementsManager App	requirementsManager	requirementsManager	""	0	1	5b9512fa1cc24a028fab8d5816167a15	0	1
+333	rqManager	RQManager App	rqManager	rqManager	rqManager	0	1	9bb2562e8c2e4e9e8a9408b668ad7929	0	1
+336	rulemall	rulemall	rulemall	rulemall	rulemall	0	1	2d475bdad36f4a5aae1ae24eeb71d7f3	0	1
+331	sciDB	sciDB	sciDB	sciDB	A site to collect science experiments for kids.	0	1	3f28fcfa35804e3894c41079b82a83a8	0	1
+332	sciDB	sciDB	sciDB	sciDB	A site to collect science experiments for kids.	0	1	4b0d51a7eb874a0d9c9e0903f2beee80	0	1
+350	scraper	scraper	scraper	scraper	scraper	0	1	d9e50bfd08cb4454a4523f012c54cb85	0	1
+345	testapp	testapp	testapp	testapp	""	0	1	c81c3b5de88248398beb8d969c871df6	0	1
+339	webcoding	webcoding	webcoding	webcoding	webcoding	0	1	2d46ccc5e95d4e9a8702c927a0dfd506	0	1

@@ -8,7 +8,7 @@ from django.forms import ModelForm, RadioSelect
 from django.urls import reverse
 from openpyxl.chart import label
 
-from applicationManager.models import Application, AppModel, Field, ApplicationDefaultPages, DjangoProject
+from applicationManager.models import Application, AppModel, AppModelField, ApplicationDefaultPages, DjangoProject
 
 __author__ = 'ozgur'
 
@@ -111,7 +111,7 @@ class CreateModelForm(ModelForm):
         fields = ['name', 'owner_app','definition']
 
 
-class CreateFieldForm(ModelForm):
+class CreateAppModelFieldForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_action = '.'
@@ -126,14 +126,14 @@ class CreateFieldForm(ModelForm):
         )
 
         # self.helper.add_input(Submit('submit', 'Submit'))
-        super(CreateFieldForm, self).__init__(*args, **kwargs)
+        super(CreateAppModelFieldForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        model = Field
+        model = AppModelField
         fields = ['name', 'field_type', 'type_parameter', 'owner_model']
 
 
-class UpdateFieldForm(ModelForm):
+class UpdateAppModelFieldForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         # self.helper.form_action = '.'
@@ -148,10 +148,10 @@ class UpdateFieldForm(ModelForm):
         )
 
         # self.helper.add_input(Submit('submit', 'Submit'))
-        super(UpdateFieldForm, self).__init__(*args, **kwargs)
+        super(UpdateAppModelFieldForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        model = Field
+        model = AppModelField
         fields = ['name', "field_type", 'type_parameter', 'owner_model']
 
 
@@ -192,18 +192,30 @@ class ProjectCreateForm2(ModelForm):
 class ProjectCreateForm3(ModelForm):
     form_desc = "Enter the details for the sample application"
     class Meta:
-        fields = ['enable_drf_api','enable_messages']
+        fields = ['enable_drf_api', 'enable_messages']
         model = DjangoProject
 
 
-
 class ApplicationCreateForm1(ModelForm):
+    """
+    Application create form for step 1
+    """
+    form_desc = "Enter the details for the application. Some of these can be changed later from the application management page"
+    name = "Basic Information"
     class Meta:
-        exclude = ['description', 'url', 'namedUrl', 'owner', 'uuid']
+        # fields = ['app_name', 'verbose_name', 'description', 'url', 'namedUrl', 'active','published']
+        fields = '__all__'
+        exclude = ['verbose_name','url','namedUrl', 'owner', 'uuid']
+        widgets = {
+            'description': forms.Textarea(attrs={'placeholder': 'A brief explanation of this application.'})
+        }
         model = Application
 
 
-class ApplicationCreateForm2(forms.Form):
+class ApplicationCreateForm3(forms.Form):
+    form_desc = "Select the libraries that should be enabled for this application."
+    name = "Default Libs"
+
     BS_VERS=(
         ('4.1', 'Bootstrap v4.1'),
         ('4.0', 'Bootstrap v4.0.0'),
@@ -230,9 +242,30 @@ class ApplicationCreateForm2(forms.Form):
 
 
 class ApplicationCreateForm4(ModelForm):
+    form_desc = "Enter basic information about the Application Models that will be created."
+    def __init__(self, *args, **kwargs):
+        super(ApplicationCreateForm4, self).__init__(*args, **kwargs)
+
+
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper()
+        self.helper.attrs = {'novalidate': 'novalidate'}
+        # self.helper.form_class = 'form-horizontal'
+        # self.helper.label_class = 'text-center col-lg-4'
+        # self.helper.field_class = 'col-lg-8'
+
+        # set initial value to a modelform field
+        # initial = kwargs.pop('initial', {})
+        #
+        # initial['port'] = random.randint(1000, 10000)
+        # kwargs['initial'] = initial
+
+
     class Meta:
-        fields = ['description']
-        model = Application
+        fields = ['name', 'definition']
+        model = AppModel
 
 
 
@@ -242,8 +275,18 @@ class ApplicationCreateForm4(ModelForm):
 #     option_template_name = 'applicationManager/forms/radio_option_custom.html'
 
 
-class ApplicationCreateForm3(ModelForm):
+class ApplicationCreateForm2(ModelForm):
+    form_desc = "Enter the pages that should be created for this application."
+    name = "Default Pages"
     class Meta:
         fields = ['coming_soon_page','about_us_page','contact_us_page','landing_page','maintenance_page']
         model = ApplicationDefaultPages
+
+
+
+# factory here is creating a class
+ModelFormSet = forms.models.modelformset_factory(AppModel, fields='__all__')
+FieldFormSet = forms.models.modelformset_factory(AppModelField, fields='__all__')
+
+
 

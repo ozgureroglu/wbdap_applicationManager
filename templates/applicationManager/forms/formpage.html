@@ -18,10 +18,10 @@
 
 
         <!-- Dropdown Card Example -->
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4 border-left-primary border-info">
             <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">{{ wizard.steps.current }} </h6>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between ">
+                <h6 class="m-0 font-weight-bold text-primary">{% if form.name %}{{ form.name | capfirst }}{% else%} {{ wizard.steps.current|capfirst }}{% endif %}</h6>
                 Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -42,10 +42,13 @@
             <!-- Card Body -->
             <form action="" method="post" novalidate="novalidate">{% csrf_token %}
                 <div class="card-body">
-                    <div>
+                    {% if form.form_desc %}
+                    <div class="alert alert-primary" role="alert">
                         {{ form.form_desc }}
                     </div>
-
+                    {% else %}
+                        No form description
+                    {% endif %}
 
                     <table>
                         {{ wizard.management_form }}
