@@ -15,7 +15,6 @@ from .views import (
 )
 
 
-
 from django.urls import include, path
 app_name = 'applicationManager-api'
 

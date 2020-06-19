@@ -1,0 +1,56 @@
+from rest_framework.serializers import HyperlinkedModelSerializer, HyperlinkedIdentityField, ModelSerializer
+from ${app}.models import ${model}
+
+# --------- CRUD Serializers -----------------------------
+# https://www.youtube.com/watch?v=dfIB-LthIpE&list=PLEsfXFp6DpzTOcOVdZF-th7BS_GYGguAS&index=9
+
+
+class ${model}CreateSerializer(ModelSerializer):
+
+    class Meta:
+        model = ${model}
+        fields = '__all__'
+
+
+    # This is the default method that should be overriden in the case of custom creation requirements.
+
+    # def create(self,validated_data):
+    #     """
+    #     This method overrides the ModelSerializers create method, so that model creation behaves differently than
+    #     the default one. If we want to change the create behaviour at APIView level this method will be defined as
+    #     perform_create() which overrides the perform_create() method of CreateModelMixin and this method simply calls
+    #     serializer.save(). So we can pass parameters to save method to override data fields
+    #     such as serializer.save(user=self.request.user)
+    #
+    #     to serializer.save
+    #     :param validated_data:
+    #     :return:
+    #     """
+    #     app = ${model}.objects.create(
+    #         name=validated_data['name'],
+    #         description=validated_data['description'],
+    #         # first_name=validated_data['first_name'],
+    #         # last_name=validated_data['last_name'],
+    #         # email=validated_data['email'],
+    #         # password=make_password(validated_data['password'])
+    #     )
+    #     return app
+
+
+class ${model}ListSerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(view_name="identityManager-api:imgroup-detail")
+
+    class Meta:
+        model = ${model}
+        fields = '__all__'
+
+
+class ${model}DetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = ${model}
+        fields = '__all__'
+
+
+# ---------------------------------------------------------------
+

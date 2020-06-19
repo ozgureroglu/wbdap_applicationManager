@@ -863,15 +863,13 @@ def updateAppsDBWoAppConfig():
 
 
 def updateAppsDB(request):
-    context = {}
+    result = {}
     appNameList = getAppNameListByAppsPy()
-
     appsDbData = Application.objects.all()
     appsDbData.delete()
 
-    done=[]
     for appName in appNameList:
-        print(appName)
+
         try:
             appConf = apps.get_app_config(appName)
             app = Application()
@@ -885,12 +883,11 @@ def updateAppsDB(request):
             app.core_app = 1
             app.uuid = uuid.uuid4()
             app.save()
-            done.append(app)
         except LookupError:
             logger.warning("Lookuperror")
 
-    context['appconfs']=done
-    return render(request, 'applicationManager/updateAppsDB.html', context=context)
+    result['appconfs']=serializers.serialize('json', Application.objects.all())
+    return JsonResponse(result)
 
 
 @require_POST
@@ -1321,23 +1318,6 @@ class FieldDeleteView(DeleteView):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def add_application_model(request, pk):
     if request.method == "GET":
         form = AddApplicationModelForm()
@@ -1564,6 +1544,12 @@ def model_list_from_app_config(request, id):
 def editors(request):
     return render(request, 'applicationManager/draganddropedit.html')
 
+
+def utils(request):
+    return render(request, 'applicationManager/utils.html')
+
+def mngops(request):
+    return render(request, 'applicationManager/mngops.html')
 
 FORMS = [("step1", ApplicationCreateForm1),
          ("step2", ApplicationCreateForm2),

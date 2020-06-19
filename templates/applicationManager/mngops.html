@@ -1,0 +1,144 @@
+{% extends 'applicationManager/utils.html' %}
+
+{% block head__jscript %}
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+{% endblock %}
+
+{% block app_home_content %}
+
+
+    <div class="alert alert-info" role="alert">
+        Here, you can generate and/or backup your application data. All backed up data will be written into fixtures.
+        You will not be able to restore
+        fixture data, if you change the models after backup operation.
+    </div>
+
+
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <!-- Default Card Example -->
+            <div class="card mb-4" id="app">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Refresh App DB</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can regenerate the list of applications registered to wbdap manually.
+                    </div>
+                    {#                    <a href="{% url 'applicationManager:updateAppsDB' %}">#}
+
+                    <button href="#collapseExample" type="button" class="btn btn-success"
+                            v-on:click="getAppData">Refresh
+                    </button>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body">
+                            <div>
+                                <ul>
+                                    <li v-for="app in apps">
+                                        <a v-bind:href="app.url">[[app]]</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Load Fixture Data</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can try to load the last fixture you have created.
+                    </div>
+                    <a href="">
+                        <button type="button" class="btn btn-success">Load Fixture Data</button>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Dump Application Data</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can dump all of the generated data to fixture files.
+                    </div>
+                    <a href="">
+                        <button type="button" class="btn btn-success">Dump Application Data</button>
+                    </a>
+
+
+                </div>
+            </div>
+
+
+            <!-- Default Card Example -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Download Application Code</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        You can download all application code in tar.gz file.
+                    </div>
+                    <a href="">
+                        <button type="button" class="btn btn-success">Download Code</button>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+{% block body__jscript %}
+    {{ block.super }}
+
+
+    <script>
+        var app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#app',
+            data() {
+                return{
+                    message: 'Hello Vue!',
+                    apps: null,
+                    collapseStatus: false,
+                }
+            },
+            methods: {
+               getAppData: function(event){
+                   {#Runs at the load of page as mounted is the when the el:app is mounted#}
+                   $('#collapseExample').collapse('toggle');
+
+                   if(this.collapseStatus == false){
+                    axios
+                     .get('{% url "applicationManager:updateAppsDB" %}')
+                     .then(response => (this.apps = response));
+                   }
+                   this.collapseStatus = !this.collapseStatus;
+               }
+            }
+        })
+    </script>
+{% endblock %}

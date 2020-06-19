@@ -16,22 +16,21 @@
 
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{ app.verbose_name | upper }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">Mnanagement Operations</h1>
         </div>
 
         <div class="alert alert-success" role="alert">
-            <p class="mb-4">{{ app.description }}</p>
+            <p class="mb-4">Manage all operations related to application manager content</p>
         </div>
 
 
         <div class="row">
             <nav class="nav">
-                <a class="nav-link active" href="{% url 'applicationManager:application-management-page' app.id %}">App
-                    Home</a>
-                <a class="nav-link active" href="{% url 'applicationManager:model-list' app.id %}">Models</a>
+                <a class="nav-link active" href="{% url 'applicationManager:mngops'%}">Operations</a>
+                <a class="nav-link active" href="">ss</a>
                 <a class="nav-link" href="#">Views</a>
-                <a class="nav-link" href="{% url 'applicationManager:application-data' app.id %}">Data</a>
-                <a class="nav-link" href="{% url 'applicationManager:application-danger-zone' app.id %}">Danger Zone</a>
+                <a class="nav-link" href="">Data</a>
+                <a class="nav-link" href="">Danger Zone</a>
             </nav>
         </div>
         <hr>

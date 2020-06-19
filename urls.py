@@ -110,6 +110,8 @@ urlpatterns = [
     path('deserializeConfs/', deserializeConfs, name='deserializeConfs'),
 
     path('editor/', editors, name='editors'),
+    path('utils/', utils, name='utils'),
+    path('mngops/', mngops, name='mngops'),
     path('test/', test, name='test'),
     path('rqtest/', rqtest, name='rqtest'),
 
