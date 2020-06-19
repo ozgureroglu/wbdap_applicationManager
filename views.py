@@ -863,7 +863,6 @@ def updateAppsDBWoAppConfig():
 
 
 def updateAppsDB(request):
-    result = {}
     appNameList = getAppNameListByAppsPy()
     appsDbData = Application.objects.all()
     appsDbData.delete()
@@ -886,8 +885,8 @@ def updateAppsDB(request):
         except LookupError:
             logger.warning("Lookuperror")
 
-    result['appconfs']=serializers.serialize('json', Application.objects.all())
-    return JsonResponse(result)
+    data = serializers.serialize('json', Application.objects.all())
+    return JsonResponse(data, safe=False)
 
 
 @require_POST

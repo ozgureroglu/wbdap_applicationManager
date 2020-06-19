@@ -35,17 +35,21 @@
                     <button href="#collapseExample" type="button" class="btn btn-success"
                             v-on:click="getAppData">Refresh
                     </button>
-                    <div class="collapse" id="collapseExample">
+                    <p>
+                        <div class="collapse" id="collapseExample">
+                        Updated the App DB table with the following apps.
                         <div class="card card-body">
                             <div>
                                 <ul>
                                     <li v-for="app in apps">
-                                        <a v-bind:href="app.url">[[app]]</a>
+                                        <a v-bind:href="app.url">[[app.fields.app_name]]</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    </p>
+
                 </div>
             </div>
 
@@ -134,7 +138,7 @@
                    if(this.collapseStatus == false){
                     axios
                      .get('{% url "applicationManager:updateAppsDB" %}')
-                     .then(response => (this.apps = response));
+                     .then(response => (this.apps = JSON.parse(response.data)));
                    }
                    this.collapseStatus = !this.collapseStatus;
                }
