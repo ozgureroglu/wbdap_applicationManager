@@ -1,14 +1,12 @@
+__author__ = 'ozgur'
+
 import django_rq
+import logging
 
 from applicationManager.django_rq_jobs import addrq, create_app, create_project
 from applicationManager.util.django_project_generator import DjangoProjectGenerator
 from applicationManager.util.soft_application_creator import SoftApplicationCreator
 
-
-
-__author__ = 'ozgur'
-
-import logging
 
 from applicationManager.signals.signals import application_created_signal, application_creation_failed_signal, \
     application_removed_signal, model_changed_signal, soft_application_created_signal, soft_application_removed_signal, \

@@ -1,8 +1,6 @@
-from django.db import connection
-
 __author__ = 'ozgur'
 
-from django.core.management import call_command
+from django.db import connection
 from django.apps import AppConfig
 import logging
 
