@@ -780,7 +780,8 @@ def reload_urlconf(urlconf=None):
 
 def getAppNameListByAppsPy():
     """
-    Get application name list from the folders of the applications
+    Get application name list from the folders
+    of the applications by folder visits
     """
     appNameList = []
     for file in os.listdir():
@@ -867,12 +868,13 @@ def updateAppsDB(request):
     appsDbData = Application.objects.all()
     appsDbData.delete()
 
-    for appName in appNameList:
+    for appname in appNameList:
 
         try:
-            appConf = apps.get_app_config(appName)
+            appConf = apps.get_app_config(appname)
+            print(appConf.__class__)
             app = Application()
-            app.app_name = appConf.appName
+            app.app_name = appConf.name
             app.verbose_name = appConf.verbose_name
             app.namedUrl = appConf.namedUrl
             app.description = appConf.readmeContent
@@ -1663,15 +1665,14 @@ class ApplicationCreateWizard(SessionWizardView):
         app = Application(  # Zorunlu alanlar
             app_name=basic_info_data['app_name'],
             description=basic_info_data['description'],
-            verbose_name=basic_info_data['verbose_name'],
+            verbose_name=basic_info_data['app_name'],
             active=basic_info_data['active'],
             core_app=basic_info_data['core_app'],
             owner_id=self.request.user.id,
             uuid=uuid.uuid4(),
             # Zorunlu olmayan alanlar
             url=basic_info_data['app_name'],
-            namedUrl=basic_info_data['app_name'],
-            soft_app=True,
+            namedUrl=basic_info_data['app_name']
         )
 
         app.save()

@@ -15,9 +15,8 @@
 
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800">Application Manager</h1>
-        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more
-            information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official
-                DataTables documentation</a>.</p>
+        <p class="mb-4">Below a list of all manageable applications can be found in the table. Each application can be
+            accessed from the links provided as the first item in the table.</p>
 
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
@@ -88,71 +87,71 @@
                                 <td>
                                     <!-- Single button -->
                                     <div class="btn-group">
-                                        <button type="button"
-                                                class="btn btn-sm btn-primary dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            Actions <span class="caret"></span>
-                                        </button>
-
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                                            <div class="dropdown-divider"></div>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:generate-data' app.id %}"> <span
-                                                    class="glyphicon glyphicon-floppy-open"
-                                                    icon-id="{{ app.id }}"></span> Generate Dummy
-                                                Data</a>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:load-data' app.id %}"> <span
-                                                    class="glyphicon glyphicon-floppy-open"
-                                                    icon-id="{{ app.id }}"></span> Load Fixture Data</a>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:dump-app-data' app.id %}"> <span
-                                                    class="glyphicon glyphicon-floppy-save"
-                                                    icon-id="{{ app.id }}"></span> Dump Application
-                                                Data</a>
-
-                                            <div class="dropdown-divider"></div>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:download-app' app.id %}"><span
-                                                    class="glyphicon glyphicon-download"
-                                                    icon-id="{{ app.id }}"></span> Download as
-                                                tar.gz</a>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:package-app' app.id %}"><span
-                                                    class="glyphicon glyphicon-download"
-                                                    icon-id="{{ app.id }}"></span> Dist package</a>
-
-                                            <div class="dropdown-divider"></div>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:create-file' app.id %}"><span
-                                                    class="glyphicon glyphicon-cloud-upload"
-                                                    icon-id="{{ app.id }}"></span> Upload to
-                                                cloud</a>
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:genuuid-app' app.id %}"><span
-                                                    class="glyphicon glyphicon-key"
-                                                    icon-id="{{ app.id }}"></span> Generate UUID</a>
-
-                                            <div class="dropdown-divider"></div>
-
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'applicationManager:delete-application' app.id %}"
-                                               id="delete_selected"
-                                               onmouseover="this.style.background='red';this.style.color='white'"
-                                               onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>
-
-
-                                        </div>
+{#                                        <button type="button"#}
+{#                                                class="btn btn-sm btn-primary dropdown-toggle"#}
+{#                                                data-toggle="dropdown" aria-haspopup="true"#}
+{#                                                aria-expanded="false">#}
+{#                                            Actions <span class="caret"></span>#}
+{#                                        </button>#}
+{##}
+{#                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{##}
+{#                                            <div class="dropdown-divider"></div>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:generate-data' app.id %}"> <span#}
+{#                                                    class="glyphicon glyphicon-floppy-open"#}
+{#                                                    icon-id="{{ app.id }}"></span> Generate Dummy#}
+{#                                                Data</a>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:load-data' app.id %}"> <span#}
+{#                                                    class="glyphicon glyphicon-floppy-open"#}
+{#                                                    icon-id="{{ app.id }}"></span> Load Fixture Data</a>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:dump-app-data' app.id %}"> <span#}
+{#                                                    class="glyphicon glyphicon-floppy-save"#}
+{#                                                    icon-id="{{ app.id }}"></span> Dump Application#}
+{#                                                Data</a>#}
+{##}
+{#                                            <div class="dropdown-divider"></div>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:download-app' app.id %}"><span#}
+{#                                                    class="glyphicon glyphicon-download"#}
+{#                                                    icon-id="{{ app.id }}"></span> Download as#}
+{#                                                tar.gz</a>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:package-app' app.id %}"><span#}
+{#                                                    class="glyphicon glyphicon-download"#}
+{#                                                    icon-id="{{ app.id }}"></span> Dist package</a>#}
+{##}
+{#                                            <div class="dropdown-divider"></div>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:create-file' app.id %}"><span#}
+{#                                                    class="glyphicon glyphicon-cloud-upload"#}
+{#                                                    icon-id="{{ app.id }}"></span> Upload to#}
+{#                                                cloud</a>#}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:genuuid-app' app.id %}"><span#}
+{#                                                    class="glyphicon glyphicon-key"#}
+{#                                                    icon-id="{{ app.id }}"></span> Generate UUID</a>#}
+{##}
+{#                                            <div class="dropdown-divider"></div>#}
+{##}
+{##}
+{#                                            <a class="dropdown-item"#}
+{#                                               href="{% url 'applicationManager:delete-application' app.id %}"#}
+{#                                               id="delete_selected"#}
+{#                                               onmouseover="this.style.background='red';this.style.color='white'"#}
+{#                                               onmouseout="this.style.background='';this.style.color=''"><span>Delete Application</span></a>#}
+{##}
+{##}
+{#                                        </div>#}
 
 
                                         <a class="nav-link collapsed"
