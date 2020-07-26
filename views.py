@@ -915,9 +915,6 @@ def application_management_page(request, id):
         logger.info('received post')
 
     app = Application.objects.get(id=id)
-
-    app_config = apps.get_app_config(app.app_name)
-    models = app_config.get_models()
     pages = ApplicationPage.objects.filter(app_id=id)
 
     # Here the term model denotes the native models of django not the AppModel of applicationManager application
@@ -930,9 +927,8 @@ def application_management_page(request, id):
     return render(request, 'applicationManager/application_management_page.html',
                   {'app_form': CreateApplicationForm,
                    'app': Application.objects.get(id=id),
-                   'models': models,
                    'pages': pages,
-                   'appsettings': ApplicationSettings.objects.filter(app_id=id)
+                   # 'appsettings': ApplicationSettings.objects.filter(app_id=id)
                    })
 
 
