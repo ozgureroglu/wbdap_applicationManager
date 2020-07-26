@@ -9,8 +9,11 @@
     </div>
 
     <!-- Button trigger modal -->
+    <a href="{% url 'applicationManager:delete-application' app.id %}">
     <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#exampleModal">
         Delete Project
     </button>
+    </a>
+
 
 {% endblock %}

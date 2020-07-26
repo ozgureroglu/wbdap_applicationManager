@@ -1,3 +1,4 @@
+import copy
 import datetime
 import subprocess
 import sys
@@ -415,9 +416,10 @@ def createApplication2(request):
 @login_required
 def delete_application(request, id):
     app = Application.objects.get(id=id)
+    capp = copy.deepcopy(app)
     logger.info('Deleting application %s', app.app_name)
 
-    if app.soft_app == True:
+    if app.core_app == True:
         try:
             app.delete()
         except Exception as e:
@@ -425,7 +427,7 @@ def delete_application(request, id):
             return False
 
         soft_application_removed_signal.send(sender=Application.__class__, test="testString",
-                                             application=app)
+                                             application=capp)
     else:
         try:
             app.delete()
@@ -434,7 +436,7 @@ def delete_application(request, id):
             return False
 
         application_removed_signal.send(sender=Application.__class__, test="testString",
-                                        application=Application.objects.get(app_name=app.app_name))
+                                        application=capp)
 
     return redirect('applicationManager:applications')
 
@@ -536,7 +538,7 @@ def application_danger_zone(request, id):
     app = Application.objects.get(id=id)
     return render(request,
                   'applicationManager/application_danger_zone.html',
-                  {'app':app}
+                  {'app': app}
                   )
 
 @login_required

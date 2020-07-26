@@ -27,13 +27,10 @@ class DjangoApplicationRemover:
         self.application = Application
 
     def removeApp(self):
+        """
+        Remove app handles the removal of the app from filessytem operation
+        """
         app_name = self.application.app_name
-
-        #remove database record
-        self.remove_from_db(app_name)
-
-        #UpdateSettings File
-        # self.updateSettingsFile(app_name)
 
         #Update Urls.py file
         # self.update_urls_file(app_name)
