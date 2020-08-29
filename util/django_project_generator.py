@@ -67,6 +67,7 @@ class %(model)s(models.Model):
 
 allow_read=True
 
+
 class DjangoProjectGenerator:
 
     def __init__(self, project: DjangoProject):
@@ -80,12 +81,8 @@ class DjangoProjectGenerator:
         self.project_root_folder = os.path.join(self.site_root, self.project.name)
         self.app_name = "ms"
 
-
-
-
-
-    def create_file_from_template(self,template_file, context, loc):
-
+    def create_file_from_template(self, template_file, context, loc):
+        """ Gecilen parametrelere gore template'den dosya ureten fonksiyon"""
         try:
             t = Template(filename=template_file)
             buf = StringIO()
@@ -94,24 +91,21 @@ class DjangoProjectGenerator:
 
             open(loc, "w+").write(buf.getvalue())
         except Exception as e:
-            logger.fatal("Exception occurred while creating blank.html file : %s", e)
+            logger.fatal("Exception occurred while creating {file} file : {error}".format(file = template_file, error=e))
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                     application=Application.objects.get(app_name=self.app_name))
-            raise Exception('creation of blank.html failed: ' + str(e))
-
-
-
-
+            raise Exception('creation of a file from template failed: ' + str(e))
 
     def delete_project(self):
         os.remove(self.project_root_folder)
 
     def create(self):
         """
-        Creates a django project and an application with all necessary secondary folders
+        Just creates a django project and an application with all necessary secondary folders
+        Entrypoint for project creation.
         """
 
-        print(self.dprjLoc)
+        logger.debug(self.dprjLoc)
         # Check if app root folder exists; if not go on to create
         if not os.path.exists('{0}{1}'.format(self.dprjLoc, self.project.name)):
 
@@ -120,21 +114,16 @@ class DjangoProjectGenerator:
                 logger.info('Creating the project {0} ...'.format(self.project.name))
                 os.chdir(self.dprjLoc)
                 call_command('startproject', self.project.name)
+                logger.debug('Project created')
+
             except Exception as e:
                 return {'Error': e}
-            #
-            # # Then create a fully functional app in the project
-            # try:
-            #     self.run_all_steps()
-            # except Exception as e:
-            #     return
 
             return True
 
         else:
             logger.info("Project folder exists\t{0}{1}".format(self.site_root, self.project.name))
             return {'Error': 'Path exists'}
-
 
     def output_reader(self, proc):
         """
@@ -148,7 +137,6 @@ class DjangoProjectGenerator:
             nextline = proc.stdout.readline()
             if nextline != '' and nextline != b'':
                 print('got line from output: {0}\n'.format(nextline), end='')
-
 
     def runServer(self):
         if settings.DEBUG:
@@ -168,12 +156,13 @@ class DjangoProjectGenerator:
             logger.info("Starting project ...")
             process = subprocess.Popen([python3bin, prjman, 'runserver', str(self.project.port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env={})
 
-            comm = "pgrep -f {}".format(self.project.name)
+            comm = "pgrep -f {}".format(self.project.name+"/manage")
             bpids = subprocess.check_output(comm, shell=True)
 
             pids = bpids.decode("utf-8").rstrip("\n").split("\n")
 
             ipids = [int(i) for i in pids]
+            print(ipids)
 
             self.project.pids = ipids
             self.project.status = 1
