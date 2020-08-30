@@ -91,7 +91,7 @@ class DjangoProjectGenerator:
 
             open(loc, "w+").write(buf.getvalue())
         except Exception as e:
-            logger.fatal("Exception occurred while creating {file} file : {error}".format(file = template_file, error=e))
+            logger.fatal("Exception occurred while creating {file} file : {error}".format(file=template_file, error=e))
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
                                                     application=Application.objects.get(app_name=self.app_name))
             raise Exception('creation of a file from template failed: ' + str(e))
@@ -165,7 +165,7 @@ class DjangoProjectGenerator:
             print(ipids)
 
             self.project.pids = ipids
-            self.project.status = 1
+            self.project.status = DjangoProject.ProjectStatus.RUNNING
             self.project.save()
 
             global allow_read
@@ -192,7 +192,7 @@ class DjangoProjectGenerator:
                     print(subprocess.check_output(cmd, shell=True))
 
             self.project.pids=None
-            self.project.status = 0
+            self.project.status = DjangoProject.ProjectStatus.STOPPED
             self.project.save()
 
         except OSError:

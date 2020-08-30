@@ -156,6 +156,7 @@ class UpdateAppModelFieldForm(ModelForm):
 
 
 class ProjectCreateForm1(ModelForm):
+    step_name = "Basic Info"
     form_desc = "Enter basic information about the Project that will be created."
     def __init__(self, *args, **kwargs):
 
@@ -183,7 +184,7 @@ class ProjectCreateForm1(ModelForm):
 
 
 class ProjectCreateForm2(ModelForm):
-    form_desc = "Enable a sample application"
+    form_desc = "Do you want to enable a sample application in the project"
     class Meta:
         fields = ['sample_app']
         model = DjangoProject

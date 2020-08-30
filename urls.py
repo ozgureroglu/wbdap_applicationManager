@@ -50,7 +50,10 @@ urlpatterns = [
     # --- PROJECTS ---------------------------------------------------
 
 
-    path('createProject/', ProjectCreateWizard.as_view(PROJECT_FORMS), name='createProject'),
+    # Another solution to conditional views in formtool
+    # https://stackoverflow.com/questions/19068452/django-formwizard-how-to-change-the-form-list-dynamically
+
+    path('createProject/', ProjectCreateWizard.as_view(PROJECT_FORMS, condition_dict={'step3': show_details_form_condition}), name='createProject'),
     path('projects/', projects, name='projects'),
     path('project/<int:id>/', project_management_page, name='project-management-page'),
     path('project/<int:id>/start/', start_project, name='start-project'),

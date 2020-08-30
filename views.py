@@ -1562,19 +1562,26 @@ TEMPLATES = {"step1": "applicationManager/forms/formpage.html",
 
 # Hangi formun hangi model alanlari veya icerik alanlari hakkinda bilgi
 # alacagi burada belirtilen form siniflari ile belirleniyor.
-PROJECT_FORMS = [("Basic Info", ProjectCreateForm1),
-                 ("Sample Application", ProjectCreateForm2),
-                 ("Sample Application Details", ProjectCreateForm3),
+PROJECT_FORMS = [("step1", ProjectCreateForm1),
+                 ("step2", ProjectCreateForm2),
+                 ("step3", ProjectCreateForm3),
                  ]
 
 # Bu kisim fieldleri belirlenmis olan form siniflarinin visual olarak hangi
 # template ile render edilecegini belirliyor.
-PROJECT_TEMPLATES = {"Basic Info": "applicationManager/forms/formpage.html",
-                     "Sample Application": "applicationManager/forms/formpage.html",
-                     "Sample Application Details": "applicationManager/forms/formpage.html",
-                     "Default Pages": "applicationManager/forms/formpage.html",
+PROJECT_TEMPLATES = {"step1": "applicationManager/forms/formpage.html",
+                     "step2": "applicationManager/forms/formpage.html",
+                     "step3": "applicationManager/forms/formpage.html",
+                     "step3": "applicationManager/forms/formpage.html",
                      }
 
+def show_details_form_condition(wizard):
+    logger.debug('condition checker called')
+    # try to get the cleaned data of step 1
+    cleaned_data = wizard.get_cleaned_data_for_step('step2') or {}
+    logger.debug("cleaned data for step: {data}".format(data=cleaned_data))
+    # check if the field ``leave_message`` was checked.
+    return cleaned_data.get('sample_app', True)
 
 # Wizard sinifi hangi adimlarda hangi form adimlarini belirleyen, submit edilen veri
 # uzerinde ne yapilacagini kontrol eden siniftir. Asagidaki bazi metodlar override
@@ -1596,9 +1603,8 @@ class ProjectCreateWizard(SessionWizardView):
     @transaction.atomic
     def done(self, form_list, form_dict, **kwargs):
         # Tum form adimlari submit edildiginde
-        basic_info_data = form_dict['Basic Info'].cleaned_data
-        sample_app_data = form_dict['Sample Application'].cleaned_data
-        sample_app_details_data = form_dict['Sample Application Details'].cleaned_data
+
+        basic_info_data = form_dict['step1'].cleaned_data
 
         project = DjangoProject(  # Zorunlu alanlar
             name=basic_info_data['name'],
@@ -1606,12 +1612,10 @@ class ProjectCreateWizard(SessionWizardView):
             description=basic_info_data['description'],
             pids=None
         )
-
         project.save()
 
-        data = {}
-        data['sample_app_data'] = sample_app_data
-        data['sample_app_details_data'] = sample_app_details_data
+        data = {k:v.cleaned_data for (k,v) in form_dict.items()}
+        print(data)
 
         project_metadata_created_signal.send(sender=DjangoProject.__class__, test="testString",
                                              project=project, data=data)
@@ -1635,7 +1639,7 @@ class ApplicationCreateWizard(SessionWizardView):
     def get_form(self, step=None, data=None, files=None):
         form = super().get_form(step, data, files)
 
-        if step is "step2":
+        if step == "step2":
             print(form)
         return form
 

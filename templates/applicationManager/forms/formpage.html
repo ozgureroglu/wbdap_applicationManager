@@ -21,7 +21,7 @@
         <div class="card shadow mb-4 border-left-primary border-info">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between ">
-                <h6 class="m-0 font-weight-bold text-primary">{% if form.name %}{{ form.name | capfirst }}{% else%} {{ wizard.steps.current|capfirst }}{% endif %}</h6>
+                <h6 class="m-0 font-weight-bold text-primary">{% if form.step_name %}{{ form.step_name | capfirst }}{% else%} {{ wizard.steps.current|capfirst }}{% endif %}</h6>
                 Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"

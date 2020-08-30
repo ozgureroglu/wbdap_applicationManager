@@ -44,11 +44,6 @@ def project_metadata_created_handler(sender, **kwargs):
     logger.info("project_metadata_created signal receieved")
     django_rq.enqueue(func=create_project, kwargs={'project': kwargs['project'], 'data': kwargs['data']})
 
-    # rqService.get_default_queue
-    # q = RQService.get_default_queue()
-    # dj_app_creator = DjangoProjectManager(kwargs['project'])
-    # dj_app_creator.create()
-
 
 # Called when he application is created
 @receiver(project_started)

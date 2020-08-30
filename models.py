@@ -40,11 +40,17 @@ class PageLayout(models.Model):
 class PageLayoutAdmin(admin.ModelAdmin):
     list_display = ('layout_name','layout_description',)
 
-
 class DjangoProject(models.Model):
+
+    class ProjectStatus(models.TextChoices):
+        INITIALIZING = 'Initializing', 'Initializing'
+        PENDING = 'Pending', 'Pending'
+        STOPPED = 'Stopped', 'Stopped'
+        RUNNING = 'Running', 'Running'
+
     name = models.CharField(max_length=25, null=False, blank=False) # app_name parameter for urls.py
     port = models.IntegerField(null=False, blank=False, validators=[MaxValueValidator(10000), MinValueValidator(1000)])
-    status = models.BooleanField(default=False, null=False, blank=False)
+    status = models.CharField(max_length=15, choices=ProjectStatus.choices, default=ProjectStatus.INITIALIZING)
     description = models.TextField(max_length=400)
     pids = models.CharField(null=True, blank=False, max_length=50, validators=[validate_comma_separated_integer_list])
     sample_app = models.BooleanField(blank=False,null=False, default=True,  verbose_name="Create Sample Application")

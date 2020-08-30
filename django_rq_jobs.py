@@ -47,8 +47,6 @@ def create_project(project, data):
             if sample_app_details_data.get('enable_drf_api'):
                 print("I will generate api")
 
-
-        print(data.get('sample_app_details_data'))
         return True
     except Exception as e:
         # TODO : Change what you do depending on the exception
