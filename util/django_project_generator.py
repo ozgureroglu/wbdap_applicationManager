@@ -84,12 +84,13 @@ class DjangoProjectGenerator:
     def create_file_from_template(self, template_file, context, loc):
         """ Gecilen parametrelere gore template'den dosya ureten fonksiyon"""
         try:
+            logger.info("creating {filename}".format(filename=template_file))
             t = Template(filename=template_file)
             buf = StringIO()
             c = mako.runtime.Context(buf, data=context)
             t.render_context(c)
-
             open(loc, "w+").write(buf.getvalue())
+            logger.info("OK ...")
         except Exception as e:
             logger.fatal("Exception occurred while creating {file} file : {error}".format(file=template_file, error=e))
             application_creation_failed_signal.send(sender=Application.__class__, test="testString",
@@ -117,7 +118,7 @@ class DjangoProjectGenerator:
                 logger.debug('Project created')
 
             except Exception as e:
-                return {'Error': e}
+                return {'Project Create Error': e}
 
             return True
 
@@ -216,10 +217,10 @@ class DjangoProjectGenerator:
             # os.system('python manage.py startapp {0}'.format(self.application.app_name))
             os.chdir(self.dprjDir)
             call_command('startapp',self.app_name, stdout=cmd_output)
-            logger.info('=========================================================================================\n'
-                        '\t\tNew Django application \'' + self.app_name + '\' has been created via manage.py.')
+            logger.debug('=========================================================================================\n'
+                         'New Django application \'' + self.app_name + '\' has been created via manage.py.')
         except Exception as e:
-            logger.fatal('Exception occured while creating django application: %s', str(e))
+            logger.fatal('Exception occured while creating django main application: %s', str(e))
             raise Exception('./manage.py startapp failed : '+str(e))
 
         startapp = cmd_output.getvalue()
@@ -249,8 +250,8 @@ class DjangoProjectGenerator:
                 #
 
                 logger.info('Stage-1 DONE.')
-            except:
-                logger.error('Stage-1 FAILED, check subtask exception')
+            except Exception as e:
+                logger.error('Stage-1 FAILED, check subtask exception: {e}'.format(e=e))
 
             try:
 
@@ -270,10 +271,12 @@ class DjangoProjectGenerator:
             logger.error(startapp)
 
     def create_urls_file(self):
-        template_file = "applicationManager/templates/applicationManager/applicationFileTemplates/app_urls_template.txt"
-        context = {'applicationName': self.app_name, 'url': self.app_name, 'models': self.app.models.all()}
-        loc = self.dprjDir + "/" + self.app_name + "/urls.py"
+        try:
+            template_file = "applicationManager/templates/applicationManager/applicationFileTemplates/app_urls_template.txt"
+            context = {'applicationName': self.app_name, 'url': self.app_name, 'models': self.project.models.all()}
+            loc = self.dprjDir + "/" + self.app_name + "/urls.py"
 
-        self.create_file_from_template(template_file, context, loc)
-
+            self.create_file_from_template(template_file, context, loc)
+        except Exception as e:
+            logger.debug("Error is {e}".format(e=e))
 
