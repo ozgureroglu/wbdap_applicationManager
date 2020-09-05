@@ -34,11 +34,11 @@
 
 
         {% block app_home_content %}
-
+        {{app.status}}
             <div class="row">
                 <div class="col-xl-3 col-md-6 mb-4">
                     <input type="checkbox" id="startproject"
-                           {% if app.status is False %}checked {% elif app.status is True %} {% endif %}data-toggle="toggle"
+                           {% if app.status == 'Stopped' or app.status == 'Initializing' %}checked {% elif app.status == 'Running' %} {% endif %}data-toggle="toggle"
                            data-on="Stopped"
                            data-off="Started" data-onstyle="danger" data-offstyle="success">
                 </div>
