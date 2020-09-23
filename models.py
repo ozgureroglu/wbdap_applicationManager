@@ -341,6 +341,7 @@ class DataDump(models.Model):
 
 
 class AppModel(models.Model):
+    """Models of the generated applications"""
     name = models.CharField(max_length=30)
     definition = models.TextField(max_length=250, blank=True, null=False)
     owner_app = models.ForeignKey(Application, on_delete=models.CASCADE, related_name="models", blank=False, null=False)
