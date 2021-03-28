@@ -871,7 +871,7 @@ def updateAppsDB(request):
     appsDbData.delete()
 
     for appname in appNameList:
-
+        print(appname)
         try:
             appConf = apps.get_app_config(appname)
             print(appConf.__class__)
@@ -888,6 +888,8 @@ def updateAppsDB(request):
             app.save()
         except LookupError:
             logger.warning("Lookuperror")
+        except AttributeError:
+            logger.warning("Check applications apps.py : "+appname)
 
     data = serializers.serialize('json', Application.objects.all())
     return JsonResponse(data, safe=False)
