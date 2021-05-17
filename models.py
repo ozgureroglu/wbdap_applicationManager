@@ -40,6 +40,7 @@ class PageLayout(models.Model):
 class PageLayoutAdmin(admin.ModelAdmin):
     list_display = ('layout_name','layout_description',)
 
+
 class DjangoProject(models.Model):
 
     class ProjectStatus(models.TextChoices):
@@ -97,7 +98,7 @@ class Application(models.Model):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('app_name','verbose_name','url','namedUrl','description','owner','active','core_app','uuid','published')
 
 
 class ApplicationDefaultPages(models.Model):
@@ -107,7 +108,6 @@ class ApplicationDefaultPages(models.Model):
     contact_us_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
     landing_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
     maintenance_page = models.BooleanField(default=True, blank=False)  # want to include a coming_soon page
-
 
     def __str__(self):
         return self.app.app_name
